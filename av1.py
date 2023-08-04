@@ -8,6 +8,11 @@ generations_id = 4508 # 202 - 1 generations
 
 class Select_car: # Fills in files: brand, model, generations.
     def __init__(self) -> None:
+        '''
+            Вывод скисков
+            Получение последовательных ответов (ВАЖНО СОБЛЮДАТЬ ПОСЛЕДОВАТЕЛЬНОСТЬ)
+            
+        '''
         self.brand_id = 0
         self.model_id = 0
         self.generations_id = 0
