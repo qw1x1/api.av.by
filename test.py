@@ -48,5 +48,31 @@ with open('brand.json', 'r') as brand:
         print(data_brand[i]['id'], data_brand[i]['name'])
     id = int(input())
     print(data_brand[id])
+    print(data_brand[id]['id'])
+
+# Последовательно получаем выбераемые данные от пользователя, если пользователь ни чего не выбрал передать null или nane
+def select_item(self):
+    brand_id = self.get_brand_car_list()
+    model_id = self.get_model_car_list(brand_id)
+    generations_id = self.get_generations_car_list(brand_id, model_id)
+    return brand_id , model_id, generations_id
+
+
+# Выполняем поиск данных с сервера изходя из полученных данных от пользователя
+def get_page_car(*args):
+    if len(args) == 0:
+        params = {'condition[0]': 2, 'sort': 2}
+    elif len(args) == 1:
+        params = {'brands[0][brand]': args[0], 'condition[0]': 2, 'sort': 2}
+    elif len(args) == 2:
+        params = {'brands[0][brand]': args[0], 'brands[0][model]': args[1], 'condition[0]': 2, 'sort': 2}
+    elif len(args) == 3:
+        params = {'brands[0][brand]': args[0], 'brands[0][model]': args[1], 'brands[0][generation]': args[2], 'condition[0]': 2, 'sort': 2}
+    page_htm = requests.get('https://cars.av.by/filter?', params=params)
+    # Если страница получина, записываем данные в файл (нужно дороботать сбор со всех имеющихся страниц) + распасить и подготовить данные для оброботки
+    if page_htm.status_code == 200:
+        with open('page.htm', 'w', encoding="utf-8") as htm:
+            data = htm.write(page_htm.text)
+
 
 

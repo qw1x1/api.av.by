@@ -9,9 +9,11 @@ generations_id = 4508 # 202 - 1 generations
 class Select_car: # Fills in files: brand, model, generations.
     def __init__(self) -> None:
         '''
-            Вывод скисков
+            Вывод списков
             Получение последовательных ответов (ВАЖНО СОБЛЮДАТЬ ПОСЛЕДОВАТЕЛЬНОСТЬ)
-            
+
+            API писать на REST?
+            Сделать кеширование объектов данного класса??
         '''
         self.brand_id = 0
         self.model_id = 0
@@ -37,11 +39,11 @@ class Select_car: # Fills in files: brand, model, generations.
 
     def __call__(self):
         self.get_brand_car_list()
-        self.get_model_car()
-        self.get_generations_car()
+        self.get_model_car_list()
+        self.get_generations_car_list()
 
-# obj = Select_car()
-# obj()
+obj = Select_car()
+obj()
 
 
 def get_page_car(brand_id, model_id, generations_id):
@@ -51,3 +53,7 @@ def get_page_car(brand_id, model_id, generations_id):
             data = htm.write(page_htm.text)
 
 get_page_car(brand_id, model_id, generations_id)
+
+# Получить инфу со всех имеющихся страниц
+# Распарсить инфу 
+# Алгоритм анализа
