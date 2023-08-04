@@ -37,7 +37,7 @@ import json
 #     brand = byUsrUrlObj.read()
 #     qUserData = json.loads(brand).decode('utf-8')
 #     questionSubjs = qUserData["all"]["questions"]
-# except ValueError:  # includes simplejson.decoder.JSONDecodeError
+# except ValueError:  # jrrrrrrrrr
     # print('Decoding JSON has failed')
 # with open('brand.json', encoding="utf-8") as json_file:
 #    data = (json.load(json_file))
