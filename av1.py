@@ -43,8 +43,8 @@ class Select_car: # Fills in files: brand, model, generations.
         self.get_model_car_list()
         self.get_generations_car_list()
 
-obj = Select_car()
-obj()
+# obj = Select_car()
+# obj()
 
 
 def get_page_car(*args):
