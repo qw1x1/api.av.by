@@ -42,6 +42,9 @@ import json
 # with open('brand.json', encoding="utf-8") as json_file:
 #    data = (json.load(json_file))
 
+########################################################################################################################################
+
+
 with open('brand.json', 'r') as brand:
     data_brand = json.load(brand)
     for i in range(len(data_brand)):
@@ -75,4 +78,10 @@ def get_page_car(*args):
             data = htm.write(page_htm.text)
 
 
+def get_brand_car_list():
+        brand_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items')
+        data_brand = json.loads(brand_list.text)
+        with open('brand.json', 'w', encoding="utf-8") as brand:
+            json.dump(data_brand, brand, indent=4, ensure_ascii=False)
 
+get_brand_car_list()
