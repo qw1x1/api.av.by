@@ -20,8 +20,19 @@ class Select_car: # Fills in files: brand, model, generations.
         self.model_id = 5879
         self.generations_id = 4508
         self.user = User().random # Инициализация объекта UserAgent в объекте Select_car
+        self.brand = 'brand.json'
+    @staticmethod
+    def output_car(file):
+        with open(file, 'r', encoding="utf-8") as file:
+            data = json.load(file)
+            for key, value in data.items():
+                print(key, value)
+            print()
 
-    def get_brand_car_list(self):
+            key = str(input())
+            return data[key]
+
+    def get_brand_car_list(self): # этот метод можно удалить но оставть заполненный файл, т.к он неизменный(почти)
         data_brand={}
         respons_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items', headers={'user-agent': f'{self.user}'})
         if respons_list.status_code == 200:
@@ -37,7 +48,7 @@ class Select_car: # Fills in files: brand, model, generations.
         if respons_list.status_code == 200:
             respons_model = json.loads(respons_list.text)
             for i in range(len(respons_model)):
-                data_model[respons_model[i]['id']] = respons_model[i]['name']
+                data_model[respons_model[i]['name']] = respons_model[i]['id']
                 with open('model.json', 'w', encoding="utf-8") as model:
                     json.dump(data_model, model, indent=4, ensure_ascii=False)
 
@@ -47,14 +58,18 @@ class Select_car: # Fills in files: brand, model, generations.
         if respons_list.status_code == 200:
             respons_generations = json.loads(respons_list.text)
             for i in range(len(respons_generations)):
-                data_generations[respons_generations[i]['id']] = respons_generations[i]['name']
+                data_generations[respons_generations[i]['name']] = respons_generations[i]['id']
                 with open('generations.json', 'w', encoding="utf-8") as generations:
                     json.dump(data_generations, generations, indent=4, ensure_ascii=False)
 
     def __call__(self):
         self.get_brand_car_list()
+        self.brand_id = self.output_car(self.brand)
         self.get_model_car_list()
+        self.model_id = self.output_car('model.json')
         self.get_generations_car_list()
+        self.generations_id = self.output_car('generations.json')
+        return self.brand_id, self.model_id, self.generations_id
 
 # добавить fake_useragent в headers запросов get_page_car 
 # вход принимает: brand_id, model_id, generations_id
@@ -76,7 +91,10 @@ def get_page_car(*args):
 
 # get_page_car(brand_id, model_id, generations_id)
 obj = Select_car()
-obj()
+
+car_crit = obj()
+print(car_crit[0], car_crit[1], car_crit[2])
+get_page_car(car_crit[0], car_crit[1], car_crit[2])
 # Получить инфу со всех имеющихся страниц
 # Распарсить инфу 
 # Алгоритм анализа

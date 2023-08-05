@@ -72,13 +72,6 @@ import json
 #             json.dump(data_generations, generations, indent=4, ensure_ascii=False)
 # get_generations_car_list()
 
-with open('brand.json', 'r', encoding="utf-8") as brand:
-    data_brand = json.load(brand)
-    for key, value in data_brand.items():
-        print(key, value)
-    key = str(input())
-    print()
-    print(data_brand[key])
     # print(data_brand.setdefault(key, 0000000000))
 
 # Последовательно получаем выбераемые данные от пользователя, если пользователь ни чего не выбрал передать null или nane
@@ -113,3 +106,26 @@ with open('brand.json', 'r', encoding="utf-8") as brand:
 #             json.dump(data_brand, brand, indent=4, ensure_ascii=False)
 
 # get_brand_car_list()
+
+
+
+# with open(r, 'r', encoding="utf-8") as brand:
+#     data_brand = json.load(brand)
+#     for key, value in data_brand.items():
+#         print(key, value)
+#     key = str(input())
+#     print()
+#     print(data_brand[key])
+
+def output_car(file):
+    with open(file, 'r', encoding="utf-8") as file:
+        data = json.load(file)
+        for key, value in data.items():
+            print(key, value)
+        print()
+
+        key = str(input())
+        return data[key]
+    
+r = 'brand.json'
+print(output_car(r))
