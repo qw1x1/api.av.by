@@ -44,44 +44,72 @@ import json
 
 ########################################################################################################################################
 
+# def get_model_car_list():
+#     respons_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items/'+ str(brand_id) +'/models', headers={'user-agent': f'{self.user}'})
+#     respons_model = json.loads(respons_list.text)
+#     with open('model.json', 'w', encoding="utf-8") as model:
+#         json.dump(respons_model, model, indent=4, ensure_ascii=False)
 
-with open('brand.json', 'r') as brand:
+# def get_model_car_list():
+#         brand_id = 683
+#         data_model={}
+#         respons_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items/'+ str(brand_id) +'/models')
+#         respons_model = json.loads(respons_list.text)
+
+#         for i in range(len(respons_model)):
+#             data_model[respons_model[i]['id']] = respons_model[i]['name']
+#             with open('model.json', 'w', encoding="utf-8") as model:
+#                 json.dump(data_model, model, indent=4, ensure_ascii=False)
+
+# def get_generations_car_list():
+#     data_generations={}
+#     brand_id, model_id = 683, 5879
+#     respons_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items/'+ str(brand_id) +'/models/'+ str(model_id) +'/generations')
+#     respons_generations = json.loads(respons_list.text)
+#     for i in range(len(respons_generations)):
+#         data_generations[respons_generations[i]['id']] = respons_generations[i]['name']
+#         with open('generations.json', 'w', encoding="utf-8") as generations:
+#             json.dump(data_generations, generations, indent=4, ensure_ascii=False)
+# get_generations_car_list()
+
+with open('brand.json', 'r', encoding="utf-8") as brand:
     data_brand = json.load(brand)
-    for i in range(len(data_brand)):
-        print(data_brand[i]['id'], data_brand[i]['name'])
-    id = int(input())
-    print(data_brand[id])
-    print(data_brand[id]['id'])
+    for key, value in data_brand.items():
+        print(key, value)
+    key = str(input())
+    print()
+    print(data_brand[key])
+    # print(data_brand.setdefault(key, 0000000000))
 
 # Последовательно получаем выбераемые данные от пользователя, если пользователь ни чего не выбрал передать null или nane
-def select_item(self):
-    brand_id = self.get_brand_car_list()
-    model_id = self.get_model_car_list(brand_id)
-    generations_id = self.get_generations_car_list(brand_id, model_id)
-    return brand_id , model_id, generations_id
+# def select_item(self):
+#     brand_id = self.get_brand_car_list()
+#     model_id = self.get_model_car_list(brand_id)
+#     generations_id = self.get_generations_car_list(brand_id, model_id)
+#     return brand_id , model_id, generations_id
 
 
 # Выполняем поиск данных с сервера изходя из полученных данных от пользователя
-def get_page_car(*args):
-    if len(args) == 0:
-        params = {'condition[0]': 2, 'sort': 2}
-    elif len(args) == 1:
-        params = {'brands[0][brand]': args[0], 'condition[0]': 2, 'sort': 2}
-    elif len(args) == 2:
-        params = {'brands[0][brand]': args[0], 'brands[0][model]': args[1], 'condition[0]': 2, 'sort': 2}
-    elif len(args) == 3:
-        params = {'brands[0][brand]': args[0], 'brands[0][model]': args[1], 'brands[0][generation]': args[2], 'condition[0]': 2, 'sort': 2}
-    page_htm = requests.get('https://cars.av.by/filter?', params=params)
-    # Если страница получина, записываем данные в файл (нужно дороботать сбор со всех имеющихся страниц) + распасить и подготовить данные для оброботки
-    if page_htm.status_code == 200:
-        with open('page.htm', 'w', encoding="utf-8") as htm:
-            data = htm.write(page_htm.text)
+# def get_page_car(*args):
+#     if len(args) == 0:
+#         params = {'condition[0]': 2, 'sort': 2}
+#     elif len(args) == 1:
+#         params = {'brands[0][brand]': args[0], 'condition[0]': 2, 'sort': 2}
+#     elif len(args) == 2:
+#         params = {'brands[0][brand]': args[0], 'brands[0][model]': args[1], 'condition[0]': 2, 'sort': 2}
+#     elif len(args) == 3:
+#         params = {'brands[0][brand]': args[0], 'brands[0][model]': args[1], 'brands[0][generation]': args[2], 'condition[0]': 2, 'sort': 2}
+#     page_htm = requests.get('https://cars.av.by/filter?', params=params)
+#     # Если страница получина, записываем данные в файл (нужно дороботать сбор со всех имеющихся страниц) + распасить и подготовить данные для оброботки
+#     if page_htm.status_code == 200:
+#         with open('page.htm', 'w', encoding="utf-8") as htm:
+#             data = htm.write(page_htm.text)
 
 
-def get_brand_car_list():
-        brand_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items')
-        data_brand = json.loads(brand_list.text)
-        with open('brand.json', 'w', encoding="utf-8") as brand:
-            json.dump(data_brand, brand, indent=4, ensure_ascii=False)
+# def get_brand_car_list():
+#         brand_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items')
+#         data_brand = json.loads(brand_list.text)
+#         with open('brand.json', 'w', encoding="utf-8") as brand:
+#             json.dump(data_brand, brand, indent=4, ensure_ascii=False)
 
-get_brand_car_list()
+# get_brand_car_list()

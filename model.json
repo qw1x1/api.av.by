@@ -1,342 +1,70 @@
-[
-    {
-        "id": 761,
-        "name": "190 (W201)",
-        "slug": "190-w201"
-    },
-    {
-        "id": 1642,
-        "name": "A-Класс",
-        "slug": "a-klass"
-    },
-    {
-        "id": 5878,
-        "name": "A-Класс AMG",
-        "slug": "a-klass-amg"
-    },
-    {
-        "id": 5488,
-        "name": "AMG GT",
-        "slug": "amg-gt"
-    },
-    {
-        "id": 1645,
-        "name": "B-Класс",
-        "slug": "b-klass"
-    },
-    {
-        "id": 5879,
-        "name": "C-Класс",
-        "slug": "c-klass"
-    },
-    {
-        "id": 5880,
-        "name": "C-Класс AMG",
-        "slug": "c-klass-amg"
-    },
-    {
-        "id": 2526,
-        "name": "Citan",
-        "slug": "citan"
-    },
-    {
-        "id": 747,
-        "name": "CL",
-        "slug": "cl"
-    },
-    {
-        "id": 5881,
-        "name": "CL AMG",
-        "slug": "cl-amg"
-    },
-    {
-        "id": 2444,
-        "name": "CLA",
-        "slug": "cla"
-    },
-    {
-        "id": 5882,
-        "name": "CLA AMG",
-        "slug": "cla-amg"
-    },
-    {
-        "id": 2409,
-        "name": "CLC",
-        "slug": "clc"
-    },
-    {
-        "id": 751,
-        "name": "CLK",
-        "slug": "clk"
-    },
-    {
-        "id": 5883,
-        "name": "CLK AMG",
-        "slug": "clk-amg"
-    },
-    {
-        "id": 1734,
-        "name": "CLS",
-        "slug": "cls"
-    },
-    {
-        "id": 5954,
-        "name": "CLS AMG",
-        "slug": "cls-amg"
-    },
-    {
-        "id": 5884,
-        "name": "E-Класс",
-        "slug": "e-klass"
-    },
-    {
-        "id": 10361,
-        "name": "E-Класс All-Terrain",
-        "slug": "e-klass-all-terrain"
-    },
-    {
-        "id": 5885,
-        "name": "E-Класс AMG",
-        "slug": "e-klass-amg"
-    },
-    {
-        "id": 10343,
-        "name": "EQA",
-        "slug": "eqa"
-    },
-    {
-        "id": 10022,
-        "name": "EQC",
-        "slug": "eqc"
-    },
-    {
-        "id": 10229,
-        "name": "EQE",
-        "slug": "eqe"
-    },
-    {
-        "id": 10130,
-        "name": "EQS",
-        "slug": "eqs"
-    },
-    {
-        "id": 10271,
-        "name": "EQS SUV",
-        "slug": "eqs-suv"
-    },
-    {
-        "id": 10332,
-        "name": "EQV",
-        "slug": "eqv"
-    },
-    {
-        "id": 774,
-        "name": "G-Класс",
-        "slug": "g-klass"
-    },
-    {
-        "id": 5886,
-        "name": "G-Класс AMG",
-        "slug": "g-klass-amg"
-    },
-    {
-        "id": 1944,
-        "name": "GL-Класс",
-        "slug": "gl-klass"
-    },
-    {
-        "id": 5887,
-        "name": "GL-Класс AMG",
-        "slug": "gl-klass-amg"
-    },
-    {
-        "id": 2537,
-        "name": "GLA",
-        "slug": "gla"
-    },
-    {
-        "id": 5888,
-        "name": "GLA AMG",
-        "slug": "gla-amg"
-    },
-    {
-        "id": 10041,
-        "name": "GLB",
-        "slug": "glb"
-    },
-    {
-        "id": 2718,
-        "name": "GLC",
-        "slug": "glc"
-    },
-    {
-        "id": 5889,
-        "name": "GLC AMG",
-        "slug": "glc-amg"
-    },
-    {
-        "id": 5890,
-        "name": "GLC Coupe",
-        "slug": "glc-coupe"
-    },
-    {
-        "id": 5891,
-        "name": "GLC Coupe AMG",
-        "slug": "glc-coupe-amg"
-    },
-    {
-        "id": 2675,
-        "name": "GLE",
-        "slug": "gle"
-    },
-    {
-        "id": 5892,
-        "name": "GLE AMG",
-        "slug": "gle-amg"
-    },
-    {
-        "id": 5893,
-        "name": "GLE Coupe",
-        "slug": "gle-coupe"
-    },
-    {
-        "id": 5894,
-        "name": "GLE Coupe AMG",
-        "slug": "gle-coupe-amg"
-    },
-    {
-        "id": 2040,
-        "name": "GLK",
-        "slug": "glk"
-    },
-    {
-        "id": 5250,
-        "name": "GLS",
-        "slug": "gls"
-    },
-    {
-        "id": 5895,
-        "name": "GLS AMG",
-        "slug": "gls-amg"
-    },
-    {
-        "id": 789,
-        "name": "M-Класс",
-        "slug": "m-klass"
-    },
-    {
-        "id": 5904,
-        "name": "M-Класс AMG",
-        "slug": "m-klass-amg"
-    },
-    {
-        "id": 785,
-        "name": "Maybach",
-        "slug": "maybach"
-    },
-    {
-        "id": 10155,
-        "name": "Maybach GLS",
-        "slug": "maybach-gls"
-    },
-    {
-        "id": 5798,
-        "name": "MB",
-        "slug": "mb"
-    },
-    {
-        "id": 10217,
-        "name": "Metris",
-        "slug": "metris"
-    },
-    {
-        "id": 1837,
-        "name": "R-Класс",
-        "slug": "r-klass"
-    },
-    {
-        "id": 5896,
-        "name": "R-Класс AMG",
-        "slug": "r-klass-amg"
-    },
-    {
-        "id": 5897,
-        "name": "S-Класс",
-        "slug": "s-klass"
-    },
-    {
-        "id": 5898,
-        "name": "S-Класс AMG",
-        "slug": "s-klass-amg"
-    },
-    {
-        "id": 811,
-        "name": "SL",
-        "slug": "sl"
-    },
-    {
-        "id": 5899,
-        "name": "SL AMG",
-        "slug": "sl-amg"
-    },
-    {
-        "id": 5900,
-        "name": "SLC",
-        "slug": "slc"
-    },
-    {
-        "id": 5901,
-        "name": "SLC AMG",
-        "slug": "slc-amg"
-    },
-    {
-        "id": 812,
-        "name": "SLK",
-        "slug": "slk"
-    },
-    {
-        "id": 5902,
-        "name": "SLK AMG",
-        "slug": "slk-amg"
-    },
-    {
-        "id": 815,
-        "name": "SLR McLaren",
-        "slug": "slr-mclaren"
-    },
-    {
-        "id": 5761,
-        "name": "SLS AMG",
-        "slug": "sls-amg"
-    },
-    {
-        "id": 1910,
-        "name": "V-Класс",
-        "slug": "v-klass"
-    },
-    {
-        "id": 818,
-        "name": "Vaneo",
-        "slug": "vaneo"
-    },
-    {
-        "id": 820,
-        "name": "Viano",
-        "slug": "viano"
-    },
-    {
-        "id": 821,
-        "name": "Vito",
-        "slug": "vito"
-    },
-    {
-        "id": 10165,
-        "name": "W110",
-        "slug": "w110"
-    },
-    {
-        "id": 5903,
-        "name": "X-класс",
-        "slug": "x-klass"
-    }
-]
+{
+    "761": "190 (W201)",
+    "1642": "A-Класс",
+    "5878": "A-Класс AMG",
+    "5488": "AMG GT",
+    "1645": "B-Класс",
+    "5879": "C-Класс",
+    "5880": "C-Класс AMG",
+    "2526": "Citan",
+    "747": "CL",
+    "5881": "CL AMG",
+    "2444": "CLA",
+    "5882": "CLA AMG",
+    "2409": "CLC",
+    "751": "CLK",
+    "5883": "CLK AMG",
+    "1734": "CLS",
+    "5954": "CLS AMG",
+    "5884": "E-Класс",
+    "10361": "E-Класс All-Terrain",
+    "5885": "E-Класс AMG",
+    "10343": "EQA",
+    "10022": "EQC",
+    "10229": "EQE",
+    "10130": "EQS",
+    "10271": "EQS SUV",
+    "10332": "EQV",
+    "774": "G-Класс",
+    "5886": "G-Класс AMG",
+    "1944": "GL-Класс",
+    "5887": "GL-Класс AMG",
+    "2537": "GLA",
+    "5888": "GLA AMG",
+    "10041": "GLB",
+    "2718": "GLC",
+    "5889": "GLC AMG",
+    "5890": "GLC Coupe",
+    "5891": "GLC Coupe AMG",
+    "2675": "GLE",
+    "5892": "GLE AMG",
+    "5893": "GLE Coupe",
+    "5894": "GLE Coupe AMG",
+    "2040": "GLK",
+    "5250": "GLS",
+    "5895": "GLS AMG",
+    "789": "M-Класс",
+    "5904": "M-Класс AMG",
+    "785": "Maybach",
+    "10155": "Maybach GLS",
+    "5798": "MB",
+    "10217": "Metris",
+    "1837": "R-Класс",
+    "5896": "R-Класс AMG",
+    "5897": "S-Класс",
+    "5898": "S-Класс AMG",
+    "811": "SL",
+    "5899": "SL AMG",
+    "5900": "SLC",
+    "5901": "SLC AMG",
+    "812": "SLK",
+    "5902": "SLK AMG",
+    "815": "SLR McLaren",
+    "5761": "SLS AMG",
+    "1910": "V-Класс",
+    "818": "Vaneo",
+    "820": "Viano",
+    "821": "Vito",
+    "10165": "W110",
+    "5903": "X-класс"
+}
