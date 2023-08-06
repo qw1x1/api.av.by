@@ -6,10 +6,13 @@ import json
 class Select_car: # Fills in files: brand, model, generations.
 
     def __init__(self) -> None:
-        self.brand_id = 683
-        self.model_id = 5879
-        self.generations_id = 4508
-        self.user = User().random # Инициализация объекта UserAgent в объекте Select_car
+        self.brand_id = 0
+        self.model_id = 0
+        self.generations_id = 0
+        self.brand = 'brand.json'
+        self.model = 'model.json'
+        self.generations = 'generations.json'
+        self.user = User().random 
 
     # Пока в консоль :)
     @staticmethod
@@ -35,12 +38,12 @@ class Select_car: # Fills in files: brand, model, generations.
                     json.dump(data, s_file, indent=4, ensure_ascii=False)
 
     def __call__(self):
-        self.get_data_select_car('', 'brand.json')
-        self.brand_id = self.output_car('brand.json')
-        self.get_data_select_car(str(self.brand_id) +'/models', 'model.json')
-        self.model_id = self.output_car('model.json')
-        self.get_data_select_car(str(self.brand_id) +'/models/'+ str(self.model_id) +'/generations' , 'generations.json')
-        self.generations_id = self.output_car('generations.json')
+        self.get_data_select_car('', self.brand)
+        self.brand_id = self.output_car(self.brand)
+        self.get_data_select_car(str(self.brand_id) +'/models', self.model)
+        self.model_id = self.output_car(self.model)
+        self.get_data_select_car(str(self.brand_id) +'/models/'+ str(self.model_id) +'/generations' , self.generations)
+        self.generations_id = self.output_car(self.generations)
         return self.brand_id, self.model_id, self.generations_id
 
 # вход принимает: brand_id, model_id, generations_id
