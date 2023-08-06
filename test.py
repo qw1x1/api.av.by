@@ -117,15 +117,42 @@ import json
 #     print()
 #     print(data_brand[key])
 
-def output_car(file):
-    with open(file, 'r', encoding="utf-8") as file:
-        data = json.load(file)
-        for key, value in data.items():
-            print(key, value)
-        print()
+# def output_car(file):
+#     with open(file, 'r', encoding="utf-8") as file:
+#         data = json.load(file)
+#         for key, value in data.items():
+#             print(key, value)
+#         print()
 
-        key = str(input())
-        return data[key]
+#         key = str(input())
+#         return data[key]
     
-r = 'brand.json'
-print(output_car(r))
+# r = 'brand.json'
+# # print(output_car(r))
+
+
+#         self.brand_id = 683
+#         self.model_id = 5879
+#         self.generations_id = 4508  or str('brand_id') +'/models/'+ str('model_id') +'/generations'
+
+
+def get_data_select_car(self, params):
+    data = {}
+    respons_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items/' + params, headers={'user-agent': f'{self.user}'})
+    if respons_list.status_code == 200:
+        respons_data = json.loads(respons_list.text)
+        for i in range(len(respons_data)):
+            data[respons_data[i]['name']] = respons_data[i]['id'] 
+            with open('brand.json', 'w', encoding="utf-8") as file:
+                json.dump(data, file, indent=4, ensure_ascii=False)
+
+
+
+# params = str(683) +'/models'
+# param = str(683) +'/models/'+ str(5879) +'/generations'
+# get_brand_car_list(param)
+
+file = 'brand.json'
+
+
+
