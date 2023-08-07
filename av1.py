@@ -3,7 +3,7 @@ from fake_useragent import UserAgent as User
 from bs4 import BeautifulSoup as bs
 import json
 
-class Select_car: # Fills in files: brand, model, generations.
+class Select_car: # -> brand_id, model_id, generations_id
 
     def __init__(self) -> None:
         self.brand_id = 0

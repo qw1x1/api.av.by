@@ -136,15 +136,15 @@ import json
 #         self.generations_id = 4508  or str('brand_id') +'/models/'+ str('model_id') +'/generations'
 
 
-def get_data_select_car(self, params):
-    data = {}
-    respons_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items/' + params, headers={'user-agent': f'{self.user}'})
-    if respons_list.status_code == 200:
-        respons_data = json.loads(respons_list.text)
-        for i in range(len(respons_data)):
-            data[respons_data[i]['name']] = respons_data[i]['id'] 
-            with open('brand.json', 'w', encoding="utf-8") as file:
-                json.dump(data, file, indent=4, ensure_ascii=False)
+# def get_data_select_car(self, params):
+#     data = {}
+#     respons_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items/' + params, headers={'user-agent': f'{self.user}'})
+#     if respons_list.status_code == 200:
+#         respons_data = json.loads(respons_list.text)
+#         for i in range(len(respons_data)):
+#             data[respons_data[i]['name']] = respons_data[i]['id'] 
+#             with open('brand.json', 'w', encoding="utf-8") as file:
+#                 json.dump(data, file, indent=4, ensure_ascii=False)
 
 
 
@@ -152,7 +152,7 @@ def get_data_select_car(self, params):
 # param = str(683) +'/models/'+ str(5879) +'/generations'
 # get_brand_car_list(param)
 
-file = 'brand.json'
+# file = 'brand.json'
 
 
 
