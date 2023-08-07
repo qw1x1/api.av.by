@@ -18,5 +18,5 @@ price_usd[min]=3000&price_usd[max]=4000 - параметы для добавле
 Users:
     pk = int(id_user)
     percent_difference_in_price = int(value)
-    search_car_list = list[картеж выбраных авто для поиска, в виде картежа со вложенными dict{brand_id:'value', model_id:'value', generations_id:'value'}]
+    search_car_list = list[картеж выбраных авто для поиска, в виде картежа со вложенными dict{brand_id:'value', model_id:'value', generations_id:'value'}], если пользоватаель не указал параметр записываем 0
     price_range = list[int(min_value), int(max_value)] - Диапозон цен для поиска

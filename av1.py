@@ -2,6 +2,7 @@ import requests
 from fake_useragent import UserAgent as User
 from bs4 import BeautifulSoup as bs
 import json
+import math
 
 class Select_car: # -> brand_id, model_id, generations_id
 
@@ -45,6 +46,24 @@ class Select_car: # -> brand_id, model_id, generations_id
         self.get_data_select_car(str(self.brand_id) +'/models/'+ str(self.model_id) +'/generations' , self.generations)
         self.generations_id = self.output_car(self.generations)
         return self.brand_id, self.model_id, self.generations_id
+    
+class Pars_info_id_file():
+    def __init__(self, *args) -> None:
+        self.brand_id, self.model_id, self.generations_id = args[0], args[1], args[2]
+        pass
+
+    def get_page(self):
+        params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'brands[0][generation]': self.generations_id, 'condition[0]': 2, 'sort': 2}
+        respons_page = requests.get('https://cars.av.by/filter?', params=params)
+        # После запроса записываем ответ в файл т.к respons_page перезапишиться на некст итерации если она будет и распарсиваем его 
+        # После первого запроса нужно распарсить страницу и достать количестро объявлений и разделить на 25 с округлением в большую сторону полусим число страниц / cout_ad - кол-во объявлений
+        count_page = math.ceil( cout_ad / 25)
+        if count_page > 1:
+            for page in range(2, count_page):
+                params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'brands[0][generation]': self.generations_id, 'condition[0]': 2, 'page': page, 'sort': 2}
+                respons_page = requests.get('https://cars.av.by/filter?', params=params)
+                # После запроса записываем ответ в файл т.к respons_page перезапишиться на некст итерации и распарсиваем его 
+        return page
 
 # вход принимает: brand_id, model_id, generations_id
 def get_page_car(*args):
@@ -63,8 +82,13 @@ def get_page_car(*args):
         with open('page.htm', 'w', encoding="utf-8") as htm:
             data = htm.write(page_htm.text)
 
-obj = Select_car()
 
-car_crit = obj()
-print(car_crit[0], car_crit[1], car_crit[2])
-# get_page_car(car_crit[0], car_crit[1], car_crit[2])
+def main():
+    obj = Select_car()
+    car_crit = obj()
+    print(car_crit[0], car_crit[1], car_crit[2])
+    # get_page_car(car_crit[0], car_crit[1], car_crit[2])
+
+
+if __name__ == "__main__":
+	main()

@@ -1,5 +1,9 @@
-import requests 
+import requests
+from fake_useragent import UserAgent as User
+from bs4 import BeautifulSoup as bs
 import json
+import math
+
 
 # car_dict = {}
 
@@ -153,6 +157,9 @@ import json
 # get_brand_car_list(param)
 
 # file = 'brand.json'
+
+
+print(math.ceil( 101 / 25))
 
 
 
