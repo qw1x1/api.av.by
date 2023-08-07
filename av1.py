@@ -4,20 +4,18 @@ from bs4 import BeautifulSoup as bs
 import json
 import math
 
-class Select_car: # -> brand_id, model_id, generations_id
+class Select_car: # -> brand_id, model_id
 
     def __init__(self) -> None:
         self.brand_id = 0
         self.model_id = 0
-        self.generations_id = 0
         self.brand = 'brand.json'
         self.model = 'model.json'
-        self.generations = 'generations.json'
         self.user = User().random 
 
     # Пока в консоль :)
     @staticmethod
-    def output_car(file):
+    def output_car(file): # -> id
         with open(file, 'r', encoding="utf-8") as file:
             data = json.load(file)
             for key, value in data.items():
@@ -38,56 +36,60 @@ class Select_car: # -> brand_id, model_id, generations_id
                 with open(file, 'w', encoding="utf-8") as s_file:
                     json.dump(data, s_file, indent=4, ensure_ascii=False)
 
-    def __call__(self):
-        self.get_data_select_car('', self.brand)
+    def __call__(self): # -> brand_id, model_id
         self.brand_id = self.output_car(self.brand)
         self.get_data_select_car(str(self.brand_id) +'/models', self.model)
         self.model_id = self.output_car(self.model)
-        self.get_data_select_car(str(self.brand_id) +'/models/'+ str(self.model_id) +'/generations' , self.generations)
-        self.generations_id = self.output_car(self.generations)
-        return self.brand_id, self.model_id, self.generations_id
+        return self.brand_id, self.model_id
     
 class Pars_info_id_file():
-    def __init__(self, *args) -> None:
-        self.brand_id, self.model_id, self.generations_id = args[0], args[1], args[2]
-        pass
+    
+    def __init__(self, year_min=1910, year_max = 2023, price_min = 0, price_max = 0, *args) -> None:
+        self.year_min = year_min
+        self.year_max = year_max
+        self.price_min = price_min
+        self.price_max = price_max
+        self.brand_id, self.model_id = args[0], args[1]
 
-    def get_page(self):
-        params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'brands[0][generation]': self.generations_id, 'condition[0]': 2, 'sort': 2}
+    def get_page(self): # -> 1 page
+        cout_ad = 1
+        params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'sort': 2}
         respons_page = requests.get('https://cars.av.by/filter?', params=params)
         # После запроса записываем ответ в файл т.к respons_page перезапишиться на некст итерации если она будет и распарсиваем его 
         # После первого запроса нужно распарсить страницу и достать количестро объявлений и разделить на 25 с округлением в большую сторону полусим число страниц / cout_ad - кол-во объявлений
         count_page = math.ceil( cout_ad / 25)
         if count_page > 1:
             for page in range(2, count_page):
-                params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'brands[0][generation]': self.generations_id, 'condition[0]': 2, 'page': page, 'sort': 2}
+                params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'page': page, 'sort': 2}
                 respons_page = requests.get('https://cars.av.by/filter?', params=params)
                 # После запроса записываем ответ в файл т.к respons_page перезапишиться на некст итерации и распарсиваем его 
         return page
+    
+    def pars_renspons_page_data(self, respons_page):
+        pass
 
-# вход принимает: brand_id, model_id, generations_id
-def get_page_car(*args):
-    if args[0] == 0 and args[1] == 0 and args[2] == 0:
-        params = {'condition[0]': 2, 'sort': 2}
-    elif args[0] != 0 and args[1] == 0 and args[2] == 0:
-        params = {'brands[0][brand]': args[0], 'condition[0]': 2, 'sort': 2}
-    elif args[0] != 0 and args[1] != 0 and args[2] == 0:
-        params = {'brands[0][brand]': args[0], 'brands[0][model]': args[1], 'condition[0]': 2, 'sort': 2}
-    elif args[0] != 0 and args[1] != 0 and args[2] != 0:
-        params = {'brands[0][brand]': args[0], 'brands[0][model]': args[1], 'brands[0][generation]': args[2], 'condition[0]': 2, 'sort': 2}
+# вход принимает: brand_id, model_id
+# def get_page_car(*args):
+#     if args[0] == 0 and args[1] == 0 and args[2] == 0:
+#         params = {'condition[0]': 2, 'sort': 2}
+#     elif args[0] != 0 and args[1] == 0 and args[2] == 0:
+#         params = {'brands[0][brand]': args[0], 'condition[0]': 2, 'sort': 2}
+#     elif args[0] != 0 and args[1] != 0 and args[2] == 0:
+#         params = {'brands[0][brand]': args[0], 'brands[0][model]': args[1], 'condition[0]': 2, 'sort': 2}
+#     elif args[0] != 0 and args[1] != 0 and args[2] != 0:
+#         params = {'brands[0][brand]': args[0], 'brands[0][model]': args[1], 'brands[0][generation]': args[2], 'condition[0]': 2, 'sort': 2}
 
-    page_htm = requests.get('https://cars.av.by/filter?', params=params)
-    # Если страница получина, записываем данные в файл (нужно дороботать сбор со всех имеющихся страниц) + распасить и подготовить данные для оброботки
-    if page_htm.status_code == 200:
-        with open('page.htm', 'w', encoding="utf-8") as htm:
-            data = htm.write(page_htm.text)
+    # page_htm = requests.get('https://cars.av.by/filter?', params=params)
+    # # Если страница получина, записываем данные в файл (нужно дороботать сбор со всех имеющихся страниц) + распасить и подготовить данные для оброботки
+    # if page_htm.status_code == 200:
+    #     with open('page.htm', 'w', encoding="utf-8") as htm:
+    #         data = htm.write(page_htm.text)
 
 
 def main():
     obj = Select_car()
     car_crit = obj()
-    print(car_crit[0], car_crit[1], car_crit[2])
-    # get_page_car(car_crit[0], car_crit[1], car_crit[2])
+    print(car_crit[0], car_crit[1])
 
 
 if __name__ == "__main__":

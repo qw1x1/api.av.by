@@ -159,7 +159,11 @@ import math
 # file = 'brand.json'
 
 
-print(math.ceil( 101 / 25))
+
+
+# params = {'brands[0][brand]': 6, 'brands[0][model]': 10,  'year[min]': 1970, 'year[max]': 2023, 'price_usd[min]': 0, 'price_usd[max]': 0, 'condition[0]': 2, 'page': 0, 'sort': 2}
+# respons_page = requests.get('https://cars.av.by/filter?', params=params)
+# print(respons_page.status_code)
 
 
 
