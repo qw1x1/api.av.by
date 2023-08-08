@@ -165,21 +165,24 @@ import math
 # respons_page = requests.get('https://cars.av.by/filter?', params=params)
 # print(respons_page.status_code)
 
+file = 'page.htm'
 
-
-
-
-with open('page.htm', 'r', encoding="utf-8") as htm:
+with open(file, 'r', encoding="utf-8") as htm:
     data_soup = bs(htm, 'lxml')
-# Колво объявлений
-print(data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text)
-# инфа о конкретной тачке
-print(data_soup.find(class_="listing__items").find(class_="listing-item__wrap").find(class_="listing-item__about").text,
-    data_soup.find(class_="listing__items").find(class_="listing-item__wrap").find(class_="listing-item__about").find('a', class_="listing-item__link").get('href'),
-    data_soup.find(class_="listing__items").find(class_="listing-item__wrap").find(class_="listing-item__params").text,
-    data_soup.find(class_="listing__items").find(class_="listing-item__wrap").find(class_="listing-item__prices").find(class_="listing-item__priceusd").text,
-    data_soup.find(class_="listing__items").find(class_="listing-item__wrap").find(class_="listing-item__message").text,
-    data_soup.find(class_="listing__items").find(class_="listing-item__wrap").find(class_="listing-item__info").text, sep='\n')
-print()
+    
+collum_ad = int("".join(c for c in data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text if  c.isdecimal()))
 
+for result in data_soup.find(class_="listing__items").find_all('div', class_="listing-item__wrap"):
+   
+    name_car = result.find('div', class_="listing-item__about").text
+    link_car = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
+    params_to_car = result.find(class_="listing-item__params").text
+    car_mileage = result.find('div', class_="listing-item__params").find('span').text
+    price_car = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
+    if result.find(class_="listing-item__message"):
+        description_car = result.find(class_="listing-item__message").text[:150]
+    location = result.find(class_="listing-item__info").find(class_="listing-item__location").text
+    print(name_car, link_car, params_to_car, car_mileage, price_car, description_car, location, sep='\n')
+    print()
+print(collum_ad, type(collum_ad))
 

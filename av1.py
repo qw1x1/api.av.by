@@ -52,14 +52,15 @@ class Pars_info_id_file():
         self.brand_id, self.model_id = args[0], args[1]
 
     def get_page(self): # -> 1 page
-        cout_ad = 1
         params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'sort': 2}
         respons_page = requests.get('https://cars.av.by/filter?', params=params)
+        data_soup = bs(respons_page, 'lxml')
+        self.count_page = data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text
         # После запроса записываем ответ в файл т.к respons_page перезапишиться на некст итерации если она будет и распарсиваем его 
         # После первого запроса нужно распарсить страницу и достать количестро объявлений и разделить на 25 с округлением в большую сторону полусим число страниц / cout_ad - кол-во объявлений
-        count_page = math.ceil( cout_ad / 25)
-        if count_page > 1:
-            for page in range(2, count_page):
+        self.count_page = math.ceil( cout_ad / 25)
+        if self.count_page > 1:
+            for page in range(2, self.count_page + 2):
                 params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'page': page, 'sort': 2}
                 respons_page = requests.get('https://cars.av.by/filter?', params=params)
                 # После запроса записываем ответ в файл т.к respons_page перезапишиться на некст итерации и распарсиваем его 
@@ -89,7 +90,7 @@ class Pars_info_id_file():
 def main():
     obj = Select_car()
     car_crit = obj()
-    print(car_crit[0], car_crit[1])
+    print(car_crit[0], car_crit[1], car_crit[2])
 
 
 if __name__ == "__main__":
