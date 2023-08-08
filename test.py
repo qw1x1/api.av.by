@@ -168,10 +168,12 @@ import math
 
 
 
-# инфа о конкретной тачке
+
 with open('page.htm', 'r', encoding="utf-8") as htm:
     data_soup = bs(htm, 'lxml')
-# print(data_soup.title.text, data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text)
+# Колво объявлений
+print(data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text)
+# инфа о конкретной тачке
 print(data_soup.find(class_="listing__items").find(class_="listing-item__wrap").find(class_="listing-item__about").text,
     data_soup.find(class_="listing__items").find(class_="listing-item__wrap").find(class_="listing-item__about").find('a', class_="listing-item__link").get('href'),
     data_soup.find(class_="listing__items").find(class_="listing-item__wrap").find(class_="listing-item__params").text,
