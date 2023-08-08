@@ -1,0 +1,482 @@
+[
+    {
+        "id": 10297,
+        "name": "Abarth",
+        "slug": "abarth"
+    },
+    {
+        "id": 1444,
+        "name": "Acura",
+        "slug": "acura"
+    },
+    {
+        "id": 1,
+        "name": "Alfa Romeo",
+        "slug": "alfa-romeo"
+    },
+    {
+        "id": 5940,
+        "name": "Alpina",
+        "slug": "alpina"
+    },
+    {
+        "id": 5324,
+        "name": "ARO",
+        "slug": "aro"
+    },
+    {
+        "id": 5772,
+        "name": "Asia",
+        "slug": "asia"
+    },
+    {
+        "id": 2325,
+        "name": "Aston Martin",
+        "slug": "aston-martin"
+    },
+    {
+        "id": 6,
+        "name": "Audi",
+        "slug": "audi"
+    },
+    {
+        "id": 10346,
+        "name": "Avatr",
+        "slug": "avart"
+    },
+    {
+        "id": 10034,
+        "name": "BAIC ",
+        "slug": "baic"
+    },
+    {
+        "id": 10337,
+        "name": "Baojun",
+        "slug": "baojun"
+    },
+    {
+        "id": 1676,
+        "name": "Bentley",
+        "slug": "bentley"
+    },
+    {
+        "id": 8,
+        "name": "BMW",
+        "slug": "bmw"
+    },
+    {
+        "id": 2210,
+        "name": "Brilliance",
+        "slug": "brilliance"
+    },
+    {
+        "id": 1506,
+        "name": "Buick",
+        "slug": "buick"
+    },
+    {
+        "id": 5459,
+        "name": "BYD",
+        "slug": "byd"
+    },
+    {
+        "id": 40,
+        "name": "Cadillac",
+        "slug": "cadillac"
+    },
+    {
+        "id": 2632,
+        "name": "Changan",
+        "slug": "changan"
+    },
+    {
+        "id": 1998,
+        "name": "Chery",
+        "slug": "chery"
+    },
+    {
+        "id": 41,
+        "name": "Chevrolet",
+        "slug": "chevrolet"
+    },
+    {
+        "id": 42,
+        "name": "Chrysler",
+        "slug": "chrysler"
+    },
+    {
+        "id": 43,
+        "name": "Citroen",
+        "slug": "citroen"
+    },
+    {
+        "id": 10236,
+        "name": "Cupra",
+        "slug": "cupra"
+    },
+    {
+        "id": 1841,
+        "name": "Dacia",
+        "slug": "dacia"
+    },
+    {
+        "id": 46,
+        "name": "Daewoo",
+        "slug": "daewoo"
+    },
+    {
+        "id": 47,
+        "name": "Daihatsu",
+        "slug": "daihatsu"
+    },
+    {
+        "id": 2578,
+        "name": "Datsun",
+        "slug": "datsun"
+    },
+    {
+        "id": 10287,
+        "name": "Denza",
+        "slug": "denza"
+    },
+    {
+        "id": 5109,
+        "name": "Derways",
+        "slug": "derways"
+    },
+    {
+        "id": 45,
+        "name": "Dodge",
+        "slug": "dodge"
+    },
+    {
+        "id": 5780,
+        "name": "Dongfeng",
+        "slug": "dong-feng"
+    },
+    {
+        "id": 10106,
+        "name": "Dongfeng Honda",
+        "slug": "dongfeng-honda"
+    },
+    {
+        "id": 10240,
+        "name": "Eagle",
+        "slug": "eagle"
+    },
+    {
+        "id": 10224,
+        "name": "Everus",
+        "slug": "everus"
+    },
+    {
+        "id": 10303,
+        "name": "EXEED",
+        "slug": "exeed"
+    },
+    {
+        "id": 2465,
+        "name": "FAW",
+        "slug": "faw"
+    },
+    {
+        "id": 288,
+        "name": "Ferrari",
+        "slug": "ferrari"
+    },
+    {
+        "id": 301,
+        "name": "Fiat",
+        "slug": "fiat"
+    },
+    {
+        "id": 2323,
+        "name": "Fisker",
+        "slug": "fisker"
+    },
+    {
+        "id": 330,
+        "name": "Ford",
+        "slug": "ford"
+    },
+    {
+        "id": 2355,
+        "name": "Foton",
+        "slug": "foton"
+    },
+    {
+        "id": 5526,
+        "name": "FSO",
+        "slug": "fso"
+    },
+    {
+        "id": 10131,
+        "name": "GAC",
+        "slug": "gac"
+    },
+    {
+        "id": 10222,
+        "name": "GAC Honda",
+        "slug": "gac-honda"
+    },
+    {
+        "id": 2012,
+        "name": "Geely",
+        "slug": "geely"
+    },
+    {
+        "id": 10006,
+        "name": "Genesis",
+        "slug": "genesis"
+    },
+    {
+        "id": 372,
+        "name": "GMC",
+        "slug": "gmc"
+    },
+    {
+        "id": 6005,
+        "name": "Gonow",
+        "slug": "gonow"
+    },
+    {
+        "id": 1726,
+        "name": "Great Wall",
+        "slug": "great-wall"
+    },
+    {
+        "id": 2215,
+        "name": "Hafei",
+        "slug": "hafei"
+    },
+    {
+        "id": 5070,
+        "name": "Haima",
+        "slug": "haima"
+    },
+    {
+        "id": 5782,
+        "name": "Haval",
+        "slug": "haval"
+    },
+    {
+        "id": 10279,
+        "name": "HiPhi",
+        "slug": "hiphi"
+    },
+    {
+        "id": 383,
+        "name": "Honda",
+        "slug": "honda"
+    },
+    {
+        "id": 10275,
+        "name": "Hongqi",
+        "slug": "hongqi"
+    },
+    {
+        "id": 2681,
+        "name": "Hongxing",
+        "slug": "hongxing"
+    },
+    {
+        "id": 10259,
+        "name": "Hozon",
+        "slug": "hozon"
+    },
+    {
+        "id": 1498,
+        "name": "Hummer",
+        "slug": "hummer"
+    },
+    {
+        "id": 10326,
+        "name": "Hycan",
+        "slug": "hycan"
+    },
+    {
+        "id": 433,
+        "name": "Hyundai",
+        "slug": "hyundai"
+    },
+    {
+        "id": 1343,
+        "name": "Infiniti",
+        "slug": "infiniti"
+    },
+    {
+        "id": 2022,
+        "name": "Iran Khodro",
+        "slug": "iran-khodro"
+    },
+    {
+        "id": 461,
+        "name": "Isuzu",
+        "slug": "isuzu"
+    },
+    {
+        "id": 2030,
+        "name": "JAC",
+        "slug": "jac"
+    },
+    {
+        "id": 526,
+        "name": "Jaguar",
+        "slug": "jaguar"
+    },
+    {
+        "id": 540,
+        "name": "Jeep",
+        "slug": "jeep"
+    },
+    {
+        "id": 10362,
+        "name": "Jetour",
+        "slug": "jetour"
+    },
+    {
+        "id": 2272,
+        "name": "Jiangling",
+        "slug": "jiangling"
+    },
+    {
+        "id": 10188,
+        "name": "Joylong",
+        "slug": "joylong"
+    },
+    {
+        "id": 10238,
+        "name": "Kandi",
+        "slug": "kandi"
+    },
+    {
+        "id": 545,
+        "name": "Kia",
+        "slug": "kia"
+    },
+    {
+        "id": 1279,
+        "name": "Lada (ВАЗ)",
+        "slug": "lada-vaz"
+    },
+    {
+        "id": 2437,
+        "name": "Lamborghini",
+        "slug": "lamborghini"
+    },
+    {
+        "id": 572,
+        "name": "Lancia",
+        "slug": "lancia"
+    },
+    {
+        "id": 584,
+        "name": "Land Rover",
+        "slug": "land-rover"
+    },
+    {
+        "id": 10268,
+        "name": "Leapmotor",
+        "slug": "leapmotor"
+    },
+    {
+        "id": 589,
+        "name": "Lexus",
+        "slug": "lexus"
+    },
+    {
+        "id": 2586,
+        "name": "Lifan",
+        "slug": "lifan"
+    },
+    {
+        "id": 601,
+        "name": "Lincoln",
+        "slug": "lincoln"
+    },
+    {
+        "id": 10209,
+        "name": "LiXiang",
+        "slug": "lixiang"
+    },
+    {
+        "id": 2295,
+        "name": "Lotus",
+        "slug": "lotus"
+    },
+    {
+        "id": 5957,
+        "name": "Mahindra",
+        "slug": "mahindra"
+    },
+    {
+        "id": 1625,
+        "name": "Maserati",
+        "slug": "maserati"
+    },
+    {
+        "id": 2169,
+        "name": "Maybach",
+        "slug": "maybach"
+    },
+    {
+        "id": 634,
+        "name": "Mazda",
+        "slug": "mazda"
+    },
+    {
+        "id": 5970,
+        "name": "McLaren",
+        "slug": "mclaren"
+    },
+    {
+        "id": 683,
+        "name": "Mercedes-Benz",
+        "slug": "mercedes-benz"
+    },
+    {
+        "id": 825,
+        "name": "Mercury",
+        "slug": "mercury"
+    },
+    {
+        "id": 1906,
+        "name": "MG",
+        "slug": "mg"
+    },
+    {
+        "id": 10090,
+        "name": "Microcar",
+        "slug": "microcar"
+    },
+    {
+        "id": 1850,
+        "name": "MINI",
+        "slug": "mini"
+    },
+    {
+        "id": 834,
+        "name": "Mitsubishi",
+        "slug": "mitsubishi"
+    },
+    {
+        "id": 5937,
+        "name": "Morgan",
+        "slug": "morgan"
+    },
+    {
+        "id": 892,
+        "name": "Nissan",
+        "slug": "nissan"
+    },
+    {
+        "id": 1364,
+        "name": "Oldsmobile",
+        "slug": "oldsmobile"
+    },
+    {
+        "id": 966,
+        "name": "Opel",
+        "slug": "opel"
+    }
+]
