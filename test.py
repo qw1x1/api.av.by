@@ -167,22 +167,82 @@ import math
 
 file = 'page.htm'
 
-with open(file, 'r', encoding="utf-8") as htm:
-    data_soup = bs(htm, 'lxml')
+# with open(file, 'r', encoding="utf-8") as htm:
+#     data_soup = bs(htm, 'lxml')
     
-collum_ad = int("".join(c for c in data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text if  c.isdecimal()))
+# count_ad = int("".join(count for count in data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text if  count.isdecimal()))
 
-for result in data_soup.find(class_="listing__items").find_all('div', class_="listing-item__wrap"):
-   
-    name_car = result.find('div', class_="listing-item__about").text
-    link_car = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
-    params_to_car = result.find(class_="listing-item__params").text
-    car_mileage = result.find('div', class_="listing-item__params").find('span').text
-    price_car = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
-    if result.find(class_="listing-item__message"):
-        description_car = result.find(class_="listing-item__message").text[:150]
-    location = result.find(class_="listing-item__info").find(class_="listing-item__location").text
-    print(name_car, link_car, params_to_car, car_mileage, price_car, description_car, location, sep='\n')
-    print()
-print(collum_ad, type(collum_ad))
+# for result in data_soup.find(class_="listing__items").find_all('div', class_="listing-item__wrap"):
+#     name_car = result.find('div', class_="listing-item__about").text
+#     link_car = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
+#     params_to_car = result.find(class_="listing-item__params").text
+#     car_mileage = result.find('div', class_="listing-item__params").find('span').text
+#     price_car = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
+#     if result.find(class_="listing-item__message"):
+#         description_car = result.find(class_="listing-item__message").text[:150]
+#     location = result.find(class_="listing-item__info").find(class_="listing-item__location").text
+#     print(name_car, link_car, params_to_car, car_mileage, price_car, description_car, location, sep='\n')
+#     print()
+# print(count_ad)
 
+
+
+# with open(file, 'a', encoding="utf-8") as s_file:
+#      json.dump(car_list, s_file, indent=4, ensure_ascii=False)
+
+
+# Принимет 1 страницу и генирирует словать с авто с полученой страницы
+# param = 1, тогда нам отдаст количество страниц, иначе не отдаст 
+def get_car_dict( page, param):
+    car_list = []
+    respons_list = []
+    with open(page, 'r', encoding="utf-8") as htm:
+        data_soup = bs(htm, 'lxml')
+        if param == 1:
+            count_ad = int("".join(count for count in data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text if  count.isdecimal()))
+            respons_list = [count_ad]
+        for result in data_soup.find(class_="listing__items").find_all('div', class_="listing-item__wrap"):
+            name_car = result.find('div', class_="listing-item__about").text
+            link_car = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
+            params_to_car = result.find(class_="listing-item__params").text
+            car_mileage = result.find('div', class_="listing-item__params").find('span').text
+            price_car = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
+            # if result.find(class_="listing-item__message"):
+            description_car = 0 #result.find(class_="listing-item__message").text[:150]
+            location = result.find(class_="listing-item__info").find(class_="listing-item__location").text
+
+            car_list.append({'name':name_car, 'lank':link_car, 'parametrs': params_to_car, 'mileage': car_mileage, 'price': price_car, 'description': description_car, 'location': location})
+        
+        with open('car.json', 'a', encoding="utf-8") as s_file:
+            json.dump(car_list, s_file, indent=4, ensure_ascii=False)
+    return  respons_list
+
+# count = get_car_dict('page.htm', param = 0)
+
+# if bool(count) is True:
+#     print(count[0])
+
+
+
+def get_page(): # -> 1 page
+    params = {'brands[0][brand]': 6, 'brands[0][model]': 10, 'year[min]': 1890, 'year[max]': 2023, 'price_usd[min]': 100, 'price_usd[max]': 30000, 'condition[0]': 2, 'sort': 2}
+    respons_page = requests.get('https://cars.av.by/filter?', params=params)
+    if respons_page.status_code == 200:
+        with open('page.htm', 'w', encoding="utf-8") as htm:
+            htm.write(respons_page.text)
+            cout_ad = get_car_dict('page.htm', param = 1)[0]
+    # После запроса записываем ответ в файл т.к respons_page перезапишиться на некст итерации если она будет и распарсиваем его 
+    # После первого запроса нужно распарсить страницу и достать количестро объявлений и разделить на 25 с округлением в большую сторону полусим число страниц / cout_ad - кол-во объявлений
+    count_page = math.ceil( cout_ad / 25)
+    if count_page > 1:
+        for page in range(2, count_page + 2):
+            params = {'brands[0][brand]': 6, 'brands[0][model]': 10, 'year[min]': 1980, 'year[max]': 2023, 'price_usd[min]': 100, 'price_usd[max]': 30000, 'condition[0]': 2, 'page': page, 'sort': 2}
+            respons_page = requests.get('https://cars.av.by/filter?', params=params)
+            if respons_page.status_code == 200:
+                with open('page.htm', 'w', encoding="utf-8") as htm:
+                    htm.write(respons_page.text)
+                    cout_ad = get_car_dict('page.htm', param = 0)
+            # После запроса записываем ответ в файл т.к respons_page перезапишиться на некст итерации и распарсиваем его 
+    return page
+
+get_page()
