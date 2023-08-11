@@ -193,7 +193,7 @@ file = 'page.htm'
 
 # Принимет 1 страницу и генирирует словать с авто с полученой страницы
 # param = 1, тогда нам отдаст количество страниц, иначе не отдаст 
-def get_car_dict( page, param):
+def get_car_dict(page, param):
     car_list = []
     respons_list = []
     with open(page, 'r', encoding="utf-8") as htm:
@@ -217,13 +217,6 @@ def get_car_dict( page, param):
             json.dump(car_list, s_file, indent=4, ensure_ascii=False)
     return  respons_list
 
-# count = get_car_dict('page.htm', param = 0)
-
-# if bool(count) is True:
-#     print(count[0])
-
-
-
 def get_page(): # -> 1 page
     params = {'brands[0][brand]': 6, 'brands[0][model]': 10, 'year[min]': 1890, 'year[max]': 2023, 'price_usd[min]': 100, 'price_usd[max]': 30000, 'condition[0]': 2, 'sort': 2}
     respons_page = requests.get('https://cars.av.by/filter?', params=params)
@@ -231,8 +224,7 @@ def get_page(): # -> 1 page
         with open('page.htm', 'w', encoding="utf-8") as htm:
             htm.write(respons_page.text)
             cout_ad = get_car_dict('page.htm', param = 1)[0]
-    # После запроса записываем ответ в файл т.к respons_page перезапишиться на некст итерации если она будет и распарсиваем его 
-    # После первого запроса нужно распарсить страницу и достать количестро объявлений и разделить на 25 с округлением в большую сторону полусим число страниц / cout_ad - кол-во объявлений
+    
     count_page = math.ceil( cout_ad / 25)
     if count_page > 1:
         for page in range(2, count_page + 2):
@@ -242,7 +234,6 @@ def get_page(): # -> 1 page
                 with open('page.htm', 'w', encoding="utf-8") as htm:
                     htm.write(respons_page.text)
                     cout_ad = get_car_dict('page.htm', param = 0)
-            # После запроса записываем ответ в файл т.к respons_page перезапишиться на некст итерации и распарсиваем его 
     return page
 
 get_page()

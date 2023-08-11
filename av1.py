@@ -89,6 +89,7 @@ class Pars_info_id_file():
 
 def main():
     obj = Select_car()
+
     car_crit = obj()
     print(car_crit[0], car_crit[1], car_crit[2])
 
