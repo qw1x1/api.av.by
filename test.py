@@ -1,3 +1,4 @@
+from typing import Any
 import requests
 from fake_useragent import UserAgent as User
 from bs4 import BeautifulSoup as bs
@@ -165,7 +166,7 @@ import math
 # respons_page = requests.get('https://cars.av.by/filter?', params=params)
 # print(respons_page.status_code)
 
-file = 'page.htm'
+# file = 'page.htm'
 
 # with open(file, 'r', encoding="utf-8") as htm:
 #     data_soup = bs(htm, 'lxml')
@@ -246,45 +247,155 @@ file = 'page.htm'
 
 
 
-
-def get_car_dict(data_soup, param = 0):
-    car_list = []
-    respons_list = []
-
-    if param == 1:
-        count_ad = int("".join(count for count in data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text if  count.isdecimal()))
-        respons_list = [count_ad]
-    for result in data_soup.find(class_="listing__items").find_all('div', class_="listing-item__wrap"):
-        name_car = result.find('div', class_="listing-item__about").text
-        link_car = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
-        params_to_car = result.find(class_="listing-item__params").text
-        car_mileage = result.find('div', class_="listing-item__params").find('span').text
-        price_car = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
-        if result.find(class_="listing-item__message"):
-            description_car = result.find(class_="listing-item__message").text[:150]
-        location = result.find(class_="listing-item__info").find(class_="listing-item__location").text
-
-        car_list.append({'name':name_car, 'lank':link_car, 'parametrs': params_to_car, 'mileage': car_mileage, 'price': price_car, 'description': description_car, 'location': location})
+# car = []
+# def get_car_dict(data_soup, param = 0):
+#     car_list, respons_list = [], []
     
-    with open('car.json', 'a', encoding="utf-8") as s_file:
-        json.dump(car_list, s_file, indent=4, ensure_ascii=False)
-    return  respons_list
+#     if param == 1:
+#         count_ad = int("".join(count for count in data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text if  count.isdecimal()))
+#         respons_list = [count_ad]
+#     for result in data_soup.find(class_="listing__items").find_all('div', class_="listing-item__wrap"):
+#         name_car = result.find('div', class_="listing-item__about").text
+#         link_car = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
+#         params_to_car = result.find(class_="listing-item__params").text
+#         car_mileage = result.find('div', class_="listing-item__params").find('span').text
+#         price_car = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
+#         if result.find(class_="listing-item__message"):
+#             description_car = result.find(class_="listing-item__message").text[:150]
+#         location = result.find(class_="listing-item__info").find(class_="listing-item__location").text
 
-def get_page(): # -> 1 page
-    params = {'brands[0][brand]': 1, 'brands[0][model]': 3, 'year[min]': 1890, 'year[max]': 2023, 'price_usd[min]': 100, 'price_usd[max]': 3000000, 'condition[0]': 2, 'sort': 2}
-    respons_page = requests.get('https://cars.av.by/filter?', params=params)
-    if respons_page.status_code == 200:
-        data_soup = bs(respons_page.text, 'lxml')
-        cout_ad = get_car_dict(data_soup, param = 1)[0]
+#         car_list.append({'name':name_car, 'lank':link_car, 'parametrs': params_to_car, 'mileage': car_mileage, 'price': price_car, 'description': description_car, 'location': location})
+
+
+#     car.append(car_list)
+#     print(len(car))
+
+
+#     with open('car.json', 'a', encoding="utf-8") as s_file:
+#         json.dump(car_list, s_file, indent=4, ensure_ascii=False)
+#     return  respons_list
+
+# def get_page(): # -> 1 page
+#     params = {'brands[0][brand]': 6, 'brands[0][model]': 2278, 'year[min]': 1890, 'year[max]': 2023, 'price_usd[min]': 100, 'price_usd[max]': 3000000, 'condition[0]': 2, 'sort': 2}
+#     respons_page = requests.get('https://cars.av.by/filter?', params=params)
+#     if respons_page.status_code == 200:
+#         data_soup = bs(respons_page.text, 'lxml')
+#         cout_ad = get_car_dict(data_soup, param = 1)[0]
     
-    count_page = math.ceil(cout_ad / 25)
-    if count_page > 1:
-        for page in range(2, count_page + 1):
-            print(0)
-            params = {'brands[0][brand]': 1, 'brands[0][model]': 3, 'year[min]': 1980, 'year[max]': 2023, 'price_usd[min]': 100, 'price_usd[max]': 3000000, 'condition[0]': 2, 'page': page, 'sort': 2}
-            respons_page = requests.get('https://cars.av.by/filter?', params=params)
-            if respons_page.status_code == 200:
-                data_soup = bs(respons_page.text, 'lxml')
-                cout_ad = get_car_dict(data_soup)
+#     count_page = math.ceil(cout_ad / 25)
+#     if count_page > 1:
+#         for page in range(2, count_page + 1):
+#             params = {'brands[0][brand]': 6, 'brands[0][model]': 2278, 'year[min]': 1980, 'year[max]': 2023, 'price_usd[min]': 100, 'price_usd[max]': 3000000, 'condition[0]': 2, 'page': page, 'sort': 2}
+#             respons_page = requests.get('https://cars.av.by/filter?', params=params)
+#             if respons_page.status_code == 200:
+#                 data_soup = bs(respons_page.text, 'lxml')
+#                 cout_ad = get_car_dict(data_soup)
 
-get_page()
+# get_page()
+
+
+
+
+
+
+
+
+
+# car = []
+# def get_car_dict(data_soup, param = 0):
+#     car_list, respons_list = [], []
+    
+#     if param == 1:
+#         count_ad = int("".join(count for count in data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text if  count.isdecimal()))
+#         respons_list = [count_ad]
+#     for result in data_soup.find(class_="listing__items").find_all('div', class_="listing-item__wrap"):
+#         name_car = result.find('div', class_="listing-item__about").text
+#         link_car = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
+#         params_to_car = result.find(class_="listing-item__params").text
+#         car_mileage = result.find('div', class_="listing-item__params").find('span').text
+#         price_car = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
+#         if result.find(class_="listing-item__message"):
+#             description_car = result.find(class_="listing-item__message").text[:150]
+#         location = result.find(class_="listing-item__info").find(class_="listing-item__location").text
+
+#         car_list.append({'name':name_car, 'lank':link_car, 'parametrs': params_to_car, 'mileage': car_mileage, 'price': price_car, 'description': description_car, 'location': location})
+#     car.append(car_list)
+#     return  respons_list
+
+# def get_page(): # -> 1 page
+#     params = {'brands[0][brand]': 6, 'brands[0][model]': 2278, 'year[min]': 1890, 'year[max]': 2023, 'price_usd[min]': 100, 'price_usd[max]': 3000000, 'condition[0]': 2, 'sort': 2}
+#     respons_page = requests.get('https://cars.av.by/filter?', params=params)
+#     if respons_page.status_code == 200:
+#         data_soup = bs(respons_page.text, 'lxml')
+#         cout_ad = get_car_dict(data_soup, param = 1)[0]
+    
+#     count_page = math.ceil(cout_ad / 25)
+#     if count_page > 1:
+#         for page in range(2, count_page + 1):
+#             params = {'brands[0][brand]': 6, 'brands[0][model]': 2278, 'year[min]': 1980, 'year[max]': 2023, 'price_usd[min]': 100, 'price_usd[max]': 3000000, 'condition[0]': 2, 'page': page, 'sort': 2}
+#             respons_page = requests.get('https://cars.av.by/filter?', params=params)
+#             if respons_page.status_code == 200:
+#                 data_soup = bs(respons_page.text, 'lxml')
+#                 cout_ad = get_car_dict(data_soup)
+
+# get_page()
+
+
+
+
+class Pars_info_id_file(): # -> car_list
+    def __init__(self, year_min=1910, year_max = 2023, price_min = 0, price_max = 0, brand_id = 0, model_id = 0) -> None:
+        self.year_min = year_min
+        self.year_max = year_max
+        self.price_min = price_min
+        self.price_max = price_max
+        self.brand_id, self.model_id = brand_id, model_id
+        self.car = []
+
+    def get_car_dict(self, data_soup, param = 0):
+        car_list, respons_list = [], []
+        
+        if param == 1:
+            count_ad = int("".join(count for count in data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text if  count.isdecimal()))
+            respons_list = [count_ad]
+        for result in data_soup.find(class_="listing__items").find_all('div', class_="listing-item__wrap"):
+            name_car = result.find('div', class_="listing-item__about").text
+            link_car = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
+            params_to_car = result.find(class_="listing-item__params").text
+            car_mileage = result.find('div', class_="listing-item__params").find('span').text
+            price_car = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
+            if result.find(class_="listing-item__message"):
+                description_car = result.find(class_="listing-item__message").text[:150]
+            location = result.find(class_="listing-item__info").find(class_="listing-item__location").text
+
+            car_list.append({'name':name_car, 'lank':link_car, 'parametrs': params_to_car, 'mileage': car_mileage, 'price': price_car, 'description': description_car, 'location': location})
+        self.car.append(car_list)
+        return  respons_list
+
+    def get_page(self): # -> 1 page
+        params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'sort': 2}
+        respons_page = requests.get('https://cars.av.by/filter?', params=params)
+        if respons_page.status_code == 200:
+            data_soup = bs(respons_page.text, 'lxml')
+            cout_ad = self.get_car_dict(data_soup, param = 1)[0]
+        
+        self.count_page = math.ceil(cout_ad / 25)
+        if self.count_page > 1:
+            for page in range(2, self.count_page + 1):
+                params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'page': page, 'sort': 2}
+                respons_page = requests.get('https://cars.av.by/filter?', params=params)
+                if respons_page.status_code == 200:
+                    data_soup = bs(respons_page.text, 'lxml')
+                    self.get_car_dict(data_soup)
+
+    def __call__(self):
+        self.get_page()
+        return self.car, self.count_page
+
+r = Pars_info_id_file(brand_id = 6, model_id = 2278)
+c = r()
+print(c[1])
+count_page = c[1]
+for i in range(count_page):
+    for item in c[0][i]:
+        print(item['price'])

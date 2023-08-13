@@ -164,7 +164,6 @@ brand = {
 }
 
 class Select_car: # -> brand_id, model_id
-
     def __init__(self, brand) -> None:
         self.brand_id = 0
         self.model_id = 0
@@ -194,14 +193,14 @@ class Select_car: # -> brand_id, model_id
         self.model_id = self.output_car(self.model)
         return self.brand_id, self.model_id
     
-class Pars_info_id_file():
-    
+class Pars_info_id_file(): # -> car_list
     def __init__(self, year_min=1910, year_max = 2023, price_min = 0, price_max = 0, *args) -> None:
         self.year_min = year_min
         self.year_max = year_max
         self.price_min = price_min
         self.price_max = price_max
         self.brand_id, self.model_id = args[0], args[1]
+        self.car = []
 
     def get_page(self): # -> 1 page
         params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'sort': 2}
@@ -218,8 +217,7 @@ class Pars_info_id_file():
                 # После запроса записываем ответ в файл т.к respons_page перезапишиться на некст итерации и распарсиваем его 
         return page
     
-    def pars_renspons_page_data(self, respons_page):
-        pass
+
 
 
 def main():
