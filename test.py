@@ -193,7 +193,7 @@ file = 'page.htm'
 
 # Принимет 1 страницу и генирирует словать с авто с полученой страницы
 # param = 1, тогда нам отдаст количество страниц, иначе не отдаст 
-def get_car_dict(page, param):
+def get_car_dict(page, param = 0):
     car_list = []
     respons_list = []
     with open(page, 'r', encoding="utf-8") as htm:
@@ -207,8 +207,8 @@ def get_car_dict(page, param):
             params_to_car = result.find(class_="listing-item__params").text
             car_mileage = result.find('div', class_="listing-item__params").find('span').text
             price_car = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
-            # if result.find(class_="listing-item__message"):
-            description_car = 0 #result.find(class_="listing-item__message").text[:150]
+            if result.find(class_="listing-item__message"):
+                description_car = result.find(class_="listing-item__message").text[:150]
             location = result.find(class_="listing-item__info").find(class_="listing-item__location").text
 
             car_list.append({'name':name_car, 'lank':link_car, 'parametrs': params_to_car, 'mileage': car_mileage, 'price': price_car, 'description': description_car, 'location': location})
@@ -218,7 +218,7 @@ def get_car_dict(page, param):
     return  respons_list
 
 def get_page(): # -> 1 page
-    params = {'brands[0][brand]': 6, 'brands[0][model]': 10, 'year[min]': 1890, 'year[max]': 2023, 'price_usd[min]': 100, 'price_usd[max]': 30000, 'condition[0]': 2, 'sort': 2}
+    params = {'brands[0][brand]': 1, 'brands[0][model]': 3, 'year[min]': 1890, 'year[max]': 2023, 'price_usd[min]': 100, 'price_usd[max]': 3000000, 'condition[0]': 2, 'sort': 2}
     respons_page = requests.get('https://cars.av.by/filter?', params=params)
     if respons_page.status_code == 200:
         with open('page.htm', 'w', encoding="utf-8") as htm:
@@ -227,13 +227,13 @@ def get_page(): # -> 1 page
     
     count_page = math.ceil( cout_ad / 25)
     if count_page > 1:
-        for page in range(2, count_page + 2):
-            params = {'brands[0][brand]': 6, 'brands[0][model]': 10, 'year[min]': 1980, 'year[max]': 2023, 'price_usd[min]': 100, 'price_usd[max]': 30000, 'condition[0]': 2, 'page': page, 'sort': 2}
+        for page in range(2, count_page + 1):
+            print(0)
+            params = {'brands[0][brand]': 1, 'brands[0][model]': 3, 'year[min]': 1980, 'year[max]': 2023, 'price_usd[min]': 100, 'price_usd[max]': 3000000, 'condition[0]': 2, 'page': page, 'sort': 2}
             respons_page = requests.get('https://cars.av.by/filter?', params=params)
             if respons_page.status_code == 200:
                 with open('page.htm', 'w', encoding="utf-8") as htm:
                     htm.write(respons_page.text)
-                    cout_ad = get_car_dict('page.htm', param = 0)
-    return page
+                    cout_ad = get_car_dict('page.htm')
 
 get_page()
