@@ -6,12 +6,15 @@ from config_reader import config
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.filters import Text
 import json, io
+from contextlib import suppress
+from aiogram.exceptions import TelegramBadRequest
 
 
 # Включаем логирование, чтобы не пропустить важные сообщения
 logging.basicConfig(level=logging.INFO)
 # Объект бота
 bot = Bot(token=config.bot_token.get_secret_value())
+#bot=Bot(token='6315832729:AAGC6fYoRIo6QQH595zsXjgN2pZorwvDGi8')
 # Диспетчер
 dp = Dispatcher()
 user_data = {}
@@ -34,20 +37,19 @@ def keyboard_coice():
     return buttons
 
 
-
+brand_count=0
 #Клавиатура из 150 строк
 def list_add():
     cars=InlineKeyboardBuilder()
     with io.open("brand.json",encoding='utf-8') as js_file:
         list=json.load(js_file)
-        i=0
         for key, value in list.items():
             cars.adjust(3)
             cars.add(types.InlineKeyboardButton(
                 text=key,
-                callback_data=value)
+                callback_data="car_"+str(value))
                 )
-            i+=1
+        brand_count=len(list.items())
     return cars
 #Клавиатура из 10 строк + клавиатура навигации
 def builder_sell(start: int):
@@ -60,11 +62,18 @@ def builder_sell(start: int):
     return builder_new
 
 async def new_page(message: types.Message, new_value: int):
-    await message.edit_text(
-        f"Выберите бренд автомобиля: ",
-        reply_markup=builder_sell(new_value).as_markup()
-    )
+    with suppress(TelegramBadRequest):
+        await message.edit_text(
+            f"Выберите бренд автомобиля: ",
+            reply_markup=builder_sell(new_value).as_markup()
+        )
 
+async def keyboard(message: types.Message, keybrd: InlineKeyboardBuilder,txt: str):
+    with suppress(TelegramBadRequest):
+        await message.answer(
+            txt,
+            reply_markup=keybrd.as_markup()
+        )
     
 # Запуск процесса поллинга новых апдейтов
 
@@ -78,17 +87,20 @@ async def call_backs(message: types.Message):
         "Выберите бренд автомобиля",
         reply_markup=builder.as_markup()
     )
-    
 
 """@dp.callback_query(Text(startswith=""))
 async def send_random_value(callback: types.CallbackQuery):
     await callback.message.answer("ANUS")
     await callback.answer()"""
-
+#свайп клавы
 @dp.callback_query(Text(startswith="coice_"))
 async def callbacks_num(callback: types.CallbackQuery):
     user_value = user_data.get(callback.from_user.id, 1)
     action = callback.data.split("_")[1]
+    if user_value>brand_count//30:
+        user_value=1
+    elif user_value<0:
+        user_value=brand_count//30
 
     if action == "back":
         user_data[callback.from_user.id] = user_value-1
@@ -100,6 +112,33 @@ async def callbacks_num(callback: types.CallbackQuery):
         user_data[callback.from_user.id] = user_value+1
         await new_page(callback.message, user_value+1)
 
+    await callback.answer()
+
+cars=[
+    [6,"80"],
+    [6,"100"],
+    [6,"A6"]
+    ]
+
+def api_call(model: int):
+    #вызов api
+    model_list = InlineKeyboardBuilder()
+    #model_list.add([value for key, value in cars.items() if key == model])
+    for key in cars:
+                model_list.adjust(3)
+                model_list.add(types.InlineKeyboardButton(
+                    text=key[1],
+                    callback_data=key[0])
+                    )
+    return model_list
+#передача выбранного бренда api + получение списка моделей
+@dp.callback_query(Text(startswith="car_"))
+async def callbacks_cars(callback: types.CallbackQuery):
+    #user_value = user_data.get(callback.from_user.id, 1)
+    action = callback.data.split("_")[1]
+    #await callback.message.answer(callback.data)
+    models_keyboard=api_call(action)
+    await keyboard(callback.message,keybrd=models_keyboard,txt="Выберите марку авто:")
     await callback.answer()
 
 async def main():
