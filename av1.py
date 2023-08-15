@@ -194,36 +194,66 @@ class Select_car: # -> brand_id, model_id
         return self.brand_id, self.model_id
     
 class Pars_info_id_file(): # -> car_list
-    def __init__(self, year_min=1910, year_max = 2023, price_min = 0, price_max = 0, *args) -> None:
+    def __init__(self, year_min=1910, year_max=2023, price_min=0, price_max=0, brand_id=0, model_id=0):
         self.year_min = year_min
         self.year_max = year_max
         self.price_min = price_min
         self.price_max = price_max
-        self.brand_id, self.model_id = args[0], args[1]
+        self.brand_id, self.model_id = brand_id, model_id
         self.car = []
 
-    def get_page(self): # -> 1 page
+    def get_car_dict(self, data_soup, param=0): # -> Return list for car
+        car_list, respons_list = [], []
+        # нужно провека на наличие объявлений
+        if param == 1:
+            count_ad = int("".join(count for count in data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text if  count.isdecimal()))
+            respons_list = [count_ad]
+        for result in data_soup.find(class_="listing__items").find_all('div', class_="listing-item__wrap"):
+            name_car = result.find('div', class_="listing-item__about").text
+            link_car = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
+            params_to_car = result.find(class_="listing-item__params").text
+            car_mileage = result.find('div', class_="listing-item__params").find('span').text
+            price_car = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
+            if result.find(class_="listing-item__message"):
+                description_car = result.find(class_="listing-item__message").text[:150]
+            location = result.find(class_="listing-item__info").find(class_="listing-item__location").text
+
+            car_list.append({'name':name_car, 'lank':link_car, 'parametrs': params_to_car, 'mileage': car_mileage, 'price': price_car, 'description': description_car, 'location': location})
+        self.car.append(car_list)
+        return  respons_list
+
+    def get_page(self): # -> Return 1 page 
         params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'sort': 2}
         respons_page = requests.get('https://cars.av.by/filter?', params=params)
-        data_soup = bs(respons_page, 'lxml')
-        self.count_page = data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text
-        # После запроса записываем ответ в файл т.к respons_page перезапишиться на некст итерации если она будет и распарсиваем его 
-        # После первого запроса нужно распарсить страницу и достать количестро объявлений и разделить на 25 с округлением в большую сторону полусим число страниц / cout_ad - кол-во объявлений
-        self.count_page = math.ceil( cout_ad / 25)
+        if respons_page.status_code == 200:
+            data_soup = bs(respons_page.text, 'lxml')
+            cout_ad = self.get_car_dict(data_soup, param = 1)[0]
+        
+        self.count_page = math.ceil(cout_ad / 25)
         if self.count_page > 1:
-            for page in range(2, self.count_page + 2):
+            for page in range(2, self.count_page + 1):
                 params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'page': page, 'sort': 2}
                 respons_page = requests.get('https://cars.av.by/filter?', params=params)
-                # После запроса записываем ответ в файл т.к respons_page перезапишиться на некст итерации и распарсиваем его 
-        return page
-    
+                if respons_page.status_code == 200:
+                    data_soup = bs(respons_page.text, 'lxml')
+                    self.get_car_dict(data_soup)
 
-
+    def __call__(self): # -> self.car, self.count_page
+        self.get_page()
+        return self.car, self.count_page
 
 def main():
     obj = Select_car(brand)
     car_crit = obj()
-    print(car_crit[0], car_crit[1])
+    print('Начало обработки запроса.....', car_crit[0], car_crit[1])
+    car_odj = Pars_info_id_file(brand_id = car_crit[0], model_id = car_crit[1])
+    car_list_odj = car_odj()
+# test................................................
+    count_page = car_list_odj[1]
+    for i in range(count_page):
+        for item in car_list_odj[0][i]:
+            print(item['price'])
+# end test................................................
 
 
 if __name__ == "__main__":
