@@ -180,7 +180,7 @@ class Select_car: # -> brand_id, model_id
         key = str(input())
         return data[key]
 
-    def get_data_select_car(self, params, data):
+    def get_data_select_car(self, params):
         respons_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items/' + params, headers={'user-agent': f'{self.user}'})
         if respons_list.status_code == 200:
             respons_data = json.loads(respons_list.text)
@@ -189,7 +189,7 @@ class Select_car: # -> brand_id, model_id
                 
     def __call__(self): # -> brand_id, model_id
         self.brand_id = self.output_car(self.brand)
-        self.get_data_select_car(str(self.brand_id) +'/models', self.model)
+        self.get_data_select_car(str(self.brand_id) +'/models')
         self.model_id = self.output_car(self.model)
         return self.brand_id, self.model_id
     
@@ -200,6 +200,7 @@ class Pars_info_id_file(): # -> car_list
         self.price_min = price_min
         self.price_max = price_max
         self.brand_id, self.model_id = brand_id, model_id
+        self.user = User().random
         self.car = []
 
     def get_car_dict(self, data_soup, param=0): # -> Return list for car
@@ -224,7 +225,7 @@ class Pars_info_id_file(): # -> car_list
 
     def get_page(self): # -> Return 1 page 
         params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'sort': 2}
-        respons_page = requests.get('https://cars.av.by/filter?', params=params)
+        respons_page = requests.get('https://cars.av.by/filter?', params=params, headers={'user-agent': f'{self.user}'})
         if respons_page.status_code == 200:
             data_soup = bs(respons_page.text, 'lxml')
             cout_ad = self.get_car_dict(data_soup, param = 1)[0]
@@ -233,7 +234,7 @@ class Pars_info_id_file(): # -> car_list
         if self.count_page > 1:
             for page in range(2, self.count_page + 1):
                 params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'page': page, 'sort': 2}
-                respons_page = requests.get('https://cars.av.by/filter?', params=params)
+                respons_page = requests.get('https://cars.av.by/filter?', params=params, headers={'user-agent': f'{self.user}'})
                 if respons_page.status_code == 200:
                     data_soup = bs(respons_page.text, 'lxml')
                     self.get_car_dict(data_soup)
@@ -249,11 +250,16 @@ def main():
     car_odj = Pars_info_id_file(brand_id = car_crit[0], model_id = car_crit[1])
     car_list_odj = car_odj()
 # test................................................
-    count_page = car_list_odj[1]
-    for i in range(count_page):
-        for item in car_list_odj[0][i]:
-            print(item['price'])
-# end test................................................
+    # count_page = car_list_odj[1]
+    # count_items, total_price = 0, 0
+    # for i in range(count_page):
+    #     for item in car_list_odj[0][i]:
+    #         print(item['price'])
+    #         count_items += 1
+    #         total_price += item['price']
+    # print()
+    # print(count_items, total_price/count_items)
+# end test................................................ Alfa Romeo
 
 
 if __name__ == "__main__":
