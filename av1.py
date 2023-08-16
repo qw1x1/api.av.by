@@ -215,6 +215,7 @@ class Pars_info_id_file(): # -> car_list
             params_to_car = result.find(class_="listing-item__params").text
             car_mileage = result.find('div', class_="listing-item__params").find('span').text
             price_car = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
+            description_car = 'Без описания'
             if result.find(class_="listing-item__message"):
                 description_car = result.find(class_="listing-item__message").text[:150]
             location = result.find(class_="listing-item__info").find(class_="listing-item__location").text
@@ -242,24 +243,50 @@ class Pars_info_id_file(): # -> car_list
     def __call__(self): # -> self.car, self.count_page
         self.get_page()
         return self.car, self.count_page
+    
+class Search_cars(): # -> deviated_car_list
+    def __init__(self, car_list:list=[], count_page:int=0, deviation_procent:int=0):  
+        self.car_list = car_list
+        self.count_page = count_page
+        self.deviation_procent = deviation_procent
+        self.deviation_price = 0
+        self.deviated_car_list = []
+
+    def get_average_market_value(self):
+        count_items, total_price = 0, 0
+        for i in range(self.count_page):
+            for item in self.car_list[i]:
+                count_items += 1
+                total_price += item['price']
+        arg_price = (total_price/count_items)
+        self.deviation_price = arg_price - ((arg_price * self.deviation_procent) / 100)
+    
+    def serch_deviated_car_list(self):
+        for i in range(self.count_page):
+            for item in self.car_list[i]:
+                if item['price'] <= self.deviation_price:
+                    self.deviated_car_list.append(item)
+
+    def __call__(self):
+        self.get_average_market_value()
+        self.serch_deviated_car_list()
+        return self.deviated_car_list
 
 def main():
     obj = Select_car(brand)
     car_crit = obj()
-    print('Начало обработки запроса.....', car_crit[0], car_crit[1])
+
     car_odj = Pars_info_id_file(brand_id = car_crit[0], model_id = car_crit[1])
     car_list_odj = car_odj()
+
+    serch_car_odj = Search_cars(car_list=car_list_odj[0], count_page=car_list_odj[1], deviation_procent = 78)
+    result = serch_car_odj()
+    print(result)
 # test................................................
-    # count_page = car_list_odj[1]
-    # count_items, total_price = 0, 0
-    # for i in range(count_page):
-    #     for item in car_list_odj[0][i]:
-    #         print(item['price'])
-    #         count_items += 1
-    #         total_price += item['price']
-    # print()
-    # print(count_items, total_price/count_items)
-# end test................................................ Alfa Romeo
+# Alfa Romeo Audi
+    # for item in result:
+    #     print(item['parametrs'])
+# end test............................................
 
 
 if __name__ == "__main__":

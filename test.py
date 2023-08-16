@@ -400,27 +400,32 @@ import math
 #     for item in c[0][i]:
 #         print(item['price'])
 
-class Search_cars(): # -> deviated_car_list
-    def __init__(self, car_list:list=[], count_page:int=0, deviation:int=0):  
-        self.car_list = car_list
-        self.count_page = count_page
-        self.deviation = deviation
-        self.deviation_price = 0
-        self.deviated_car_list = []
+# class Search_cars(): # -> deviated_car_list
+#     def __init__(self, car_list:list=[], count_page:int=0, deviation_procent:int=0):  
+#         self.car_list = car_list
+#         self.count_page = count_page
+#         self.deviation_procent = deviation_procent
+#         self.deviation_price = 0
+#         self.deviated_car_list = []
 
-    def get_average_market_value(self):
-        count_items, total_price = 0, 0
-        for i in range(self.count_page):
-            for item in self.car_list[i]:
-                count_items += 1
-                total_price += item['price']
-        arg_price = ((total_price/count_items) * self.deviation) / 100
-        self.deviation_price = total_price - arg_price 
+#     def get_average_market_value(self):
+#         count_items, total_price = 0, 0
+#         for i in range(self.count_page):
+#             for item in self.car_list[i]:
+#                 count_items += 1
+#                 total_price += item['price']
+#         arg_price = ((total_price/count_items) * self.deviation_procent) / 100
+#         self.deviation_price = total_price - arg_price 
     
-    def serch_deviated_car_list(self):
-        for i in range(self.count_page):
-            for item in self.car_list[i]:
-                if item['price'] <= self.deviation_price:
-                    self.deviated_car_list.append(item)
+#     def serch_deviated_car_list(self):
+#         for i in range(self.count_page):
+#             for item in self.car_list[i]:
+#                 if item['price'] <= self.deviation_price:
+#                     self.deviated_car_list.append(item)
+
+#     def __call__(self):
+#         self.get_average_market_value()
+#         self.serch_deviated_car_list()
+#         return self.deviated_car_list
 
 
