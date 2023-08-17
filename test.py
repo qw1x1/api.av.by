@@ -429,3 +429,13 @@ import math
 #         return self.deviated_car_list
 
 
+
+
+def get_started(brand_dict, year_min, year_max, price_min, price_max, deviation_procent):
+    obj = Select_car(brand_dict)
+    car_crit = obj()
+
+    car_odj = Pars_info_id_file(year_min=year_min, year_max=year_max, price_min=price_min, price_max=price_max, brand_id = car_crit[0], model_id = car_crit[1])
+    car_list_odj = car_odj()
+    # 
+    serch_car_odj = Search_cars(car_list=car_list_odj[0], count_page=car_list_odj[1], deviation_procent = deviation_procent)

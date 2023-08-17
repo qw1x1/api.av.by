@@ -276,16 +276,17 @@ def main():
     obj = Select_car(brand)
     car_crit = obj()
 
-    car_odj = Pars_info_id_file(brand_id = car_crit[0], model_id = car_crit[1])
+    car_odj = Pars_info_id_file(year_min=1910, year_max=2023, price_min=0, price_max=0, brand_id = car_crit[0], model_id = car_crit[1])
     car_list_odj = car_odj()
-
-    serch_car_odj = Search_cars(car_list=car_list_odj[0], count_page=car_list_odj[1], deviation_procent = 78)
+    
+    serch_car_odj = Search_cars(car_list=car_list_odj[0], count_page=car_list_odj[1], deviation_procent = 30)
     result = serch_car_odj()
-    print(result)
+
 # test................................................
 # Alfa Romeo Audi
-    # for item in result:
-    #     print(item['parametrs'])
+    for item in result:
+        print(item['name'], item['lank'], item['parametrs'], item['mileage'], item['price'], item['description'], item['location'], sep='\n')
+        print()
 # end test............................................
 
 
