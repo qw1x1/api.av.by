@@ -3,6 +3,7 @@
 Запуск виртуального окружения: .\venv\Scripts\activate 
 Создание файла с зависимостями: pip freeze > requirements.txt
 Загрузка библиотек с помощю файла с зависимостями: pip install -r requirements.txt
+Удаление всех библиотек pip uninstall -y -r requirements.txt
 .gitignore - для игнорирования файлов (не загрузяться на git)
 Создание проекта django: django-admin startproject <имя>
 При запуске сервера нужно находиться в папке приложения!
