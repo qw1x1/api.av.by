@@ -588,8 +588,6 @@ brand = {
 
 
 
-
-
 class Select_car: # -> brand_id, model_id
     def __init__(self, brand, metod_bran_id, metod_model_id) -> None:
         self.brand_id = 0
@@ -632,6 +630,28 @@ def metod_model_id(data):
     key = str(input())
     return data[key]
 
-obj = Select_car(brand=brand, metod_bran_id=metod_bran_id, metod_model_id=metod_model_id)
-ger = obj()
-print(ger)
+
+
+from av1 import Pars_info_id_file, Search_cars
+
+def main(metod_bran_id=metod_bran_id, metod_model_id=metod_model_id):
+
+    obj = Select_car(brand=brand, metod_bran_id=metod_bran_id, metod_model_id=metod_model_id)
+    car_crit = obj()
+
+
+    car_odj = Pars_info_id_file(year_min=1910, year_max=2023, price_min=0, price_max=0, brand_id = car_crit[0], model_id = car_crit[1])
+    car_list_odj = car_odj()
+    
+    serch_car_odj = Search_cars(car_list=car_list_odj[0], count_page=car_list_odj[1], deviation_procent = 30)
+    result = serch_car_odj()
+
+# test................................................
+# Alfa Romeo Audi
+    for item in result:
+        print(item['name'], item['lank'], item['parametrs'], item['mileage'], item['price'], item['description'], item['location'], sep='\n')
+        print()
+# end test............................................
+
+if __name__ == "__main__":
+	main()
