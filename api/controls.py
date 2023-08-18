@@ -1,4 +1,4 @@
-from models import User, Request, db
+from api.models import db, User, Request
 
 class Control_db():
     def __init__(self, telegram_id):

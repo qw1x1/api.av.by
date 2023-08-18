@@ -1,18 +1,19 @@
 from peewee import *
 
-db = SqliteDatabase('users.db')
+db = SqliteDatabase('db.sqlite')
 
 class Basic(Model):
     id = PrimaryKeyField(unique=True)
 
     class Meta:
         database = db
-
+    
 class User(Basic):
     telegram_id = IntegerField(unique=True)
 
     class Meta:
         db_table = 'users'
+
 
 class Request(Basic):
     brand_id = IntegerField()
@@ -26,3 +27,4 @@ class Request(Basic):
 
     class Meta:
         db_table = 'requests'
+    
