@@ -591,22 +591,14 @@ brand = {
 
 
 class Select_car: # -> brand_id, model_id
-    def __init__(self, brand, metod) -> None:
+    def __init__(self, brand, metod_bran_id, metod_model_id) -> None:
         self.brand_id = 0
         self.model_id = 0
         self.brand = brand
         self.model = {}
         self.user = User().random
-        self.metod = metod
-
-    # Пока в консоль :)
-    @staticmethod
-    def output_car(data): # -> id
-        for key, value in data.items():
-            print(key, value)
-        print()
-        key = str(input())
-        return data[key]
+        self.metod_bran_id = metod_bran_id
+        self.metod_model_id = metod_model_id
 
     def get_data_select_car(self, params):
         respons_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items/' + params, headers={'user-agent': f'{self.user}'})
@@ -616,15 +608,15 @@ class Select_car: # -> brand_id, model_id
                 self.model[respons_data[i]['name']] = respons_data[i]['id']
 
     def __call__(self): # -> brand_id, model_id
-        self.brand_id = self.metod(self.brand)
+        self.brand_id = self.metod_bran_id(self.brand)
         self.get_data_select_car(str(self.brand_id) +'/models')
-        self.model_id = self.metod(self.model)
+        self.model_id = self.metod_model_id(self.model)
         return self.brand_id, self.model_id
     
 
 
 
-def output_car(data): 
+def metod_bran_id(data): 
     # Напишеш функцию для вывода и получения id, тип этой ток не в консоль а в тг_бот и предаш ее 2 параметрам классу Select_car(brand=brand, metod='''''ТУТ'''')
     for key, value in data.items():
         print(key, value)
@@ -632,6 +624,14 @@ def output_car(data):
     key = str(input())
     return data[key]
 
-obj = Select_car(brand=brand, metod=output_car)
+def metod_model_id(data): 
+    # Напишеш функцию для вывода и получения id, тип этой ток не в консоль а в тг_бот и предаш ее 2 параметрам классу Select_car(brand=brand, metod='''''ТУТ'''')
+    for key, value in data.items():
+        print(key, value)
+    print()
+    key = str(input())
+    return data[key]
+
+obj = Select_car(brand=brand, metod_bran_id=metod_bran_id, metod_model_id=metod_model_id)
 ger = obj()
 print(ger)
