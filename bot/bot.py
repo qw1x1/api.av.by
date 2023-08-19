@@ -13,13 +13,13 @@ dp = Dispatcher()
 
 
 model = Get_model()
-bran = brand
+# bran = brand
 
 
 @dp.message(Command("start"))
 async def bild_mrnu_brend(message: types.Message):
     builder = InlineKeyboardBuilder()
-    for key, value in bran.items():
+    for key, value in brand.items():
         builder.button(text=key, callback_data=value)
     builder.adjust(3)
 #  хз как достать и записать переменную value для передачи 
