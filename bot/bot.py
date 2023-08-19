@@ -28,7 +28,7 @@ async def bild_mrnu_brend(message: types.Message):
 @dp.message(Command("model"))
 async def bild_mrnu_model(message: types.Message):
     builde = InlineKeyboardBuilder()
-    mode = model.get_data_select_car(str(6) +'/models')
+    mode = model.get_data_select_car(str(6) +'/models') # сюда передать id бренда 
     for key, value in mode.items():
         builde.button(text=key, callback_data=value)
     builde.adjust(2)
