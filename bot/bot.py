@@ -116,6 +116,7 @@ def api_call(list):
     #вызов api
     #obj.model_id = 
     model_list = InlineKeyboardBuilder()
+    model_list._markup.clear()
     #model_list.add([value for key, value in cars.items() if key == model])
     for key,value in list.items():
             model_list.adjust(3)
@@ -134,6 +135,8 @@ async def callbacks_cars(callback: types.CallbackQuery):
     #await callback.message.answer(callback.data)
     model_car={}
     model_car=model.get_data_select_car(str(action) +'/models')
+    models_keyboard=InlineKeyboardBuilder()
+    models_keyboard._markup.clear()
     models_keyboard=api_call(model_car)
     await keyboard(callback.message,keybrd=models_keyboard,txt="Выберите марку авто:")
     await callback.answer()
@@ -153,7 +156,7 @@ async def callbacks_cars(callback: types.CallbackQuery):
     serch_cars_ekz=Search_cars(pars_info.car,pars_info.count_page)
     list_cars=serch_cars_ekz()
     for item in list_cars:
-        txt=f""+item['name']+" "+item['lank']+" "+item['parametrs']+" "+item['mileage']+" "+item['price']+" "+item['description']+" "+item['location']
+        txt=f""+item['name']+f"\n"+item['lank']+f"\n"+item['parametrs']+f"\n"+item['mileage']+f"\n"+str(item['price'])+" \n"+item['description']+"\n"+item['location']
         #item['name'], item['lank'], item['parametrs'], item['mileage'], item['price'], item['description'], item['location'], sep='\n'
         await callback.message.answer(text=txt)
     await callback.answer()

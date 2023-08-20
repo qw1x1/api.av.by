@@ -169,6 +169,7 @@ class Get_model():
         self.model_dict = {}
 
     def get_data_select_car(self, params):
+        self.model_dict.clear()
         respons_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items/' + params, headers={'user-agent': f'{self.user}'})
         if respons_list.status_code == 200:
             respons_data = json.loads(respons_list.text)
