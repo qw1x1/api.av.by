@@ -13,7 +13,7 @@ BOT_TOKEN = '6315832729:AAGC6fYoRIo6QQH595zsXjgN2pZorwvDGi8'
 bot = Bot(BOT_TOKEN)
 dp = Dispatcher()
 
-model = Get_model()
+
 
 
 @dp.message(Command("start"))
@@ -32,7 +32,8 @@ async def bild_mrnu_brend(message: types.Message):
 @dp.message(Command("model"))
 async def bild_mrnu_model(message: types.Message):
     builde = InlineKeyboardBuilder()
-
+    model = Get_model()
+    
     mode = model.get_data_select_car(str(6) +'/models') # сюда передать id бренда 
     for key, value in mode.items():
         builde.button(text=key, callback_data=value)
