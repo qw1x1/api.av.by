@@ -27,4 +27,7 @@ class Request(Basic):
 
     class Meta:
         db_table = 'requests'
+
+    def __str__(self):
+        return 'Ваши авто'
     
