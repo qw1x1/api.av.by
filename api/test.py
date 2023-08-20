@@ -640,7 +640,7 @@ def main(metod_bran_id=metod_bran_id, metod_model_id=metod_model_id):
     car_crit = obj()
 
 
-    car_odj = Pars_info_id_file(year_min=1940, year_max=2023, price_min=0, price_max=0, brand_id = car_crit[0], model_id = car_crit[1])
+    car_odj = Pars_info_id_file(year_min=1940, year_max=2023, price_min=0, price_max=0, brand_id = 6, model_id = car_crit[1])
     car_list_odj = car_odj()
     
     serch_car_odj = Search_cars(car_list=car_list_odj[0], count_page=car_list_odj[1], deviation_procent = 30)

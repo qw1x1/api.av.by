@@ -29,5 +29,5 @@ class Request(Basic):
         db_table = 'requests'
 
     def __str__(self):
-        return 'Ваши авто'
+        return f'{str(Request.model_id)}'
     

@@ -169,6 +169,7 @@ class Get_model():
         self.model_dict = {}
 
     def get_data_select_car(self, params):
+        self.model_dict.clear()
         respons_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items/' + params, headers={'user-agent': f'{self.user}'})
         if respons_list.status_code == 200:
             respons_data = json.loads(respons_list.text)
@@ -185,13 +186,19 @@ class Pars_info_id_file(): # -> car_list
         self.brand_id, self.model_id = brand_id, model_id
         self.user = User().random
         self.car = []
+        self.count_page=0
 
     def get_car_dict(self, data_soup, param=0): # -> Return list for car
         car_list, respons_list = [], []
-        # нужно провека на наличие объявлений
-        if param == 1:
-            count_ad = int("".join(count for count in data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text if  count.isdecimal()))
-            respons_list = [count_ad]
+        # нужно провека на наличие объявлений AttributeError: 'NoneType' object has no attribute 'find'
+        try:
+            if param == 1:
+                count_ad = int("".join(count for count in data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text if  count.isdecimal()))
+                respons_list = [count_ad]
+        except AttributeError:
+            respons_list = [0]
+            return respons_list
+        
         for result in data_soup.find(class_="listing__items").find_all('div', class_="listing-item__wrap"):
             name_car = result.find('div', class_="listing-item__about").text
             link_car = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
@@ -213,6 +220,9 @@ class Pars_info_id_file(): # -> car_list
         if respons_page.status_code == 200:
             data_soup = bs(respons_page.text, 'lxml')
             cout_ad = self.get_car_dict(data_soup, param = 1)[0]
+            if cout_ad == 0:
+                return 0
+            
         
         self.count_page = math.ceil(cout_ad / 25)
         if self.count_page > 1:
@@ -224,11 +234,15 @@ class Pars_info_id_file(): # -> car_list
                     self.get_car_dict(data_soup)
 
     def __call__(self): # -> self.car, self.count_page
-        self.get_page()
-        return self.car, self.count_page
+        page = self.get_page()
+        if page == 0:
+            return 0
+        else:
+            page
+            return self.car, self.count_page
     
 class Search_cars(): # -> deviated_car_list
-    def __init__(self, car_list:list=[], count_page:int=0, deviation_procent:int=10):  
+    def __init__(self, car_list:list=[], count_page:int=0, deviation_procent:int=55):  
         self.car_list = car_list
         self.count_page = count_page
         self.deviation_procent = deviation_procent
@@ -241,6 +255,7 @@ class Search_cars(): # -> deviated_car_list
             for item in self.car_list[i]:
                 count_items += 1
                 total_price += item['price']
+                
         arg_price = (total_price/count_items)
         self.deviation_price = arg_price - ((arg_price * self.deviation_procent) / 100)
     

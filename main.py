@@ -6,20 +6,19 @@ from api.models import *
 
 with db:
     obj = Control_db(12)
-    # us = obj.create_user()
-    # User.create(telegram_id=12)
-    # us = User.get(User.telegram_id == 12)
+    us = obj.create_user()
+
     # re = obj.create_request(3, 3, 3, 3, 3, 3, 3, us)
     # respons_re = obj.get_sefch_data_list()
-    # obj.request_id = 0
+    obj.request_id = 0
     # delet = obj.delet_reqest()
     # get_reqest = obj.get_sefch_data()
-    # respons = obj.get_reqest()
+    respons = obj.get_reqest()
 
 # print(us)
 # print(re)
 # print(respons_re)
 # print(delet)
-# print(respons.user)
+print(respons)
 # print(obj.request_id)
 # END TEST
