@@ -248,6 +248,7 @@ class Search_cars(): # -> deviated_car_list
         self.deviation_procent = deviation_procent
         self.deviation_price = 0
         self.deviated_car_list = []
+        self.arg_price = 0
 
     def get_average_market_value(self):
         count_items, total_price = 0, 0
@@ -256,8 +257,8 @@ class Search_cars(): # -> deviated_car_list
                 count_items += 1
                 total_price += item['price']
                 
-        arg_price = (total_price/count_items)
-        self.deviation_price = arg_price - ((arg_price * self.deviation_procent) / 100)
+        self.arg_price = (total_price/count_items)
+        self.deviation_price = self.arg_price - ((self.arg_price * self.deviation_procent) / 100)
     
     def serch_deviated_car_list(self):
         for i in range(self.count_page):
@@ -268,4 +269,4 @@ class Search_cars(): # -> deviated_car_list
     def __call__(self):
         self.get_average_market_value()
         self.serch_deviated_car_list()
-        return self.deviated_car_list
+        return self.deviated_car_list, self.arg_price
