@@ -117,9 +117,10 @@ async def callbacks_cars(callback: types.CallbackQuery):
     if cars_count_page == 0:
         await callback.message.answer(text='В настоящий момент нет ни одного объявления по Вашему запросу') 
     else:
-        serch_cars_ekz=Search_cars(pars_info.car,pars_info.count_page)
-        list_cars=serch_cars_ekz()[0]
-        arg_price = serch_cars_ekz()[1]
+        deviation_procent = 55
+        serch_cars_ekz = Search_cars(pars_info.car,pars_info.count_page, deviation_procent)
+        list_cars, arg_price = serch_cars_ekz()[0], serch_cars_ekz()[1]
+
         if len(list_cars) != 0:
             for item in list_cars:
                 txt=f"Среднерыночная стоимость: {math.floor(arg_price)}  "+item['name']+f"\n"+item['lank']+f"\n"+item['parametrs']+f"\n"+item['mileage']+f"\n"+str(item['price'])+" \n"+item['description']+"\n"+item['location']

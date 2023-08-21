@@ -242,7 +242,7 @@ class Pars_info_id_file(): # -> car_list
             return self.car, self.count_page
     
 class Search_cars(): # -> deviated_car_list
-    def __init__(self, car_list:list=[], count_page:int=0, deviation_procent:int=55):  
+    def __init__(self, car_list:list=[], count_page:int=0, deviation_procent:int=10):  
         self.car_list = car_list
         self.count_page = count_page
         self.deviation_procent = deviation_procent
