@@ -22,7 +22,7 @@ class Control_db():
         '''
         Добавляем новые данные поиска для User
         '''
-        request = Request(
+        Request.get_or_create(
             brand_id=brand_id,
             model_id=model_id,
             percent_difference=percent_difference,
@@ -31,14 +31,7 @@ class Control_db():
             price_min=price_min,
             price_max=price_max,
             user=user)
-        '''
-        Написать проверку, если запись с такими параметрами уже существует то не создавать 
-        Не учитовать percent_difference
-        т
-        '''
-        request.save()
-        
-
+    
     def get_sefch_data_list(self):
         '''
         Вкрнет поисковые параметры для конкретного пользователя
@@ -65,7 +58,6 @@ class Control_db():
         '''
         user = User.get(User.telegram_id == self.telegram_id)
         return user.requests[self._request_id]
-    
 
     def delet_reqest(self):
         '''
@@ -95,38 +87,38 @@ class Integer:
         self.is_valid_data(value)
         instance.__dict__[self.name] = value
 
-class Create_request(): 
-    brand_id = Integer() 
-    model_id = Integer()  
-    percent_difference = Integer()
-    year_min = Integer() 
-    year_max = Integer() 
-    price_min = Integer() 
-    price_max = Integer() 
+# class Create_request(): 
+#     brand_id = Integer() 
+#     model_id = Integer()  
+#     percent_difference = Integer()
+#     year_min = Integer() 
+#     year_max = Integer() 
+#     price_min = Integer() 
+#     price_max = Integer() 
 
-    def __init__(self, telegram_id, brand_id = 0, model_id = 0, percent_difference = 1, year_min = 0, year_max = 0, price_min = 0, price_max = 0):
-        self.brand_id = brand_id
-        self.model_id = model_id 
-        self.percent_difference = percent_difference 
-        self.year_min = year_min
-        self.year_max = year_max
-        self.price_min = price_min
-        self.price_max = price_max
-        self.user = Control_db(telegram_id).create_user()
+#     def __init__(self, telegram_id, brand_id = 0, model_id = 0, percent_difference = 1, year_min = 0, year_max = 0, price_min = 0, price_max = 0):
+#         self.brand_id = brand_id
+#         self.model_id = model_id 
+#         self.percent_difference = percent_difference 
+#         self.year_min = year_min
+#         self.year_max = year_max
+#         self.price_min = price_min
+#         self.price_max = price_max
+#         self.user = Control_db(telegram_id).create_user()
 
-    def create_request(self):
-        '''
-        Добавляем новые данные поиска для User
-        '''
-        Request.create(
-            brand_id=self.brand_id,
-            model_id=self.model_id,
-            percent_difference=self.percent_difference,
-            year_min=self.year_min,
-            year_max=self.year_max,
-            price_min=self.price_min,
-            price_max=self.price_max,
-            user=self.user
-            )
+#     def create_request(self):
+#         '''
+#         Добавляем новые данные поиска для User
+#         '''
+#         Request.create(
+#             brand_id=self.brand_id,
+#             model_id=self.model_id,
+#             percent_difference=self.percent_difference,
+#             year_min=self.year_min,
+#             year_max=self.year_max,
+#             price_min=self.price_min,
+#             price_max=self.price_max,
+#             user=self.user
+#             )
         
 # Мб пок не юзаю но может пригодиться

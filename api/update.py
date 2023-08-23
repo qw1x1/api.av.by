@@ -1,5 +1,4 @@
-from typing import Any
-from av1 import brand, Get_model, Pars_info_id_file,  Search_cars, Get_revers_model, revers_brand
+from av1 import  Pars_info_id_file,  Search_cars
 from controls import Control_db
 from models import *
 
@@ -11,8 +10,7 @@ class Get_data_for_request:
     def get_data(self):
         with db:
             bd = Control_db(telegram_id=self.telegram_id)
-            request_list = bd.get_sefch_data_list()
-        return request_list
+        return bd.get_sefch_data_list()
     
     def pars_info(self):
         request_list = self.get_data()

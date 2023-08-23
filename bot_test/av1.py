@@ -1,8 +1,6 @@
-import requests
+import requests, json, math
 from fake_useragent import UserAgent as User
 from bs4 import BeautifulSoup as bs
-import json
-import math
 
 brand = {
     "Acura": 1444,
@@ -203,7 +201,6 @@ class Pars_info_id_file(): # -> car_list
             if cout_ad == 0:
                 return 0
             
-        
         self.count_page = math.ceil(cout_ad / 25)
         if self.count_page > 1:
             for page in range(2, self.count_page + 1):

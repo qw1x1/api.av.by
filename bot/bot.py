@@ -107,12 +107,12 @@ async def callbacks_cars(callback: types.CallbackQuery):
 async def callbacks_cars(callback: types.CallbackQuery):
     action = callback.data.split("_")[1]
     global model_car_id
-    model_car_id=action
+    model_car_id = action
     ##########################
     #ТУТ БУДЕТ ВВОД ГОДА И ЦЕНЫ
     ##########################
     global brand_car_id
-    pars_info=Pars_info_id_file(brand_id=brand_car_id,model_id=model_car_id)
+    pars_info = Pars_info_id_file(brand_id=brand_car_id,model_id=model_car_id)
     cars_count_page = pars_info()
     if cars_count_page == 0:
         await callback.message.answer(text='В настоящий момент нет ни одного объявления по Вашему запросу') 

@@ -153,7 +153,6 @@ class Get_model():
             respons_data = json.loads(respons_list.text)
             for i in range(len(respons_data)):
                 self.model_dict[respons_data[i]['name']] = respons_data[i]['id']
-                # self.model_dict[respons_data[i]['id']] = respons_data[i]['name']
         return self.model_dict
     
 class Pars_info_id_file(): # -> car_list
