@@ -1,6 +1,6 @@
-from bot.av1 import brand, Pars_info_id_file, Search_cars
-from api.controls import Control_db
-from api.models import *
+from av1 import brand, Pars_info_id_file, Search_cars
+from controls import Control_db
+from models import *
 
 # TEST
 
@@ -17,7 +17,7 @@ with db:
 
 # print(us)
 # print(re)
-print(respons_re[0])
+print(respons_re[1]['id'])
 # print(delet)
 # print(us)
 # print(obj.request_id)

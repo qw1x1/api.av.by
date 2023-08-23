@@ -9,7 +9,9 @@ from aiogram.filters import Text, CommandObject
 import json, io
 from contextlib import suppress
 from aiogram.exceptions import TelegramBadRequest
-from av1 import brand, Get_model, Pars_info_id_file,  Search_cars
+from av1 import brand, Get_model, Pars_info_id_file,  Search_cars, Get_revers_model, revers_brand
+from controls import Control_db
+from models import *
 
 
 # Включаем логирование, чтобы не пропустить важные сообщения
@@ -31,8 +33,8 @@ def keyboard_coice():
     ]    
     return buttons
 
-builder, model = InlineKeyboardBuilder(), Get_model()
-brand_car_id, model_car_id = '', ''
+builder, model, rev_model = InlineKeyboardBuilder(), Get_model(),  Get_revers_model()
+brand_car_id, model_car_id, = '', ''
 
 
 def list_add():
@@ -45,7 +47,7 @@ def list_add():
 
 builder_new=InlineKeyboardBuilder()
 def builder_sell(start: int):
-    builder_old=list_add()
+    builder_old = list_add()
     stop, builder_new._markup = start*10 if (start*10<=len(builder_old._markup))else len(builder_old._markup), []
     for i in range(stop-10,stop,1):
         builder_new._markup.append(builder_old._markup[i])
@@ -67,6 +69,7 @@ async def call_backs(message: types.Message):
     model.user = message.from_user.id
     user_data[message.from_user.id] = 1
     builder = builder_sell(1)
+
     await message.answer("Выберите бренд автомобиля", reply_markup=builder.as_markup())
 
 @dp.callback_query(Text(startswith="coice_"))
@@ -108,20 +111,26 @@ async def callbacks_cars(callback: types.CallbackQuery):
     action = callback.data.split("_")[1]
     global model_car_id
     model_car_id=action
+
     ##########################
     #ТУТ БУДЕТ ВВОД ГОДА И ЦЕНЫ
     ##########################
     global brand_car_id
     pars_info=Pars_info_id_file(brand_id=brand_car_id,model_id=model_car_id)
     cars_count_page = pars_info()
+    user_id =callback.message.from_user.id # нужен ID пользователя а не бота
+    with db:
+        obj = Control_db(user_id)
+        us = obj.create_user()
+        re = obj.create_request(brand_id=brand_car_id, model_id=model_car_id, percent_difference=0, year_min=0, year_max=0, price_min=0, price_max=0, user=us[0])
+
     if cars_count_page == 0:
         await callback.message.answer(text='В настоящий момент нет ни одного объявления по Вашему запросу') 
     else:
-        deviation_procent = 55
+        deviation_procent = 60
         serch_cars_ekz = Search_cars(pars_info.car,pars_info.count_page, deviation_procent)
         serch_car = serch_cars_ekz()
         list_cars, arg_price = serch_car[0], serch_car[1]
-
         if len(list_cars) != 0:
             for item in list_cars:
                 txt=f"Среднерыночная стоимость: {math.floor(arg_price)}  "+item['name']+f"\n"+item['lank']+f"\n"+item['parametrs']+f"\n"+item['mileage']+f"\n"+str(item['price'])+" \n"+item['description']+"\n"+item['location']
@@ -129,6 +138,22 @@ async def callbacks_cars(callback: types.CallbackQuery):
         else:
             await callback.message.answer(text='В настоящий момент нет ни одного объявления по Вашему запросу, измените процент отклонения от среднерыночной стоимости')
     await callback.answer()
+
+@dp.message(Command("help"))
+async def call(message: types.Message):
+    user_id = message.from_user.id
+    with db:
+        obj = Control_db(6315832729)
+        respons_re = obj.get_sefch_data_list()
+        for item in respons_re:
+            drand = revers_brand[item['brand_id']]
+            rev_model = Get_revers_model()
+            model_car = rev_model.get_data_select_car(str(item['brand_id']) +'/models')
+            model = model_car[item['model_id']]
+            # button_del = types.InlineKeyboardButton(text='Удалить', callback_data="car_"+str(item['id']))
+
+            await message.answer(f"{drand, model, item['id']}")
+    # await message.answer(f"wqe")
 
 async def main():
     await dp.start_polling(bot)
