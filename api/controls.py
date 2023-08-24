@@ -1,4 +1,4 @@
-from api.models import User, Request
+from models import User, Request
 
 class Control_db():
     def __init__(self, telegram_id):
@@ -16,13 +16,13 @@ class Control_db():
 
     def create_user(self):
         return User.get_or_create(telegram_id=self.telegram_id)
-
+            
     @staticmethod
     def create_request(brand_id=0, model_id=0, percent_difference=0, year_min=0, year_max=0, price_min=0, price_max=0, user=0):
         '''
         Добавляем новые данные поиска для User
         '''
-        Request.create(
+        Request.get_or_create(
             brand_id=brand_id,
             model_id=model_id,
             percent_difference=percent_difference,
@@ -30,9 +30,8 @@ class Control_db():
             year_max=year_max,
             price_min=price_min,
             price_max=price_max,
-            user=user
-            )
-
+            user=user)
+    
     def get_sefch_data_list(self):
         '''
         Вкрнет поисковые параметры для конкретного пользователя
@@ -40,6 +39,7 @@ class Control_db():
         user = User.get(User.telegram_id == self.telegram_id)
         for request in user.requests:
             self.requests_list.append({
+                    'id': request.id,
                     'brand_id':request.brand_id,
                     'model_id':request.model_id,
                     'percent_difference':request.percent_difference,
@@ -58,7 +58,6 @@ class Control_db():
         '''
         user = User.get(User.telegram_id == self.telegram_id)
         return user.requests[self._request_id]
-    
 
     def delet_reqest(self):
         '''
@@ -68,6 +67,14 @@ class Control_db():
         '''
         user = User.get(User.telegram_id == self.telegram_id)
         return user.requests[self._request_id].delete_instance()
+    
+def get_users():
+    '''
+    вернет список с tg_id пользователей
+    '''
+    users = User.select()
+    return users
+
 
 
 # Мб пок не юзаю но может пригодиться

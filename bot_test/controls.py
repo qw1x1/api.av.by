@@ -1,4 +1,4 @@
-from models import db, User, Request
+from models import User, Request
 
 class Control_db():
     def __init__(self, telegram_id):
@@ -67,25 +67,33 @@ class Control_db():
         '''
         user = User.get(User.telegram_id == self.telegram_id)
         return user.requests[self._request_id].delete_instance()
+    
+def get_users():
+    '''
+    вернет список с tg_id пользователей
+    '''
+    users = User.select()
+    return users
+
 
 
 # Мб пок не юзаю но может пригодиться
-class Integer:
-    @classmethod
-    def is_valid_data(cls, value):
-        if type(value) != int:
-            return 0 
-        return value
+# class Integer:
+#     @classmethod
+#     def is_valid_data(cls, value):
+#         if type(value) != int:
+#             return 0 
+#         return value
  
-    def __set_name__(self, owner, name):
-        self.name = "_" + name
+#     def __set_name__(self, owner, name):
+#         self.name = "_" + name
  
-    def __get__(self, instance, owner):
-        return instance.__dict__[self.name]
+#     def __get__(self, instance, owner):
+#         return instance.__dict__[self.name]
  
-    def __set__(self, instance, value):
-        self.is_valid_data(value)
-        instance.__dict__[self.name] = value
+#     def __set__(self, instance, value):
+#         self.is_valid_data(value)
+#         instance.__dict__[self.name] = value
 
 # class Create_request(): 
 #     brand_id = Integer() 

@@ -12,6 +12,7 @@ from aiogram.exceptions import TelegramBadRequest
 from av1 import brand, Get_model, Pars_info_id_file,  Search_cars, Get_revers_model, revers_brand
 from controls import Control_db
 from models import *
+from update import Get_data_for_request
 
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token='6315832729:AAGC6fYoRIo6QQH595zsXjgN2pZorwvDGi8')
@@ -126,7 +127,7 @@ async def callbacks_cars(callback:types.CallbackQuery):
             await callback.message.answer(text='В настоящий момент нет ни одного объявления по Вашему запросу, измените процент отклонения от среднерыночной стоимости')
     await callback.answer()
 
-# Вывод машин пользователя
+# Вывод машин пользователя Get_data_for_request
 @dp.message(Command("help"))
 async def call(message:types.Message):
     user_id = message.from_user.id
@@ -141,6 +142,17 @@ async def call(message:types.Message):
             percent_difference = item['percent_difference']
             # button_del = types.InlineKeyboardButton(text='Удалить', callback_data="car_"+str(item['id']))
             await message.answer(f"{drand, model, percent_difference, item['id']}")
+
+@dp.message(Command("all"))
+async def call(message:types.Message):
+    user_id = 6315832729 # message.from_user.id
+    respons = Get_data_for_request(user_id)
+    for car in respons:
+        list_cars, arg_price = car[0], car[1]
+        for item in list_cars:
+            txt=f"Среднерыночная стоимость: {math.floor(arg_price)}  "+item['name']+f"\n"+item['lank']+f"\n"+item['parametrs']+f"\n"+item['mileage']+f"\n"+str(item['price'])+" \n"+item['description']+"\n"+item['location']
+            await callback.message.answer(text=txt)
+
 
 async def main():
     await dp.start_polling(bot)

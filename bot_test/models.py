@@ -13,6 +13,9 @@ class User(Basic):
 
     class Meta:
         db_table = 'users'
+    
+    def __str__(self):
+        return f'{str(self.telegram_id)}'
 
 class Request(Basic):
     brand_id = IntegerField()

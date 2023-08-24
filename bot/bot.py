@@ -21,42 +21,33 @@ bot=Bot(token='6315832729:AAGC6fYoRIo6QQH595zsXjgN2pZorwvDGi8')
 dp = Dispatcher()
 user_data = {}
 
-
-
-def keyboard_coice():
-    buttons = [
-        types.InlineKeyboardButton(text="<", callback_data="coice_back"),
-        types.InlineKeyboardButton(text="Подтвердить", callback_data="coice_coice"),
-        types.InlineKeyboardButton(text=">", callback_data="coice_forward")
-    ]    
-    return buttons
+""" types.InlineKeyboardButton(text="<", callback_data="coice_back"),
+types.InlineKeyboardButton(text="Подтвердить", callback_data="coice_coice"),
+types.InlineKeyboardButton(text=">", callback_data="coice_forward")"""
 
 builder, model = InlineKeyboardBuilder(), Get_model()
 brand_car_id, model_car_id = '', ''
 
 
-def list_add():
+def list_add(cars:InlineKeyboardBuilder()):
     brand_cars=brand.items()
-    cars=InlineKeyboardBuilder()
     for key, value in brand_cars:
         cars.adjust(3)
         cars.add(types.InlineKeyboardButton(text=key, callback_data="car_"+str(value)))
-    return cars
 
-builder_new=InlineKeyboardBuilder()
-def builder_sell(start: int):
-    builder_old=list_add()
-    stop, builder_new._markup = start*10 if (start*10<=len(builder_old._markup))else len(builder_old._markup), []
-    for i in range(stop-10,stop,1):
-        builder_new._markup.append(builder_old._markup[i])
-    builder_new._markup.append(keyboard_coice())
-    return builder_new
-
+def NewKeyboard(cars:InlineKeyboardBuilder(), start:int,stop:int):
+    new_cars=InlineKeyboardBuilder()
+    new_cars._markup=cars._markup[start:stop]
+    new_cars=new_cars.as_markup()
+    new_cars.inline_keyboard.append([types.InlineKeyboardButton(text="<", callback_data="coice_back"),
+types.InlineKeyboardButton(text="Подтвердить", callback_data="coice_coice"),
+types.InlineKeyboardButton(text=">", callback_data="coice_forward")])
+    return new_cars
 
 #навигация брендов
 async def new_page(message: types.Message, new_value: int):
     with suppress(TelegramBadRequest):
-        await message.edit_text(f"Выберите бренд автомобиля: ",reply_markup=builder_sell(new_value).as_markup())
+        await message.edit_text(f"Выберите бренд автомобиля: ",reply_markup=NewKeyboard(builder,(new_value*10)-10,new_value*10))
 
 async def keyboard(message: types.Message, keybrd: InlineKeyboardBuilder,txt: str):
     with suppress(TelegramBadRequest):
@@ -66,8 +57,8 @@ async def keyboard(message: types.Message, keybrd: InlineKeyboardBuilder,txt: st
 async def call_backs(message: types.Message):
     model.user = message.from_user.id
     user_data[message.from_user.id] = 1
-    builder = builder_sell(1)
-    await message.answer("Выберите бренд автомобиля", reply_markup=builder.as_markup())
+    list_add(builder)
+    await message.answer("Выберите бренд автомобиля", reply_markup=NewKeyboard(builder,0,10))
 
 @dp.callback_query(Text(startswith="coice_"))
 async def callbacks_num(callback: types.CallbackQuery):
