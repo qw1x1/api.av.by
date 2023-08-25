@@ -1,15 +1,24 @@
 import asyncio, math
 import logging
-from aiogram import Bot, Dispatcher, types
+from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters.command import Command
 #from config_reader import config
 from bs4 import BeautifulSoup as bs
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from aiogram.filters import Text, CommandObject
+from aiogram.filters import Text, CommandObject, StateFilter
 import json, io
 from contextlib import suppress
 from aiogram.exceptions import TelegramBadRequest
+from aiogram.fsm.storage.memory import MemoryStorage
 from av1 import brand, Get_model, Pars_info_id_file,  Search_cars
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.fsm.context import FSMContext
+
+
+class Inputdata(StatesGroup):
+    prise=State()
+    date=State()
+    procent=State()
 
 
 # Включаем логирование, чтобы не пропустить важные сообщения
@@ -18,7 +27,8 @@ logging.basicConfig(level=logging.INFO)
 #bot = Bot(token=str(config.bot_token.get_secret_value()))
 bot=Bot(token='6315832729:AAGC6fYoRIo6QQH595zsXjgN2pZorwvDGi8')
 # Диспетчер
-dp = Dispatcher()
+storage: MemoryStorage = MemoryStorage()
+dp = Dispatcher(storage=storage)
 user_data = {}
 
 """ types.InlineKeyboardButton(text="<", callback_data="coice_back"),
@@ -93,22 +103,53 @@ async def callbacks_cars(callback: types.CallbackQuery):
 
     await keyboard(callback.message,keybrd=models_keyboard,txt="Выберите марку авто:")
     await callback.answer()
+price_date_procent_dict: dict[str, str, int] = {}
 
 @dp.callback_query(Text(startswith="model_"))
-async def callbacks_cars(callback: types.CallbackQuery):
+async def callbacks_cars(callback: types.CallbackQuery, state: FSMContext):
     action = callback.data.split("_")[1]
     global model_car_id
     model_car_id = action
+    await callback.answer()
     ##########################
     #ТУТ БУДЕТ ВВОД ГОДА И ЦЕНЫ
+    await callback.message.answer('Введите диапазон цен')
+    await state.set_state(Inputdata.prise)
     ##########################
-    global brand_car_id
-    pars_info = Pars_info_id_file(brand_id=brand_car_id,model_id=model_car_id)
+
+@dp.message(StateFilter(Inputdata.prise))
+async def process_name_sent(message: types.Message, state: FSMContext):
+    await state.update_data(price=message.text)
+    await message.answer(text='Ввежите дату')
+    await state.set_state(Inputdata.date)
+
+@dp.message(StateFilter(Inputdata.date))
+async def process_name_sent(message: types.Message, state: FSMContext):
+    await state.update_data(date=message.text)
+    await message.answer(text='Ввежите процент')
+    await state.set_state(Inputdata.procent)
+
+@dp.message(StateFilter(Inputdata.procent))
+async def process_name_sent(message: types.Message, state: FSMContext):
+    await state.update_data(procent=message.text)
+    price_date_procent_dict[message.from_user.id] = await state.get_data()
+    # Завершаем машину состояний
+    await state.clear()
+    #await message.answer(text=F"{price_date_procent_dict[message.from_user.id]['price']} {price_date_procent_dict[message.from_user.id]['date']} {price_date_procent_dict[message.from_user.id]['procent']}")
+    global brand_car_id, model_car_id
+    price_min, price_max, year_min, year_max=0,0,0,0
+    deviation_procent = 55
+    price_min, price_max = price_date_procent_dict[message.from_user.id]['price'].split('-')[0],price_date_procent_dict[message.from_user.id]['price'].split('-')[1]
+    year_min, year_max = price_date_procent_dict[message.from_user.id]['date'].split('-')[0],price_date_procent_dict[message.from_user.id]['date'].split('-')[1]
+    deviation_procent = price_date_procent_dict[message.from_user.id]['procent']
+    pars_info = Pars_info_id_file(brand_id=brand_car_id,model_id=model_car_id,
+                                  year_max=year_max,year_min=year_min, 
+                                  price_max=price_max,price_min=price_min)
+    await message.answer(F"{price_min} {price_max} {year_min} {year_max}")
     cars_count_page = pars_info()
     if cars_count_page == 0:
-        await callback.message.answer(text='В настоящий момент нет ни одного объявления по Вашему запросу') 
+        await message.answer(text='В настоящий момент нет ни одного объявления по Вашему запросу') 
     else:
-        deviation_procent = 55
         serch_cars_ekz = Search_cars(pars_info.car,pars_info.count_page, deviation_procent)
         serch_car = serch_cars_ekz()
         list_cars, arg_price = serch_car[0], serch_car[1]
@@ -116,11 +157,10 @@ async def callbacks_cars(callback: types.CallbackQuery):
         if len(list_cars) != 0:
             for item in list_cars:
                 txt=f"Среднерыночная стоимость: {math.floor(arg_price)}  "+item['name']+f"\n"+item['lank']+f"\n"+item['parametrs']+f"\n"+item['mileage']+f"\n"+str(item['price'])+" \n"+item['description']+"\n"+item['location']
-                await callback.message.answer(text=txt)
+                await message.answer(text=txt)
         else:
-            await callback.message.answer(text='В настоящий момент нет ни одного объявления по Вашему запросу, измените процент отклонения от среднерыночной стоимости')
-    await callback.answer()
-
+            await message.answer(text='В настоящий момент нет ни одного объявления по Вашему запросу, измените процент отклонения от среднерыночной стоимости')
+    
 async def main():
     await dp.start_polling(bot)
     
