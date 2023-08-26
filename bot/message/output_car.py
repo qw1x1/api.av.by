@@ -5,6 +5,8 @@ from aiogram.filters import StateFilter
 import callbacks.model as cb_model
 from av1 import Pars_info_id_file, Search_cars
 import math
+from controls import Control_db
+from models import *
 
 brand_car_id, model_car_id = '', ''
 router = Router()
@@ -37,6 +39,12 @@ async def process_name_sent(message: types.Message, state: FSMContext):
         list_cars, arg_price = serch_car[0], serch_car[1]
 
         if len(list_cars) != 0:
+            with db:
+                obj = Control_db(message.from_user.id)
+                us = obj.create_user()
+                percent_difference = 60
+                obj.create_request(brand_id=brand_car_id, model_id=model_car_id, percent_difference=percent_difference, 
+                                   year_min=0, year_max=0, price_min=0, price_max=0, user=us[0])
             for item in list_cars:
                 txt=f"Среднерыночная стоимость: {math.floor(arg_price)}  "+item['name']+f"\n"+item['lank']+f"\n"+item['parametrs']+f"\n"+item['mileage']+f"\n"+str(item['price'])+" \n"+item['description']+"\n"+item['location']
                 await message.answer(text=txt)
