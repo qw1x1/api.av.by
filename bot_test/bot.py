@@ -52,12 +52,15 @@ async def keyboard(message:types.Message, keybrd:InlineKeyboardBuilder, txt:str)
     with suppress(TelegramBadRequest):
         await message.answer(txt, reply_markup=keybrd.as_markup())
 
+user_id = 0
 @dp.message(Command("start"))
 async def call_backs(message: types.Message):
+    global user_id
+    user_id = message.from_user.id
     model.user = message.from_user.id
     user_data[message.from_user.id] = 1
     builder = builder_sell(1)
-    await message.answer("Выберите бренд автомобиля", reply_markup=builder.as_markup())
+    await message.answer(f"Выберите бренд автомобиля{user_id}", reply_markup=builder.as_markup())
 
 @dp.callback_query(Text(startswith="coice_"))
 async def callbacks_num(callback:types.CallbackQuery):
@@ -100,6 +103,7 @@ async def callbacks_cars(callback:types.CallbackQuery):
 
     ##########################
     #ТУТ БУДЕТ ВВОД ГОДА И ЦЕНЫ
+
     ##########################
     
     pars_info = Pars_info_id_file(brand_id=brand_car_id,model_id=model_car_id)
@@ -113,9 +117,9 @@ async def callbacks_cars(callback:types.CallbackQuery):
         serch_car = serch_cars_ekz()
         list_cars, arg_price = serch_car[0], serch_car[1]
         if len(list_cars) != 0:
-
+            global user_id
             with db:
-                obj = Control_db(callback.message.from_user.id)
+                obj = Control_db(user_id)
                 us = obj.create_user()
                 percent_difference = 60
                 obj.create_request(brand_id=brand_car_id, model_id=model_car_id, percent_difference=percent_difference, year_min=0, year_max=0, price_min=0, price_max=0, user=us[0])
@@ -130,9 +134,9 @@ async def callbacks_cars(callback:types.CallbackQuery):
 # Вывод машин пользователя Get_data_for_request
 @dp.message(Command("help"))
 async def call(message:types.Message):
-    user_id = message.from_user.id
+    global user_id
     with db:
-        obj = Control_db(6315832729)
+        obj = Control_db(user_id)
         respons_re = obj.get_sefch_data_list()
         for item in respons_re:
             drand = revers_brand[item['brand_id']]
@@ -145,13 +149,13 @@ async def call(message:types.Message):
 
 @dp.message(Command("all"))
 async def call(message:types.Message):
-    user_id = 6315832729 # message.from_user.id
-    respons = Get_data_for_request(user_id)
+    global user_id
+    respons = Get_data_for_request(user_id) 
     for car in respons:
         list_cars, arg_price = car[0], car[1]
         for item in list_cars:
             txt=f"Среднерыночная стоимость: {math.floor(arg_price)}  "+item['name']+f"\n"+item['lank']+f"\n"+item['parametrs']+f"\n"+item['mileage']+f"\n"+str(item['price'])+" \n"+item['description']+"\n"+item['location']
-            await callback.message.answer(text=txt)
+            # await callback.message.answer(text=txt)
 
 
 async def main():
