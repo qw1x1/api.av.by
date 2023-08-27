@@ -2,16 +2,31 @@ from aiogram import Router, F, types
 from aiogram.filters.command import Command
 from models import *
 from update import Get_data_for_request
-import math
+from controls import Control_db
+from av1 import revers_brand, Get_revers_model
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 router = Router()
 
 @router.message(Command("all"))
 async def call(message:types.Message):
-    user_id = message.from_user.id # message.from_user.id
-    respons = Get_data_for_request(user_id)
-    for car in respons:
-        list_cars, arg_price = car[0], car[1]
-        for item in list_cars:
-            txt=f"Среднерыночная стоимость: {math.floor(arg_price)}  "+item['name']+f"\n"+item['lank']+f"\n"+item['parametrs']+f"\n"+item['mileage']+f"\n"+str(item['price'])+" \n"+item['description']+"\n"+item['location']
-            await message.answer(text=txt)
+    global user_id
+    user_id = message.from_user.id
+    cars = InlineKeyboardBuilder()
+    cars=cars.as_markup()
+    await message.answer("Ваши авто:")
+    with db:
+        obj = Control_db(user_id)
+        respons_re = obj.get_sefch_data_list()
+        for item in respons_re:
+            drand = revers_brand[item['brand_id']]
+            rev_model = Get_revers_model()
+            model_car = rev_model.get_data_select_car(str(item['brand_id']) +'/models')
+            model = model_car[item['model_id']]
+            percent_difference = item['percent_difference']
+            cars.inline_keyboard.clear()
+            button_del = types.InlineKeyboardButton(text='Удалить', callback_data=f"delete_{item['id']}")
+            cars.inline_keyboard.append([button_del])
+            await message.answer(f"{drand} {model} Цена: {item['price_min']} - {item['price_max']} Год: {item['year_min']} - {item['year_max']} Процент: {percent_difference}",reply_markup=cars)
+
+    

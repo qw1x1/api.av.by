@@ -162,7 +162,83 @@ brand = {
     "УАЗ": 1464,
     "Эксклюзив": 5019
 }
+revers_brand = {
+    1444: 'Acura',
+    1: 'Alfa Romeo',
+    6: 'Audi',
+    8: 'BMW',
+    1506: 'Buick',
+    5459: 'BYD',
+    40: 'Cadillac',
+    2632: 'Changan',
+    1998: 'Chery',
+    41: 'Chevrolet',
+    42: 'Chrysler',
+    43: 'Citroen',
+    10236: 'Cupra',
+    1841: 'Dacia',
+    46: 'Daewoo',
+    47: 'Daihatsu',
+    45: "Dodge",
+    5780: "Dongfeng",
+    10106: "Dongfeng Honda",
+    2465: "FAW",
+    301: "Fiat",
+    330: "Ford",
+    2012: "Geely",
+    10006: "Genesis",
+    372: "GMC",
+    1726: "Great Wall",
+    5782: "Haval",
+    383: "Honda",
+    433: "Hyundai",
+    1343: "Infiniti",
+    526: "Jaguar",
+    540: "Jeep",
+    545: "Kia",
+    1279: "Lada (ВАЗ)",
+    572: "Lancia",
+    584: "Land Rover",
+    589: "Lexus",
+    2586: "Lifan",
+    601: "Lincoln",
+    10209: "LiXiang",
+    1625: "Maserati",
+    634: "Mazda",
+    683: "Mercedes-Benz",
+    834: "Mitsubishi",
+    892: "Nissan",
+    966: "Opel",
+    989: "Peugeot",
+    1485: "Porsche",
+    1039: "Renault",
+    1067: "Rover",
+    1085: "Saab",
+    1091: "SEAT",
+    1126: "Skoda",
+    1597: "SsangYong",
+    1136: "Subaru",
+    1155: "Suzuki",
+    2521: "Tesla",
+    1181: "Toyota",
+    1216: "Volkswagen",
+    1238: "Volvo",
+}
 
+class Get_revers_model():
+    def __init__(self):
+        self.user = User().random 
+        self.model_dict = {}
+
+    def get_data_select_car(self, params):
+        self.model_dict.clear()
+        respons_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items/' + params, headers={'user-agent': f'{self.user}'})
+        if respons_list.status_code == 200:
+            respons_data = json.loads(respons_list.text)
+            for i in range(len(respons_data)):
+                self.model_dict[respons_data[i]['id']] = respons_data[i]['name']
+        return self.model_dict
+    
 class Get_model():
     def __init__(self):
         self.user = User().random 
