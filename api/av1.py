@@ -220,22 +220,23 @@ class Pars_info_id_file(): # -> car_list
             return self.car, self.count_page
     
 class Search_cars(): # -> deviated_car_list
-    def __init__(self, car_list:list=[], count_page:int=0, deviation_procent:int=55):  
+    def __init__(self, car_list:list=[], count_page:int=0, deviation_procent:int=60):  
         self.car_list = car_list
         self.count_page = count_page
         self.deviation_procent = deviation_procent
         self.deviation_price = 0
         self.deviated_car_list = []
+        self.arg_price = 0
 
     def get_average_market_value(self):
-        count_items, total_price = 0, 0
+        self.count_items, total_price = 0, 0
         for i in range(self.count_page):
             for item in self.car_list[i]:
-                count_items += 1
+                self.count_items += 1
                 total_price += item['price']
                 
-        arg_price = (total_price/count_items)
-        self.deviation_price = arg_price - ((arg_price * self.deviation_procent) / 100)
+        self.arg_price = (total_price/self.count_items)
+        self.deviation_price = self.arg_price - ((self.arg_price * self.deviation_procent) / 100)
     
     def serch_deviated_car_list(self):
         for i in range(self.count_page):
@@ -243,7 +244,8 @@ class Search_cars(): # -> deviated_car_list
                 if item['price'] <= self.deviation_price:
                     self.deviated_car_list.append(item)
 
+                    
     def __call__(self):
         self.get_average_market_value()
         self.serch_deviated_car_list()
-        return self.deviated_car_list
+        return self.deviated_car_list, self.arg_price

@@ -13,7 +13,7 @@ async def call(message:types.Message):
     global user_id
     user_id = message.from_user.id
     cars = InlineKeyboardBuilder()
-    cars=cars.as_markup()
+    cars = cars.as_markup()
     await message.answer("Ваши авто:")
     with db:
         obj = Control_db(user_id)

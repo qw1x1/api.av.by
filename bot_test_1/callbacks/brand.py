@@ -10,8 +10,8 @@ router = Router()
 async def callbacks_cars(callback: types.CallbackQuery):
     action, model_car = callback.data.split("_")[1], {}
     global brand_car_id
-    brand_car_id=action
-    model_car=Start.model.get_data_select_car(str(action) +'/models')
+    brand_car_id = action
+    model_car = Start.model.get_data_select_car(str(action) +'/models')
     models_keyboard = InlineKeyboardBuilder()
     models_keyboard._markup.clear()
     models_keyboard = kb_model.api_call(model_car)

@@ -12,7 +12,7 @@ async def callbacks_cars(callback: types.CallbackQuery):
     user_id = all.user_id
     with db:
         obj = Control_db(user_id)
-        obj.request_id = int(action) - 1
+        obj._request_id = int(action) - 1
         obj.get_sefch_data_list()
         obj.delet_reqest()
     await callback.message.answer("Авто удаленно из поиска", show_alert=True)

@@ -4,7 +4,7 @@ from av1 import brand
 from aiogram.exceptions import TelegramBadRequest
 from contextlib import suppress
 
-async def keyboard(message: types.Message, keybrd: InlineKeyboardBuilder,txt: str):
+async def keyboard(message:types.Message, keybrd:InlineKeyboardBuilder, txt:str):
     with suppress(TelegramBadRequest):
         await message.answer(txt, reply_markup=keybrd.as_markup())
 

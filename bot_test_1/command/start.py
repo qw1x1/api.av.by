@@ -15,4 +15,4 @@ async def call_backs(message: types.Message):
     model.user = message.from_user.id
     user_data[message.from_user.id] = 1
     kb_brand.list_add(kb_brand.builder)
-    await message.answer("Выберите бренд автомобиля", reply_markup=kb_brand.NewKeyboard(kb_brand.builder,0,10))
+    await message.answer("Выберите бренд автомобиля", reply_markup=kb_brand.NewKeyboard(kb_brand.builder, 0, 10))

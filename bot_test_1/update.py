@@ -2,8 +2,6 @@ from av1 import  Pars_info_id_file, Search_cars
 from controls import Control_db
 from models import *
 
-import math
-
 class Get_data_for_request:
     def __init__(self, telegram_id):
         self.telegram_id = telegram_id
@@ -26,21 +24,21 @@ class Get_data_for_request:
         self.pars_info()
         return self.result_list
     
-def main(): 
-    user_id = 6315832729 # message.from_user.id
-    obj = Get_data_for_request(user_id)
-    respons = obj()
-    for car in respons:
-        list_cars, arg_price = car[0], car[1]
-        for item in list_cars:
-            txt = f"Среднерыночная стоимость: {math.floor(arg_price)}  "+item['name']+f"\n"+item['lank']+f"\n"+item['parametrs']+f"\n"+item['mileage']+f"\n"+str(item['price'])+" \n"+item['description']+"\n"+item['location']
-            print(txt)
-            print()
+# def main(): 
+#     user_id = 6315832729 # message.from_user.id
+#     obj = Get_data_for_request(user_id)
+#     respons = obj()
+#     for car in respons:
+#         list_cars, arg_price = car[0], car[1]
+#         for item in list_cars:
+#             txt = f"Среднерыночная стоимость: {math.floor(arg_price)}  "+item['name']+f"\n"+item['lank']+f"\n"+item['parametrs']+f"\n"+item['mileage']+f"\n"+str(item['price'])+" \n"+item['description']+"\n"+item['location']
+#             print(txt)
+#             print()
 
 
     
-if __name__ ==  '__main__':
-    main()
+# if __name__ ==  '__main__':
+#     main()
 
     
         
