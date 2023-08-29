@@ -40,7 +40,7 @@ async def process_name_sent(message: types.Message, state: FSMContext):
         serch_cars_ekz = Search_cars(pars_info.car, pars_info.count_page, deviation_procent)
         serch_car = serch_cars_ekz()
         list_cars, arg_price = serch_car[0], serch_car[1]
-
+        await message.answer(text=f'Среднерыночная стоимость: {math.floor(arg_price)}')
         if len(list_cars) != 0:
             with db:
                 obj = Control_db(message.from_user.id)
@@ -50,7 +50,7 @@ async def process_name_sent(message: types.Message, state: FSMContext):
                                   price_max=int(price_max), price_min=int(price_min), 
                                   percent_difference=deviation_procent, user=us[0])
             for item in list_cars:
-                txt=f"Среднерыночная стоимость: {math.floor(arg_price)}  "+item['name']+f"\n"+item['lank']+f"\n"+item['parametrs']+f"\n"+item['mileage']+f"\n"+str(item['price'])+" \n"+item['description']+"\n"+item['location']
+                txt=f""+item['name']+f"\n"+item['lank']+f"\n"+item['parametrs']+f"\n"+item['mileage']+f"\n"+str(item['price'])+" \n"+item['description']+"\n"+item['location']
                 await message.answer(text=txt)
         else:
             await message.answer(text='В настоящий момент нет ни одного объявления по Вашему запросу, измените процент отклонения от среднерыночной стоимости')
