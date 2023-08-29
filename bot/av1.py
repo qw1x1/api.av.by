@@ -1,24 +1,12 @@
-import requests
+import requests, json, math
 from fake_useragent import UserAgent as User
 from bs4 import BeautifulSoup as bs
-import json
-import math
 
 brand = {
-    "Abarth": 10297,
     "Acura": 1444,
     "Alfa Romeo": 1,
-    "Alpina": 5940,
-    "ARO": 5324,
-    "Asia": 5772,
-    "Aston Martin": 2325,
     "Audi": 6,
-    "Avatr": 10346,
-    "BAIC ": 10034,
-    "Baojun": 10337,
-    "Bentley": 1676,
     "BMW": 8,
-    "Brilliance": 2210,
     "Buick": 1506,
     "BYD": 5459,
     "Cadillac": 40,
@@ -31,136 +19,50 @@ brand = {
     "Dacia": 1841,
     "Daewoo": 46,
     "Daihatsu": 47,
-    "Datsun": 2578,
-    "Denza": 10287,
-    "Derways": 5109,
     "Dodge": 45,
     "Dongfeng": 5780,
     "Dongfeng Honda": 10106,
-    "Eagle": 10240,
-    "Everus": 10224,
-    "EXEED": 10303,
     "FAW": 2465,
-    "Ferrari": 288,
     "Fiat": 301,
-    "Fisker": 2323,
     "Ford": 330,
-    "Foton": 2355,
-    "FSO": 5526,
-    "GAC": 10131,
-    "GAC Honda": 10222,
     "Geely": 2012,
     "Genesis": 10006,
     "GMC": 372,
-    "Gonow": 6005,
     "Great Wall": 1726,
-    "Hafei": 2215,
-    "Haima": 5070,
     "Haval": 5782,
-    "HiPhi": 10279,
     "Honda": 383,
-    "Hongqi": 10275,
-    "Hongxing": 2681,
-    "Hozon": 10259,
-    "Hummer": 1498,
-    "Hycan": 10326,
     "Hyundai": 433,
     "Infiniti": 1343,
-    "Iran Khodro": 2022,
-    "Isuzu": 461,
-    "JAC": 2030,
     "Jaguar": 526,
     "Jeep": 540,
-    "Jetour": 10362,
-    "Jiangling": 2272,
-    "Joylong": 10188,
-    "Kandi": 10238,
     "Kia": 545,
     "Lada (ВАЗ)": 1279,
-    "Lamborghini": 2437,
     "Lancia": 572,
     "Land Rover": 584,
-    "Leapmotor": 10268,
     "Lexus": 589,
     "Lifan": 2586,
     "Lincoln": 601,
     "LiXiang": 10209,
-    "Lotus": 2295,
-    "Mahindra": 5957,
     "Maserati": 1625,
-    "Maybach": 2169,
     "Mazda": 634,
-    "McLaren": 5970,
     "Mercedes-Benz": 683,
-    "Mercury": 825,
-    "MG": 1906,
-    "Microcar": 10090,
-    "MINI": 1850,
     "Mitsubishi": 834,
-    "Morgan": 5937,
     "Nissan": 892,
-    "Oldsmobile": 1364,
     "Opel": 966,
     "Peugeot": 989,
-    "Piaggio": 2221,
-    "Plymouth": 1012,
-    "Polestar": 10042,
-    "Pontiac": 1022,
     "Porsche": 1485,
-    "Proton": 1609,
-    "RAM": 10226,
-    "Ravon": 5503,
     "Renault": 1039,
-    "Renault Samsung": 10100,
-    "Roewe": 5800,
-    "Rolls-Royce": 5100,
     "Rover": 1067,
     "Saab": 1085,
-    "Saipa": 5029,
-    "Santana": 5517,
-    "Saturn": 1703,
-    "Scion": 2698,
     "SEAT": 1091,
-    "Seres": 10289,
-    "Shanghai Maple": 5822,
     "Skoda": 1126,
-    "Skywell": 10308,
-    "Smart": 2449,
-    "SRM": 10350,
     "SsangYong": 1597,
     "Subaru": 1136,
     "Suzuki": 1155,
-    "Tata": 5447,
-    "Tatra": 10161,
     "Tesla": 2521,
-    "Think": 10013,
-    "Tianma": 5520,
     "Toyota": 1181,
-    "Trabant": 5080,
-    "VGV": 10368,
     "Volkswagen": 1216,
     "Volvo": 1238,
-    "Vortex": 5437,
-    "Voyah": 10244,
-    "Wartburg": 1857,
-    "Weltmeister": 10067,
-    "Wuling": 10334,
-    "Xpeng": 6019,
-    "Yudo": 10285,
-    "Zeekr": 10185,
-    "Zotye": 2510,
-    "ZX": 5066,
-    "Богдан": 5076,
-    "ГАЗ": 1310,
-    "ЕрАЗ": 10094,
-    "ЗАЗ": 1551,
-    "ИЖ": 2894,
-    "ЛуАЗ": 2345,
-    "Москвич": 2051,
-    "РАФ": 5252,
-    "ТагАЗ": 5032,
-    "УАЗ": 1464,
-    "Эксклюзив": 5019
 }
 revers_brand = {
     1444: 'Acura',
@@ -238,10 +140,10 @@ class Get_revers_model():
             for i in range(len(respons_data)):
                 self.model_dict[respons_data[i]['id']] = respons_data[i]['name']
         return self.model_dict
-    
+
 class Get_model():
-    def __init__(self):
-        self.user = User().random 
+    def __init__(self,user):
+        self.user = user
         self.model_dict = {}
 
     def get_data_select_car(self, params):
@@ -266,7 +168,7 @@ class Pars_info_id_file(): # -> car_list
 
     def get_car_dict(self, data_soup, param=0): # -> Return list for car
         car_list, respons_list = [], []
-        # нужно провека на наличие объявлений AttributeError: 'NoneType' object has no attribute 'find'
+        
         try:
             if param == 1:
                 count_ad = int("".join(count for count in data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text if  count.isdecimal()))
@@ -318,7 +220,7 @@ class Pars_info_id_file(): # -> car_list
             return self.car, self.count_page
     
 class Search_cars(): # -> deviated_car_list
-    def __init__(self, car_list:list=[], count_page:int=0, deviation_procent:float=10):  
+    def __init__(self, car_list:list=[], count_page:int=0, deviation_procent:int=60):  
         self.car_list = car_list
         self.count_page = count_page
         self.deviation_procent = deviation_procent
@@ -334,7 +236,7 @@ class Search_cars(): # -> deviated_car_list
                 total_price += item['price']
                 
         self.arg_price = (total_price/self.count_items)
-        self.deviation_price = int(self.arg_price) - int((int(self.arg_price) * int(self.deviation_procent)) / 100)
+        self.deviation_price = self.arg_price - ((self.arg_price * self.deviation_procent) / 100)
     
     def serch_deviated_car_list(self):
         for i in range(self.count_page):

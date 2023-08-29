@@ -50,15 +50,6 @@ class Control_db():
                     })
         return self.requests_list
     
-    def get_reqest(self):
-        '''
-        Метод вернет крнкретную запсись с параметрами для поиска
-        но пред этим нужно передать в класс _request_id с помощю сетерра 
-        obj.request_id = <int:и id записи>
-        '''
-        user = User.get(User.telegram_id == self.telegram_id)
-        return user.requests[self._request_id]
-
     def delet_reqest(self):
         '''
         Метод удалит крнкретную запсись с параметрами для поиска
@@ -66,8 +57,9 @@ class Control_db():
         obj.request_id = <int:и id записи>
         '''
         user = User.get(User.telegram_id == self.telegram_id)
-        return user.requests[self._request_id].delete_instance()
-    
+        request = Request.get(Request.user == user and Request.id == self._request_id)
+        return request.delete_instance()
+        
 def get_users():
     '''
     вернет список с tg_id пользователей
