@@ -3,11 +3,8 @@ from aiogram.filters.command import Command
 from av1 import brand, Get_model
 import keyboar.brand as kb_brand
 
-
 router = Router()
-
 model = Get_model()
-
 user_data = {}
 
 @router.message(Command("start"))
