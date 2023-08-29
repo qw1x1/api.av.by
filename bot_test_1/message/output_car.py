@@ -18,9 +18,8 @@ price_date_procent_dict: dict[str, str, int] = {}
 async def process_name_sent(message: types.Message, state: FSMContext):
     await state.update_data(procent=message.text)
     price_date_procent_dict[message.from_user.id] = await state.get_data()
-    # Завершаем машину состояний
     await state.clear()
-    #await message.answer(text=F"{price_date_procent_dict[message.from_user.id]['price']} {price_date_procent_dict[message.from_user.id]['date']} {price_date_procent_dict[message.from_user.id]['procent']}")
+
     global brand_car_id, model_car_id
     model_car_id = cb_model.model_car_id
     brand_car_id = cb_brand.brand_car_id
@@ -32,7 +31,7 @@ async def process_name_sent(message: types.Message, state: FSMContext):
     pars_info = Pars_info_id_file(brand_id=int(brand_car_id), model_id=int(model_car_id),
                                   year_max=int(year_max), year_min=int(year_min), 
                                   price_max=int(price_max), price_min=int(price_min))
-    #await message.answer(F"{price_min} {price_max} {year_min} {year_max}")
+
     
     cars_count_page = pars_info()
     if cars_count_page == 0:

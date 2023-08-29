@@ -14,19 +14,23 @@ async def call(message:types.Message):
     user_id = message.from_user.id
     cars = InlineKeyboardBuilder()
     cars = cars.as_markup()
-    await message.answer("Ваши авто:")
+    
     with db:
         obj = Control_db(user_id)
         respons_re = obj.get_sefch_data_list()
-        for item in respons_re:
-            drand = revers_brand[item['brand_id']]
-            rev_model = Get_revers_model()
-            model_car = rev_model.get_data_select_car(str(item['brand_id']) +'/models')
-            model = model_car[item['model_id']]
-            percent_difference = item['percent_difference']
-            cars.inline_keyboard.clear()
-            button_del = types.InlineKeyboardButton(text='Удалить', callback_data=f"delete_{item['id']}")
-            cars.inline_keyboard.append([button_del])
-            await message.answer(f"{drand} {model} Цена: {item['price_min']} - {item['price_max']} Год: {item['year_min']} - {item['year_max']} Процент: {percent_difference}",reply_markup=cars)
+        if len(respons_re) == 0:
+            await message.answer(f'Вы еще не выбрaли ни одного авто')
+        else:
+            await message.answer("Ваши авто:")
+            for item in respons_re:
+                drand = revers_brand[item['brand_id']]
+                rev_model = Get_revers_model()
+                model_car = rev_model.get_data_select_car(str(item['brand_id']) +'/models')
+                model = model_car[item['model_id']]
+                percent_difference = item['percent_difference']
+                cars.inline_keyboard.clear()
+                button_del = types.InlineKeyboardButton(text='Удалить', callback_data=f"delete_{item['id']}")
+                cars.inline_keyboard.append([button_del])
+                await message.answer(f"{drand} {model} Цена: {item['price_min']} - {item['price_max']} Год: {item['year_min']} - {item['year_max']} Процент: {percent_difference}", reply_markup=cars)
 
     

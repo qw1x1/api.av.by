@@ -11,7 +11,7 @@ class Inputdata(StatesGroup):
     procent=State()
 
 @router.callback_query(Text(startswith="model_"))
-async def callbacks_cars(callback: types.CallbackQuery, state: FSMContext):
+async def callbacks_cars(callback:types.CallbackQuery, state:FSMContext):
     action = callback.data.split("_")[1]
     global model_car_id
     model_car_id = action
