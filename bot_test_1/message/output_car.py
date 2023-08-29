@@ -32,7 +32,6 @@ async def process_name_sent(message: types.Message, state: FSMContext):
                                   year_max=int(year_max), year_min=int(year_min), 
                                   price_max=int(price_max), price_min=int(price_min))
 
-    
     cars_count_page = pars_info()
     if cars_count_page == 0:
         await message.answer(text='В настоящий момент нет ни одного объявления по Вашему запросу') 
@@ -49,10 +48,6 @@ async def process_name_sent(message: types.Message, state: FSMContext):
                                   year_max=int(year_max), year_min=int(year_min), 
                                   price_max=int(price_max), price_min=int(price_min), 
                                   percent_difference=deviation_procent, user=us[0])
-                
-
-
-
             trek = 0
             for item in list_cars:
                 if trek == 10:
@@ -62,9 +57,5 @@ async def process_name_sent(message: types.Message, state: FSMContext):
                     trek += 1
                     txt=f""+item['name']+f"\n"+item['lank']+f"\n"+item['parametrs']+f"\n"+item['mileage']+f"\n"+str(item['price'])+" \n"+item['description']+"\n"+item['location']
                     await message.answer(text=txt)
-
-
-
-
         else:
             await message.answer(text='В настоящий момент нет ни одного объявления по Вашему запросу, измените процент отклонения от среднерыночной стоимости')
