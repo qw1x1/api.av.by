@@ -179,17 +179,10 @@ class Pars_info_id_file(): # -> car_list
             return respons_list
         
         for result in data_soup.find(class_="listing__items").find_all('div', class_="listing-item__wrap"):
-            name_car = result.find('div', class_="listing-item__about").text
             link_car = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
-            params_to_car = result.find(class_="listing-item__params").text
-            car_mileage = result.find('div', class_="listing-item__params").find('span').text
             price_car = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
-            description_car = 'Без описания'
-            if result.find(class_="listing-item__message"):
-                description_car = result.find(class_="listing-item__message").text[:150]
-            location = result.find(class_="listing-item__info").find(class_="listing-item__location").text
-
-            car_list.append({'name':name_car, 'lank':link_car, 'parametrs': params_to_car, 'mileage': car_mileage, 'price': price_car, 'description': description_car, 'location': location})
+            
+            car_list.append({'link':link_car,'price': price_car})
         self.car.append(car_list)
         return  respons_list
 

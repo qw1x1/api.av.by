@@ -59,7 +59,7 @@ async def process_name_sent(message: types.Message, state: FSMContext):
                     await message.answer(text=f'1 sek') # Тут бы придумать чет чтоб вывод сделать с кнопкой продолжить
                 else:
                     trek += 1
-                    txt=f""+item['name']+f"\n"+item['lank']+f"\n"+item['parametrs']+f"\n"+item['mileage']+f"\n"+str(item['price'])+" \n"+item['description']+"\n"+item['location']
+                    txt=f"{item['link']}"
                     await message.answer(text=txt)
 
 
