@@ -9,5 +9,5 @@ router = Router()
 @router.message(StateFilter(cb_model.Inputdata.prise))
 async def process_name_sent(message: types.Message, state: FSMContext):
     await state.update_data(price=message.text)
-    await message.answer(text='Введите дату')
+    await message.answer(text='Введите диапозон дат')
     await state.set_state(cb_model.Inputdata.date)
