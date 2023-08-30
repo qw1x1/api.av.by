@@ -1,0 +1,58 @@
+Виртуальное окружение:  python -m venv venv
+При запуске виртуального окружения может возникнуть ошибка: https://gist.github.com/2ik/3ddbef3263dee8e76b63a391e2ffe5d0?permalink_comment_id=4077417
+Запуск виртуального окружения: .\venv\Scripts\activate 
+Создание файла с зависимостями: pip freeze > requirements.txt
+Загрузка библиотек с помощю файла с зависимостями: pip install -r requirements.txt
+Удаление всех библиотек pip uninstall -y -r requirements.txt
+.gitignore - для игнорирования файлов (не загрузяться на git)
+Создание проекта django: django-admin startproject <имя>
+При запуске сервера нужно находиться в папке приложения!
+Запуск сервера: python manage.py runserver
+При создании приложения нужно находиться в папке проекта!
+Создание приложения django: python manage.py startapp <имя>
+Консоль для ручной отладки: python manage.py shell, для выхода exit()
+
+$ git config --global user.name "qw1x1"
+$ git config --global user.email "qw1x.stars@gmail.com"
+
+@builtin git - При ошибке в vs_code "Поставщики системы управления версиями не зрегестрированы"
+
+
+
+@
+# Вьюхи для ответа используют HttpResponseexit
+# from django.http import HttpResponse 
+# Не прописываем урлы в главном приложении а прописываем в самом приложении для гибкости path('', include('women.urls')) 
+# т.к это позволит нам перенести все наше приложение в другой проект и прописать всего однй строку в урлах главного приложения
+@
+
+--
+Создание миграции: python manage.py makemigrations
+Просмотр SQL-запроса миграции: python manage.py sqlmigrate <папка_модели>=women <номер_миграции>=0001
+Выполнение миграции: python manage.py migrate
+--
+
+@
+АДМИНКА
+python manage.py createsuperuser - создает админа 
+
+
+@
+GIT
+git config --global user.name "qw1x1" 
+git config --global user.email "qw1x.stars@gmail.com"
+
+git status - показывает файлы в index 
+git add . - добавляет ВСЕ файлы в index
+git add <name_file> - добавляет указаный файл(ы) в index
+git commit -m 'Текст комита' - комитит отслеживаемые фвйлы из index
+
+git rm --cached <name_file> - удалит файл из index, но осавит локально
+git rm -r --cached <name_directory> - удалит директорию из index, но осавит локально
+
+git branch - список веток
+git branch <имя_ветки> - создает новую ветку
+git checkout <имя_ветки> - переключиться на веky
+git checkout -b <имя_ветки> - создать новую локальную ветку и переключиться на нее
+
+commit e917e1d / коммит с рездельной api и bot
