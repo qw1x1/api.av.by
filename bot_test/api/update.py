@@ -1,6 +1,6 @@
-from av1 import  Pars_info_id_file, Search_cars
-from controls import Control_db
-from models import *
+from api.av1 import  Pars_info_id_file, Search_cars
+from api.controls import Control_db
+from api.models import *
 
 class Get_data_for_request:
     def __init__(self, telegram_id):
