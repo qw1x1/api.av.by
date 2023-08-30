@@ -66,3 +66,7 @@ def get_users():
     '''
     users = User.select()
     return users
+
+def get_request(brand_id=0, model_id=0, percent=0):
+    reqest_list = Request.select().where(Request.brand_id == brand_id, Request.model_id == model_id, Request.percent_difference <= percent)
+    return reqest_list

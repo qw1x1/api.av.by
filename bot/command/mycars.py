@@ -17,6 +17,7 @@ async def call(message:types.Message):
     
     with db:
         obj = Control_db(user_id)
+        obj.create_user()
         respons_re = obj.get_sefch_data_list()
         if len(respons_re) == 0:
             await message.answer(f'Вы еще не выбрaли ни одного авто')

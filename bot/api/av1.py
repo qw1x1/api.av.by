@@ -142,7 +142,7 @@ class Get_revers_model():
         return self.model_dict
 
 class Get_model():
-    def __init__(self, user_id):
+    def __init__(self, user_id=0):
         self.user = User().random 
         self.model_dict = {}
         self.user_id = user_id
@@ -195,7 +195,6 @@ class Pars_info_id_file(): # -> car_list
             if cout_ad == 0:
                 return 0
             
-        
         self.count_page = math.ceil(cout_ad / 25)
         if self.count_page > 1:
             for page in range(2, self.count_page + 1):
