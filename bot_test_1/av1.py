@@ -142,9 +142,10 @@ class Get_revers_model():
         return self.model_dict
 
 class Get_model():
-    def __init__(self):
+    def __init__(self, user_id):
         self.user = User().random 
         self.model_dict = {}
+        self.user_id = user_id
 
     def get_data_select_car(self, params):
         self.model_dict.clear()
