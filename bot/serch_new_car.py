@@ -1,38 +1,14 @@
 import requests, time
 from fake_useragent import UserAgent as Userr
 from bs4 import BeautifulSoup as bs
-from api.av1 import brand, Get_model, Pars_info_id_file
+from api.av1 import brand as brand_list
+from api.av1 import Get_model, Pars_info_id_file
 from api.controls import get_request
 from api.models import *
 
-test_list = [{'brand': 1238, 'model': 1262, 'link': 'https://cars.av.by/volvo/xc70/105570262', 'price': 22900, 'location': 'Лида', 'arg_price': 15669.1875},
-             {'brand': 1216, 'model': 1974, 'link': 'https://cars.av.by/volkswagen/tiguan/105570332', 'price': 11500, 'location': 'Жлобин', 'arg_price': 24082.986270022884},
-             {'brand': 1039, 'model': None, 'link': 'https://cars.av.by/renault/grand-scenic/105463046', 'price': 22600, 'location': 'Минск', 'arg_price': 0},
-             {'brand': 683, 'model': 820, 'link': 'https://cars.av.by/mercedes-benz/viano/105627663', 'price': 22999, 'location': 'Минск', 'arg_price': 17434.843137254902},
-             {'brand': 43, 'model': 181, 'link': 'https://cars.av.by/citroen/c5/105435652', 'price': 5450, 'location': 'Минск', 'arg_price': 6693.4951768488745},
-             {'brand': 43, 'model': 178, 'link': 'https://cars.av.by/citroen/berlingo/104885011', 'price': 11000, 'location': 'Гродно', 'arg_price': 7279.571428571428},
-             {'brand': 6, 'model': 5812, 'link': 'https://cars.av.by/audi/a8/105035770', 'price': 18950, 'location': 'Жлобин', 'arg_price': 22360.14619883041},
-             {'brand': 892, 'model': 2306, 'link': 'https://cars.av.by/nissan/leaf/105435450', 'price': 19500, 'location': 'Минск', 'arg_price': 14557.008547008547},
-             {'brand': 1216, 'model': 1974, 'link': 'https://cars.av.by/volkswagen/tiguan/105409480', 'price': 27200, 'location': 'Минск', 'arg_price': 24082.986270022884},
-             {'brand': 1238, 'model': 1717, 'link': 'https://cars.av.by/volvo/v90-cross-country/105409190', 'price': 39500, 'location': 'Минск', 'arg_price': 27264.36842105263},
-             {'brand': 2012, 'model': None, 'link': 'https://cars.av.by/geely/coolray/105406987', 'price': 19990, 'location': 'Минск', 'arg_price': 0},
-             {'brand': 433, 'model': 5384, 'link': 'https://cars.av.by/hyundai/creta/105406486', 'price': 22200, 'location': 'Минск', 'arg_price': 20258.721739130433},
-             {'brand': 683, 'model': 5897, 'link': 'https://cars.av.by/mercedes-benz/s-klass-amg/105399371', 'price': 72500, 'location': 'Минск', 'arg_price': 24343.136},
-             {'brand': 2012, 'model': None, 'link': 'https://cars.av.by/geely/emgrand-x7/105363797', 'price': 22200, 'location': 'Минск', 'arg_price': 0},
-             {'brand': 8, 'model': 5867, 'link': 'https://cars.av.by/bmw/x5/105363652', 'price': 46900, 'location': 'Минск', 'arg_price': 41081.10339943343},
-             {'brand': 433, 'model': 5384, 'link': 'https://cars.av.by/hyundai/creta/105339165', 'price': 21200, 'location': 'Минск', 'arg_price': 20258.721739130433},
-             {'brand': 834, 'model': 875, 'link': 'https://cars.av.by/mitsubishi/outlander/105319901', 'price': 24700, 'location': 'Минск', 'arg_price': 16399.98367346939},
-             {'brand': 526, 'model': 5291, 'link': 'https://cars.av.by/jaguar/f-pace/105259699', 'price': 38500, 'location': 'Минск', 'arg_price': 38539.781818181815},
-             {'brand': 892, 'model': 1768, 'link': 'https://cars.av.by/nissan/qashqai/105249731', 'price': 19990, 'location': 'Минск', 'arg_price': 17522.932084309134},
-             {'brand': 2012, 'model': None, 'link': 'https://cars.av.by/geely/coolray/105249600', 'price': 23400, 'location': 'Минск', 'arg_price': 0},
-             {'brand': 1506, 'model': 2570, 'link': 'https://cars.av.by/buick/encore/105207739', 'price': 15300, 'location': 'Минск', 'arg_price': 15741.606557377048},
-             {'brand': 2012, 'model': 5846, 'link': 'https://cars.av.by/geely/atlas-pro/105167592', 'price': 27700, 'location': 'Минск', 'arg_price': 20239.297297297297},
-             {'brand': 1485, 'model': 1493, 'link': 'https://cars.av.by/porsche/cayenne/105159545', 'price': 74500, 'location': 'Минск', 'arg_price': 39384.88636363636},
-             {'brand': 8, 'model': None, 'link': 'https://cars.av.by/bmw/ix/105153728', 'price': 88800, 'location': 'Минск', 'arg_price': 0},
-             {'brand': 6, 'model': 5811, 'link': 'https://cars.av.by/audi/a6/105153155', 'price': 30200, 'location': 'Минск', 'arg_price': 15412.228003784296}]
-
 class Get_new_car_list:
     '''
+    Делает запрос на av.by, получет 25 новых авто, затем записывает их в список с дсктами.
     Вернёт список с диктами {'brand':brand_id, 'model':model_id, 'link':link_car, 'price': price_car, 'location': location, 'arg_price': arg_price}
     ничего не принемает, нужно вызывать с интервалом в 10-15 мин
     '''
@@ -43,7 +19,7 @@ class Get_new_car_list:
     
     def get_model_id(self, brend_id, model):
         model_object = Get_model()
-        model_dict = model_object.get_data_select_car(str(brand[brend_id]) +'/models')
+        model_dict = model_object.get_data_select_car(str(brand_list[brend_id]) +'/models')
         if model in model_dict:
             return model_dict[model]
 
@@ -56,8 +32,8 @@ class Get_new_car_list:
             location = result.find(class_="listing-item__info").find(class_="listing-item__location").text
 
             lst = name_car.split() 
-            if lst[0] in brand:
-                car_list.append({'brand':brand[lst[0]], 'model':self.get_model_id(lst[0], lst[1]), 'link':link_car, 'price': price_car, 'location': location, 'arg_price': 0})
+            if lst[0] in brand_list:
+                car_list.append({'brand':brand_list[lst[0]], 'model':self.get_model_id(lst[0], lst[1]), 'link':link_car, 'price': price_car, 'location': location, 'arg_price': 0})
         self.car.append(car_list)
         return self.car[0]
 
@@ -91,6 +67,7 @@ class Get_new_car_list:
 class Create_list_respons():
     '''
     На вход передаем список из класса Get_new_car_list
+    Добавляет в список процент отклонения от среднерырочной стоимости
     Вернёт список с диктами {'brand':brand_id, 'model':model_id, 'link':link_car, 'price': price_car, 'location': location, 'arg_price': arg_price, 'procent': procent}
     '''
     def __init__(self, new_car:list=[]):
@@ -118,6 +95,7 @@ class Create_list_respons():
 class Serch_user_for_cars():
     '''
     На вход передаем список из класса Create_list_respons
+    Добавляет в список пользователей поторым иодходит авто
     Вернёт список с диктами {'brand':brand_id, 'model':model_id, 'link':link_car, 'price': price_car, 'location': location, 'arg_price': arg_price, 'procent': procent, 'users': list[user_1, user_2]}
     '''
     def __init__(self, car_list:list = []):
@@ -142,6 +120,11 @@ class Serch_user_for_cars():
         return self.car_list
 
 class Сheck_for_repeats():
+    '''
+    Убирает авто которые попали в список второй раз.
+    Затем с интервалом обновляет данные.
+    Обрабатывает все данные и отправляет найденые авто пользователям
+    '''
     CAR_LIST = Get_new_car_list()
 
     def __init__(self):
@@ -161,42 +144,26 @@ class Сheck_for_repeats():
     def send_messeg_for_user(self, car_list):
         for item in car_list:
             for user in item['users']:
+                # send_msg(user, item['link'])
                 link = item['link']
                 print(f'{link}, user') #тут предать в метод для отправки по user_id 
 
-        return 0
-    
     def __call__(self):
         while True:
             result_0 = self.get_old_list()
-
             obj_1 = Create_list_respons(new_car = result_0)
             result_1 = obj_1()
-
             obj_2 = Serch_user_for_cars(result_1)
             result_2 = obj_2()
-            # result_2 - Эьо дикт вида {'brand':brand_id, 'model':model_id, 'link':link_car, 'price': price_car, 'location': location, 'arg_price': arg_price, 'procent': procent, 'users': list[user_1, user_2]}
-            # result_2 нужно передать в метод который по user_id отправляет сообщения пользователям
-     
-            
-            time.sleep(5)
+
+            self.send_messeg_for_user(result_2)
+            time.sleep(600)
             # 900 = 15min
             # 840 = 14min
             # 780 = 13min
             # 720 = 12min
             # 660 = 11min
             # 600 = 10min
-            
-            
-# obj_0 = Get_new_car_list()
-# result_0 = obj_0()
-
-# obj_1 = Create_list_respons(new_car = result_0)
-# result_1 = obj_1()
-
-# obj_2 = Serch_user_for_cars(result_1)
-# result_2 = obj_2()
-
     
 obj_3 = Сheck_for_repeats()
 res = obj_3()
