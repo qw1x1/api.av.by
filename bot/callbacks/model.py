@@ -18,5 +18,5 @@ async def callbacks_cars(callback:types.CallbackQuery, state:FSMContext):
     action = callback.data.split("_")[1]
     id_model[callback.from_user.id] = action
     await callback.answer()
-    await callback.message.answer('Введите диапазон цен (мин. цена - макс. цена)')
+    await callback.message.answer('Введите диапазон цен')
     await state.set_state(Inputdata.prise)

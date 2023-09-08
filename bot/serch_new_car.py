@@ -1,32 +1,10 @@
-import asyncio, logging, requests, time
-from aiogram import Bot, Dispatcher
-from aiogram.fsm.storage.memory import MemoryStorage
-from callbacks import brand, coice, model, delete
-from command import start, help, mycars
-from message import date, output_car, procent
+import requests, time
 from fake_useragent import UserAgent as Userr
 from bs4 import BeautifulSoup as bs
-from api.av1 import Get_model, Pars_info_id_file
 from api.av1 import brand as brand_list
+from api.av1 import Get_model, Pars_info_id_file
 from api.controls import get_request
 from api.models import *
-
-logging.basicConfig(level=logging.INFO)
-bot = Bot(token='6315832729:AAGC6fYoRIo6QQH595zsXjgN2pZorwvDGi8')
-storage:MemoryStorage = MemoryStorage()
-dp = Dispatcher(storage=storage)
-
-dp.include_routers(brand.router, coice.router, model.router, start.router, 
-                   date.router, output_car.router, procent.router, delete.router, help.router, mycars.router)
-
-async def main():
-    await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot)
-    obj = Сheck_for_repeats()
-    await obj()
-
-async def send_msg(id: int, message: str):
-    await bot.send_message(id, message)
 
 class Get_new_car_list:
     '''
@@ -166,7 +144,9 @@ class Сheck_for_repeats():
     def send_messeg_for_user(self, car_list):
         for item in car_list:
             for user in item['users']:
-                send_msg(user, item['link'])
+                # send_msg(user, item['link'])
+                link = item['link']
+                print(f'{link}, user') #тут предать в метод для отправки по user_id 
 
     def __call__(self):
         while True:
@@ -184,6 +164,33 @@ class Сheck_for_repeats():
             # 720 = 12min
             # 660 = 11min
             # 600 = 10min
+    
+obj_3 = Сheck_for_repeats()
+res = obj_3()
 
-if __name__ ==  '__main__':
-    asyncio.run(main())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+             
+             
+             
+             
+             
+                  
+             
+             
+
+

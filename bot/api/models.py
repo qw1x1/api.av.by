@@ -31,5 +31,5 @@ class Request(Basic):
         db_table = 'requests'
 
     def __str__(self):
-        return f'{str(Request.model_id)}'
+        return f'{str(self.user.id)}'
     
