@@ -2,7 +2,7 @@ import requests, time
 from fake_useragent import UserAgent as Userr
 from bs4 import BeautifulSoup as bs
 from api.av1 import brand as brand_list
-from api.av1 import Get_model, Pars_info_id_file
+from api.av1 import Get_model_or_generations, Pars_info_id_file
 from api.controls import get_request
 from api.models import *
 
@@ -18,22 +18,33 @@ class Get_new_car_list:
         self.respons = None
     
     def get_model_id(self, brend_id, model):
-        model_object = Get_model()
-        model_dict = model_object.get_data_select_car(str(brand_list[brend_id]) +'/models')
+        model_object = Get_model_or_generations(str(brand_list[brend_id]) +'/models')
+        model_dict = model_object()[0]
         if model in model_dict:
             return model_dict[model]
+        
+    def get_generations_id(self, brend_id, model_id, generation_name):
+        generations_object = Get_model_or_generations(str(brend_id) +'/models/' + str(model_id)+ '/generations')
+        generations_dict = generations_object()[0]
+        if generation_name in generations_dict:
+            return generations_dict[generation_name]
+        return 0
 
     def get_car_dict(self, data_soup):
         car_list = []
         for result in data_soup.find(class_="listing__items").find_all('div', class_="listing-item__wrap"):
-            name_car = result.find('div', class_="listing-item__about").text
+            name_car = result.find('div', class_="listing-item__about").text.replace('VIN', '')
             link_car = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
             price_car = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
-            location = result.find(class_="listing-item__info").find(class_="listing-item__location").text
 
-            lst = name_car.split() 
+            lst = name_car.split()
+            print(lst)
             if lst[0] in brand_list:
-                car_list.append({'brand':brand_list[lst[0]], 'model':self.get_model_id(lst[0], lst[1]), 'link':link_car, 'price': price_car, 'location': location, 'arg_price': 0})
+                brand_id , model_id = brand_list[lst[0]], self.get_model_id(lst[0], lst[1])
+                if len(lst) >= 3:
+                    car_list.append({'brand': brand_id, 'model': model_id, 'generation': self.get_generations_id(brand_id, model_id, lst[2]),  'link':link_car, 'price': price_car, 'arg_price': 0})
+                else:
+                    car_list.append({'brand': brand_id, 'model': model_id, 'generation': 0,  'link':link_car, 'price': price_car, 'arg_price': 0})
         self.car.append(car_list)
         return self.car[0]
 
@@ -55,7 +66,7 @@ class Get_new_car_list:
     def get_arg_price(self): # берет список машин, делает запрос по их brand_id и model_id, и находит их среднерыночную стоимость
         for item in self.respons:
             if item['model'] != None:
-                dict_to_car = Pars_info_id_file(brand_id=item['brand'], model_id=item['model'])
+                dict_to_car = Pars_info_id_file(brand_id=item['brand'], model_id=item['model'], generations_id = item['generation'])
                 params = dict_to_car()
                 arg_price = self.get_average_market_value(params[0], params[1])
                 item['arg_price'] = arg_price
@@ -144,19 +155,20 @@ class Сheck_for_repeats():
     def send_messeg_for_user(self, car_list):
         for item in car_list:
             for user in item['users']:
-                # send_msg(user, item['link'])
-                link = item['link']
-                print(f'{link}, user') #тут предать в метод для отправки по user_id 
+                print(user, item['link'])
 
     def __call__(self):
         while True:
             result_0 = self.get_old_list()
-            obj_1 = Create_list_respons(new_car = result_0)
-            result_1 = obj_1()
-            obj_2 = Serch_user_for_cars(result_1)
-            result_2 = obj_2()
-
-            self.send_messeg_for_user(result_2)
+            result_2 = []
+            if len(result_0) != 0:
+                obj_1 = Create_list_respons(new_car = result_0)
+                result_1 = obj_1()
+                obj_2 = Serch_user_for_cars(result_1)
+                result_2 = obj_2()
+            if len(result_2) != 0:
+                print(result_2)
+                self.send_messeg_for_user(result_2)
             time.sleep(600)
             # 900 = 15min
             # 840 = 14min
@@ -164,11 +176,14 @@ class Сheck_for_repeats():
             # 720 = 12min
             # 660 = 11min
             # 600 = 10min
+            
     
-obj_3 = Сheck_for_repeats()
-res = obj_3()
+# obj_3 = Сheck_for_repeats()
+# res = obj_3()
 
-
+obj_0 = Get_new_car_list()
+res_0 = obj_0()
+print(res_0)
 
 
 

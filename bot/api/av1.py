@@ -1,3 +1,4 @@
+from typing import Any
 import requests, json, math
 from fake_useragent import UserAgent as User
 from bs4 import BeautifulSoup as bs
@@ -5,6 +6,7 @@ from bs4 import BeautifulSoup as bs
 brand = {
     "Acura": 1444,
     "Alfa Romeo": 1,
+    "Alfa": 1,
     "Audi": 6,
     "BMW": 8,
     "Buick": 1506,
@@ -29,6 +31,7 @@ brand = {
     "Genesis": 10006,
     "GMC": 372,
     "Great Wall": 1726,
+    "Great": 1726,
     "Haval": 5782,
     "Honda": 383,
     "Hyundai": 433,
@@ -37,8 +40,10 @@ brand = {
     "Jeep": 540,
     "Kia": 545,
     "Lada (ВАЗ)": 1279,
+    "Lada": 1279,
     "Lancia": 572,
     "Land Rover": 584,
+    "Land": 584,
     "Lexus": 589,
     "Lifan": 2586,
     "Lincoln": 601,
@@ -127,49 +132,43 @@ revers_brand = {
     1238: "Volvo",
 }
 
-class Get_revers_model():
-    def __init__(self):
+class Get_model_or_generations():
+    def __init__(self, params, user_id=0):
         self.user = User().random 
-        self.model_dict = {}
+        self.params = params
+        self.dikt, self.revers_dikt = {}, {}
+        self.data = None
+        self.user = user_id
 
-    def get_data_select_car(self, params):
-        self.model_dict.clear()
-        respons_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items/' + params, headers={'user-agent': f'{self.user}'})
+    def get_revevs_name(self):
+        for i in range(len(self.data)):
+            self.dikt[self.data[i]['name']] = self.data[i]['id']
+            self.revers_dikt[self.data[i]['id']] = self.data[i]['name']
+
+    def get_data_select_car(self):
+        self.dikt.clear()
+        respons_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items/' + self.params, headers={'user-agent': f'{self.user}'})
         if respons_list.status_code == 200:
-            respons_data = json.loads(respons_list.text)
-            for i in range(len(respons_data)):
-                self.model_dict[respons_data[i]['id']] = respons_data[i]['name']
-        return self.model_dict
+            self.data = json.loads(respons_list.text)
+            self.get_revevs_name()
 
-class Get_model():
-    def __init__(self, user_id=0):
-        self.user = User().random 
-        self.model_dict = {}
-        self.user_id = user_id
-
-    def get_data_select_car(self, params):
-        self.model_dict.clear()
-        respons_list = requests.get('https://api.av.by/offer-types/cars/catalog/brand-items/' + params, headers={'user-agent': f'{self.user}'})
-        if respons_list.status_code == 200:
-            respons_data = json.loads(respons_list.text)
-            for i in range(len(respons_data)):
-                self.model_dict[respons_data[i]['name']] = respons_data[i]['id']
-        return self.model_dict
+    def __call__(self):
+        self.get_data_select_car()
+        return self.dikt, self.revers_dikt
     
 class Pars_info_id_file(): # -> car_list
-    def __init__(self, year_min=1910, year_max=2023, price_min=0, price_max=0, brand_id=0, model_id=0):
+    def __init__(self, year_min=1910, year_max=2023, price_min=0, price_max=0, brand_id=0, model_id=0, generations_id=0):
         self.year_min = year_min
         self.year_max = year_max
         self.price_min = price_min
         self.price_max = price_max
-        self.brand_id, self.model_id = brand_id, model_id
+        self.brand_id, self.model_id, self.generations_id = brand_id, model_id, generations_id
         self.user = User().random
         self.car = []
         self.count_page=0
 
     def get_car_dict(self, data_soup, param=0): # -> Return list for car
         car_list, respons_list = [], []
-        
         try:
             if param == 1:
                 count_ad = int("".join(count for count in data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text if  count.isdecimal()))
@@ -186,9 +185,10 @@ class Pars_info_id_file(): # -> car_list
         self.car.append(car_list)
         return  respons_list
 
-    def get_page(self): # -> Return 1 page 
-        params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'sort': 2}
+    def get_page(self): # -> Return 1 page
+        params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'brands[0][generation]': self.generations_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'sort': 2}
         respons_page = requests.get('https://cars.av.by/filter?', params=params, headers={'user-agent': f'{self.user}'})
+
         if respons_page.status_code == 200:
             data_soup = bs(respons_page.text, 'lxml')
             cout_ad = self.get_car_dict(data_soup, param = 1)[0]
@@ -196,11 +196,13 @@ class Pars_info_id_file(): # -> car_list
                 return 0
             
         self.count_page = math.ceil(cout_ad / 25)
+
         if self.count_page > 1:
             for page in range(2, self.count_page + 1):
-                params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'page': page, 'sort': 2}
+                params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'brands[0][generation]': self.generations_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'page': page, 'sort': 2}
                 respons_page = requests.get('https://cars.av.by/filter?', params=params, headers={'user-agent': f'{self.user}'})
                 if respons_page.status_code == 200:
+
                     data_soup = bs(respons_page.text, 'lxml')
                     self.get_car_dict(data_soup)
 
@@ -236,9 +238,21 @@ class Search_cars(): # -> deviated_car_list
             for item in self.car_list[i]:
                 if item['price'] <= self.deviation_price:
                     self.deviated_car_list.append(item)
-
                     
     def __call__(self):
         self.get_average_market_value()
         self.serch_deviated_car_list()
         return self.deviated_car_list, self.arg_price
+    
+
+
+# obj_0 = Get_model_or_generations(str(8) +'/models')
+# oo = obj_0()
+
+# generations_object = Get_model_or_generations(str(8) +'/models/' + str(5863)+ '/generations')
+# oo2 = generations_object()
+
+
+#         https://api.av.by/offer-types/cars/catalog/brand-items/ {brandId}/models/ {modelId}/generations
+# print(oo2)
+# 5863

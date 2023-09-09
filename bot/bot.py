@@ -2,9 +2,8 @@ import asyncio, logging, requests, time
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from callbacks import brand, coice, model, delete
-from command import start, all, help, mycars
+from command import start, help, mycars
 from message import date, output_car, procent
-from serch_new_car import Сheck_for_repeats
 from fake_useragent import UserAgent as Userr
 from bs4 import BeautifulSoup as bs
 from api.av1 import Get_model, Pars_info_id_file
@@ -17,13 +16,16 @@ bot = Bot(token='6315832729:AAGC6fYoRIo6QQH595zsXjgN2pZorwvDGi8')
 storage:MemoryStorage = MemoryStorage()
 dp = Dispatcher(storage=storage)
 
-dp.include_routers(brand.router, coice.router, model.router, start.router, date.router, output_car.router, procent.router, all.router, delete.router, help.router, mycars.router)
+dp.include_routers(brand.router, coice.router, model.router, start.router, 
+                   date.router, output_car.router, procent.router, delete.router, help.router, mycars.router)
 
 async def main():
     await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot)
     obj = Сheck_for_repeats()
     await obj()
+    await dp.start_polling(bot)
+    # obj = Сheck_for_repeats()
+    # await obj()
 
 async def send_msg(id: int, message: str):
     await bot.send_message(id, message)
@@ -171,12 +173,14 @@ class Сheck_for_repeats():
     def __call__(self):
         while True:
             result_0 = self.get_old_list()
-            obj_1 = Create_list_respons(new_car = result_0)
-            result_1 = obj_1()
-            obj_2 = Serch_user_for_cars(result_1)
-            result_2 = obj_2()
-
-            self.send_messeg_for_user(result_2)
+            result_2 = []
+            if len(result_0) != 0:
+                obj_1 = Create_list_respons(new_car = result_0)
+                result_1 = obj_1()
+                obj_2 = Serch_user_for_cars(result_1)
+                result_2 = obj_2()
+            if len(result_2) != 0:
+                self.send_messeg_for_user(result_2)
             time.sleep(600)
             # 900 = 15min
             # 840 = 14min
