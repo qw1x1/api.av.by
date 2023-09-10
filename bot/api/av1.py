@@ -201,8 +201,8 @@ class Pars_info_id_file(): # -> car_list
             for page in range(2, self.count_page + 1):
                 params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'brands[0][generation]': self.generations_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'page': page, 'sort': 2}
                 respons_page = requests.get('https://cars.av.by/filter?', params=params, headers={'user-agent': f'{self.user}'})
+                
                 if respons_page.status_code == 200:
-
                     data_soup = bs(respons_page.text, 'lxml')
                     self.get_car_dict(data_soup)
 

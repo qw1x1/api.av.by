@@ -18,12 +18,14 @@ class Get_new_car_list:
         self.respons = None
     
     def get_model_id(self, brend_id, model):
+        '''Вернет id модели по ее названию'''
         model_object = Get_model_or_generations(str(brand_list[brend_id]) +'/models')
         model_dict = model_object()[0]
         if model in model_dict:
             return model_dict[model]
         
     def get_generations_id(self, brend_id, model_id, generation_name):
+        '''Вернет id поколения по ее названию'''
         generations_object = Get_model_or_generations(str(brend_id) +'/models/' + str(model_id)+ '/generations')
         generations_dict = generations_object()[0]
         if generation_name in generations_dict:
@@ -33,15 +35,16 @@ class Get_new_car_list:
     def get_car_dict(self, data_soup):
         car_list = []
         for result in data_soup.find(class_="listing__items").find_all('div', class_="listing-item__wrap"):
-            name_car = result.find('div', class_="listing-item__about").text.replace('VIN', '')
+            name_car = result.find('div', class_="listing-item__about").text.replace('VIN', '').replace('ТопОбъявление', '').replace('ТОПеПоднялось', '').replace('выше', '').replace('остальных', '').replace('в', '').replace('и', '').replace('собирает', '').replace('больше', '').replace('просмотроСпособы', '').replace('собрает', '').replace('ускореня', '').replace('продаж', '')
             link_car = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
             price_car = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
 
-            lst = name_car.split()
-            print(lst)
+            lst = name_car.split()[:7]
+
             if lst[0] in brand_list:
                 brand_id , model_id = brand_list[lst[0]], self.get_model_id(lst[0], lst[1])
                 if len(lst) >= 3:
+                    print(lst)
                     car_list.append({'brand': brand_id, 'model': model_id, 'generation': self.get_generations_id(brand_id, model_id, lst[2]),  'link':link_car, 'price': price_car, 'arg_price': 0})
                 else:
                     car_list.append({'brand': brand_id, 'model': model_id, 'generation': 0,  'link':link_car, 'price': price_car, 'arg_price': 0})
@@ -63,13 +66,16 @@ class Get_new_car_list:
                 total_price += item['price']
         return total_price/count_items
 
-    def get_arg_price(self): # берет список машин, делает запрос по их brand_id и model_id, и находит их среднерыночную стоимость
+    def get_arg_price(self):
+        ''' Находит среднерыночную стоимость авто в списке'''
         for item in self.respons:
             if item['model'] != None:
-                dict_to_car = Pars_info_id_file(brand_id=item['brand'], model_id=item['model'], generations_id = item['generation'])
+                dict_to_car = Pars_info_id_file(brand_id=item['brand'], model_id=item['model'], generations_id=item['generation'])
                 params = dict_to_car()
                 arg_price = self.get_average_market_value(params[0], params[1])
                 item['arg_price'] = arg_price
+            else:
+                self.respons.remove(item)
 
     def __call__(self):
         self.get_page()
@@ -183,7 +189,12 @@ class Сheck_for_repeats():
 
 obj_0 = Get_new_car_list()
 res_0 = obj_0()
-print(res_0)
+for i in res_0:
+    print(i)
+print(len(res_0))
+
+
+
 
 
 

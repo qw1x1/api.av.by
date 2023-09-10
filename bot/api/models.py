@@ -33,3 +33,13 @@ class Request(Basic):
     def __str__(self):
         return f'{str(self.user.id)}'
     
+# class User(Model):
+#     id = PrimaryKeyField(unique=True)
+#     telegram_id = IntegerField(unique=True)
+#     percent_difference = IntegerField()
+
+#     class Meta:
+#         db_table = 'users'
+    
+#     def __str__(self):
+#         return f'{str(self.telegram_id)}'
