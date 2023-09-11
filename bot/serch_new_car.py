@@ -3,13 +3,13 @@ from fake_useragent import UserAgent as Userr
 from bs4 import BeautifulSoup as bs
 from api.av1 import brand as brand_list
 from api.av1 import Get_model_or_generations, Pars_info_id_file
-from api.controls import get_request
+from api.controls import get_user_id_on_procent
 from api.models import *
 
 class Get_new_car_list:
     '''
     Делает запрос на av.by, получет 25 новых авто, затем записывает их в список с дсктами.
-    Вернёт список с диктами {'brand':brand_id, 'model':model_id, 'link':link_car, 'price': price_car, 'location': location, 'arg_price': arg_price}
+    Вернёт список с диктами {'brand':brand_id, 'model':model_id, 'link':link_car, 'price': price_car, 'location': location, 'arg_price': arg_price, 'procent': procent, 'users': list[user_1, user_2]}
     ничего не принемает, нужно вызывать с интервалом в 10-15 мин
     '''
     def __init__(self):
@@ -31,6 +31,26 @@ class Get_new_car_list:
         if generation_name in generations_dict:
             return generations_dict[generation_name]
         return 0
+    
+    def get_car_name(self, lst):
+        lst.reverse()
+        if lst[0] == 'Рестайлнг' and len(lst) == 5:
+            gen = f'Рестайлинг {lst[1]} {lst[2]}'
+            mod = f'{lst[3]}'
+            brand = f'{lst[4]}'
+        elif len(lst) == 3:
+            gen = f'{lst[0]}'
+            mod = f'{lst[1]}'
+            brand = f'{lst[2]}'
+        elif len(lst) == 6 and lst[0] == 'рестайлнг,':
+            gen = f'{lst[3]} {lst[2]} {lst[1]} рестайлинг'
+            mod = f'{lst[4]}'
+            brand = f'{lst[5]}'
+        else:
+            gen = 0
+            mod = 0
+            brand = 0
+        return brand, mod, gen
 
     def get_car_dict(self, data_soup):
         car_list = []
@@ -38,13 +58,10 @@ class Get_new_car_list:
             name_car = result.find('div', class_="listing-item__about").text.replace('VIN', '').replace('ТопОбъявление', '').replace('ТОПеПоднялось', '').replace('выше', '').replace('остальных', '').replace('в', '').replace('и', '').replace('собирает', '').replace('больше', '').replace('просмотроСпособы', '').replace('собрает', '').replace('ускореня', '').replace('продаж', '')
             link_car = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
             price_car = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
-
-            lst = name_car.split()[:7]
-
-            if lst[0] in brand_list:
+            lst = self.get_car_name(name_car.split()[:6])
+            if lst[0] != 0:
                 brand_id , model_id = brand_list[lst[0]], self.get_model_id(lst[0], lst[1])
                 if len(lst) >= 3:
-                    print(lst)
                     car_list.append({'brand': brand_id, 'model': model_id, 'generation': self.get_generations_id(brand_id, model_id, lst[2]),  'link':link_car, 'price': price_car, 'arg_price': 0})
                 else:
                     car_list.append({'brand': brand_id, 'model': model_id, 'generation': 0,  'link':link_car, 'price': price_car, 'arg_price': 0})
@@ -66,6 +83,12 @@ class Get_new_car_list:
                 total_price += item['price']
         return total_price/count_items
 
+    def get_procent(self, price, arg_price):
+        procent = 0
+        if price < arg_price:
+            procent = ((price / arg_price) * 100) - 100
+        return abs(int(procent))
+
     def get_arg_price(self):
         ''' Находит среднерыночную стоимость авто в списке'''
         for item in self.respons:
@@ -74,67 +97,25 @@ class Get_new_car_list:
                 params = dict_to_car()
                 arg_price = self.get_average_market_value(params[0], params[1])
                 item['arg_price'] = arg_price
+                item['procent'] = self.get_procent(item['price'], item['arg_price'])
+                # TEST# TEST# TEST
+                item['users'] = self.record_users_if_dict()  # TEST
+                # TEST# TEST# TEST
             else:
                 self.respons.remove(item)
+
+    # TEST# TEST# TEST# TEST# TEST
+    def record_users_if_dict(self):
+        for item in self.respons:
+            user_list, users = [], get_user_id_on_procent(percent=item['procent'])
+            if len(users) >= 1:
+                for user in users:
+                   user_list.append(user)
+                return user_list
 
     def __call__(self):
         self.get_page()
         return self.respons
-
-class Create_list_respons():
-    '''
-    На вход передаем список из класса Get_new_car_list
-    Добавляет в список процент отклонения от среднерырочной стоимости
-    Вернёт список с диктами {'brand':brand_id, 'model':model_id, 'link':link_car, 'price': price_car, 'location': location, 'arg_price': arg_price, 'procent': procent}
-    '''
-    def __init__(self, new_car:list=[]):
-        self.new_car = new_car
-        self.result_list = []
-
-    @staticmethod
-    def get_procent(price, arg_price):
-        procent = 0
-        if price < arg_price:
-            procent = ((price / arg_price) * 100) - 100
-        return abs(int(procent))
-
-    def cek_car_in_user(self):
-        for car in self.new_car:
-            procent = self.get_procent(car['price'], car['arg_price'])
-            if procent != 0:
-                car['procent'] = procent
-                self.result_list.append(car)
-    
-    def __call__(self):
-        self.cek_car_in_user()
-        return self.result_list
-
-class Serch_user_for_cars():
-    '''
-    На вход передаем список из класса Create_list_respons
-    Добавляет в список пользователей поторым иодходит авто
-    Вернёт список с диктами {'brand':brand_id, 'model':model_id, 'link':link_car, 'price': price_car, 'location': location, 'arg_price': arg_price, 'procent': procent, 'users': list[user_1, user_2]}
-    '''
-    def __init__(self, car_list:list = []):
-        self.car_list = car_list
-        self.result_list  = []
-
-    @staticmethod
-    def serch_users(brand_id=0, model_id=0, percent=0):
-        return get_request(brand_id=brand_id, model_id=model_id, percent=percent)
-
-    def record_users_if_dict(self):
-        for item in self.car_list:
-            users = self.serch_users(brand_id=item['brand'], model_id=item['model'], percent=item['procent'])
-            user_list = []
-            if len(users) >= 1:
-                for user in users:
-                   user_list.append(user)
-                item['users'] = user_list
-
-    def __call__(self):
-        self.record_users_if_dict()
-        return self.car_list
 
 class Сheck_for_repeats():
     '''

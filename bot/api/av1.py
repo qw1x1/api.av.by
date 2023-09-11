@@ -1,4 +1,3 @@
-from typing import Any
 import requests, json, math
 from fake_useragent import UserAgent as User
 from bs4 import BeautifulSoup as bs
@@ -157,11 +156,7 @@ class Get_model_or_generations():
         return self.dikt, self.revers_dikt
     
 class Pars_info_id_file(): # -> car_list
-    def __init__(self, year_min=1910, year_max=2023, price_min=0, price_max=0, brand_id=0, model_id=0, generations_id=0):
-        self.year_min = year_min
-        self.year_max = year_max
-        self.price_min = price_min
-        self.price_max = price_max
+    def __init__(self, brand_id=0, model_id=0, generations_id=0):
         self.brand_id, self.model_id, self.generations_id = brand_id, model_id, generations_id
         self.user = User().random
         self.car = []
@@ -186,7 +181,7 @@ class Pars_info_id_file(): # -> car_list
         return  respons_list
 
     def get_page(self): # -> Return 1 page
-        params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'brands[0][generation]': self.generations_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'sort': 2}
+        params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'brands[0][generation]': self.generations_id, 'condition[0]': 2, 'sort': 2}
         respons_page = requests.get('https://cars.av.by/filter?', params=params, headers={'user-agent': f'{self.user}'})
 
         if respons_page.status_code == 200:
@@ -199,7 +194,7 @@ class Pars_info_id_file(): # -> car_list
 
         if self.count_page > 1:
             for page in range(2, self.count_page + 1):
-                params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'brands[0][generation]': self.generations_id, 'year[min]': self.year_min, 'year[max]': self.year_max, 'price_usd[min]': self.price_min, 'price_usd[max]': self.price_max, 'condition[0]': 2, 'page': page, 'sort': 2}
+                params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'brands[0][generation]': self.generations_id, 'condition[0]': 2, 'page': page, 'sort': 2}
                 respons_page = requests.get('https://cars.av.by/filter?', params=params, headers={'user-agent': f'{self.user}'})
                 
                 if respons_page.status_code == 200:

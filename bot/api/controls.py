@@ -1,4 +1,5 @@
-from api.models import User, Request, db
+from api.models import User, Request, db, User2
+# from models import User2, db
 
 class Control_db():
     def __init__(self, telegram_id):
@@ -71,3 +72,20 @@ def get_request(brand_id=0, model_id=0, percent=0):
     with db:
         reqest_list = Request.select().where(Request.brand_id == brand_id, Request.model_id == model_id, Request.percent_difference <= percent)
     return reqest_list
+
+
+
+##########################################################################################################################
+def get_user_id_on_procent(percent=0):
+    with db:
+        reqest_list = User2.select().where(User2.percent_difference <= percent)
+    return reqest_list
+
+def create_user():
+    with db:
+        return User2.get_or_create(telegram_id=1212121212, percent_difference=1)
+##########################################################################################################################
+
+# with db:
+# create_user()
+    # User2.create_table()
