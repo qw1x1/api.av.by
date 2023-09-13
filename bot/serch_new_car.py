@@ -35,7 +35,11 @@ class Get_new_car_list:
     def get_car_name(self, lst):
         lst.reverse()
         if lst[0] == 'Рестайлнг' and len(lst) == 5:
-            gen = f'Рестайлинг {lst[1]} {lst[2]}'
+            gen = f'{lst[2]} {lst[1]} Рестайлинг'
+            mod = f'{lst[3]}'
+            brand = f'{lst[4]}'
+        elif lst[0] == 'мест' and len(lst) == 5:
+            gen = str(lst[2]).replace(',', '')
             mod = f'{lst[3]}'
             brand = f'{lst[4]}'
         elif len(lst) == 3:
@@ -46,11 +50,24 @@ class Get_new_car_list:
             gen = f'{lst[3]} {lst[2]} {lst[1]} рестайлинг'
             mod = f'{lst[4]}'
             brand = f'{lst[5]}'
+        elif len(lst) == 2:
+            mod = f'{lst[0]}'
+            brand = f'{lst[1]}'
+            gen = 0
         else:
             gen = 0
             mod = 0
             brand = 0
         return brand, mod, gen
+
+    def get_page(self): 
+        respons_page = requests.get('https://cars.av.by/filter?', params={'condition[0]': 2, 'sort': 4}, headers={'user-agent': f'{self.f_user}'})
+        if respons_page.status_code == 200:
+            data_soup = bs(respons_page.text, 'lxml')
+            self.respons = self.get_car_dict(data_soup)
+        self.get_arg_price()
+
+###############################################################################_____LOGIK_____###############################################################################
 
     def get_car_dict(self, data_soup):
         car_list = []
@@ -59,21 +76,16 @@ class Get_new_car_list:
             link_car = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
             price_car = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
             lst = self.get_car_name(name_car.split()[:6])
+            print(lst)
             if lst[0] != 0:
                 brand_id , model_id = brand_list[lst[0]], self.get_model_id(lst[0], lst[1])
-                if len(lst) >= 3:
+                if brand_id and model_id:
                     car_list.append({'brand': brand_id, 'model': model_id, 'generation': self.get_generations_id(brand_id, model_id, lst[2]),  'link':link_car, 'price': price_car, 'arg_price': 0})
                 else:
-                    car_list.append({'brand': brand_id, 'model': model_id, 'generation': 0,  'link':link_car, 'price': price_car, 'arg_price': 0})
+                    car_list.append({'brand': 0, 'model': 0, 'generation': 0, 'link':0, 'price': 0, 'arg_price': 0})
+
         self.car.append(car_list)
         return self.car[0]
-
-    def get_page(self): 
-        respons_page = requests.get('https://cars.av.by/filter?', params={'condition[0]': 2, 'sort': 4}, headers={'user-agent': f'{self.f_user}'})
-        if respons_page.status_code == 200:
-            data_soup = bs(respons_page.text, 'lxml')
-            self.respons = self.get_car_dict(data_soup)
-        self.get_arg_price()
 
     def get_average_market_value(self, car_list:list=[], count_page:int=0):
         count_items, total_price = 0, 0
@@ -98,20 +110,14 @@ class Get_new_car_list:
                 arg_price = self.get_average_market_value(params[0], params[1])
                 item['arg_price'] = arg_price
                 item['procent'] = self.get_procent(item['price'], item['arg_price'])
-                # TEST# TEST# TEST
-                item['users'] = self.record_users_if_dict()  # TEST
-                # TEST# TEST# TEST
-            else:
-                self.respons.remove(item)
-
-    # TEST# TEST# TEST# TEST# TEST
-    def record_users_if_dict(self):
-        for item in self.respons:
-            user_list, users = [], get_user_id_on_procent(percent=item['procent'])
-            if len(users) >= 1:
-                for user in users:
-                   user_list.append(user)
-                return user_list
+                item['users'] = self.record_users_if_dict(item['procent'])
+                
+    def record_users_if_dict(self, procent):
+        user_list, users = [], get_user_id_on_procent(percent=procent)
+        if len(users) >= 1:
+            for user in users:
+                user_list.append(user)
+            return user_list
 
     def __call__(self):
         self.get_page()
