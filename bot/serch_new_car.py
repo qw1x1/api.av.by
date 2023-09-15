@@ -63,8 +63,7 @@ class Get_new_car_list:
     def get_page(self): 
         respons_page = requests.get('https://cars.av.by/filter?', params={'condition[0]': 2, 'sort': 4}, headers={'user-agent': f'{self.f_user}'})
         if respons_page.status_code == 200:
-            data_soup = bs(respons_page.text, 'lxml')
-            self.respons = self.get_car_dict(data_soup)
+            self.respons = self.get_car_dict(bs(respons_page.text, 'lxml'))
         self.get_arg_price()
 
 ###############################################################################_____LOGIK_____###############################################################################
@@ -72,17 +71,16 @@ class Get_new_car_list:
     def get_car_dict(self, data_soup):
         car_list = []
         for result in data_soup.find(class_="listing__items").find_all('div', class_="listing-item__wrap"):
-            name_car = result.find('div', class_="listing-item__about").text.replace('VIN', '').replace('ТопОбъявление', '').replace('ТОПеПоднялось', '').replace('выше', '').replace('остальных', '').replace('в', '').replace('и', '').replace('собирает', '').replace('больше', '').replace('просмотроСпособы', '').replace('собрает', '').replace('ускореня', '').replace('продаж', '')
-            link_car = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
-            price_car = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
-            lst = self.get_car_name(name_car.split()[:6])
-            print(lst)
+            name = result.find('div', class_="listing-item__about").text.replace('VIN', '').replace('ТопОбъявление', '').replace('ТОПеПоднялось', '').replace('выше', '').replace('остальных', '').replace('в', '').replace('и', '').replace('собирает', '').replace('больше', '').replace('просмотроСпособы', '').replace('собрает', '').replace('ускореня', '').replace('продаж', '')
+            link = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
+            price = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
+            lst = self.get_car_name(name.split()[:6])
             if lst[0] != 0:
                 brand_id , model_id = brand_list[lst[0]], self.get_model_id(lst[0], lst[1])
                 if brand_id and model_id:
-                    car_list.append({'brand': brand_id, 'model': model_id, 'generation': self.get_generations_id(brand_id, model_id, lst[2]),  'link':link_car, 'price': price_car, 'arg_price': 0})
+                    car_list.append({'brand': brand_id, 'model': model_id, 'generation': self.get_generations_id(brand_id, model_id, lst[2]),  'link':link, 'price': price, 'arg_price': 0})
                 else:
-                    car_list.append({'brand': 0, 'model': 0, 'generation': 0, 'link':0, 'price': 0, 'arg_price': 0})
+                    car_list.append({'brand': 0, 'model': 0, 'generation': 0, 'link': 0, 'price': 0, 'arg_price': 0})
 
         self.car.append(car_list)
         return self.car[0]
@@ -119,8 +117,14 @@ class Get_new_car_list:
                 user_list.append(user)
             return user_list
 
+    def del_repit(self):
+        for item in self.respons:
+            if item['users'] == None:
+                self.respons.remove(item)
+
     def __call__(self):
         self.get_page()
+
         return self.respons
 
 class Сheck_for_repeats():
@@ -153,15 +157,10 @@ class Сheck_for_repeats():
     def __call__(self):
         while True:
             result_0 = self.get_old_list()
-            result_2 = []
+            
             if len(result_0) != 0:
-                obj_1 = Create_list_respons(new_car = result_0)
-                result_1 = obj_1()
-                obj_2 = Serch_user_for_cars(result_1)
-                result_2 = obj_2()
-            if len(result_2) != 0:
-                print(result_2)
-                self.send_messeg_for_user(result_2)
+                print(result_0)
+                self.send_messeg_for_user(result_0)
             time.sleep(600)
             # 900 = 15min
             # 840 = 14min
