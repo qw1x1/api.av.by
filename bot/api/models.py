@@ -10,6 +10,7 @@ class Basic(Model):
     
 class User(Basic):
     telegram_id = IntegerField(unique=True)
+    percent_difference = IntegerField()
 
     class Meta:
         db_table = 'users'

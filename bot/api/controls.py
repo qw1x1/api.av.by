@@ -1,4 +1,4 @@
-from api.models import User, Request, db, User2
+from api.models import User2, Request, db
 # from models import User2, db
 
 class Control_db():
@@ -16,7 +16,7 @@ class Control_db():
         self._request_id = request_id
 
     def create_user(self):
-        return User.get_or_create(telegram_id=self.telegram_id)
+        return User.get_or_create(telegram_id=self.telegram_id, percent_difference = 1)
             
     @staticmethod
     def create_request(brand_id=0, model_id=0, percent_difference=0, year_min=0, year_max=0, price_min=0, price_max=0, user=0):
@@ -81,11 +81,17 @@ def get_user_id_on_procent(percent=0):
         reqest_list = User2.select().where(User2.percent_difference <= percent)
     return reqest_list
 
-def create_user():
+def create_user(telegram_id=1212121212, percent_difference=1):
     with db:
-        return User2.get_or_create(telegram_id=1212121212, percent_difference=1)
+        return User2.get_or_create(telegram_id=telegram_id, percent_difference=percent_difference)
 ##########################################################################################################################
 
 # with db:
 # create_user()
     # User2.create_table()
+
+# with db:
+#     ff = Control_db(633279160)
+#     ff.create_user()
+#     User.create_table()
+

@@ -255,7 +255,7 @@ class Get_model_or_generations():
         return self.dikt, self.revers_dikt
     
 class Pars_info_id_file(): # -> car_list
-    def __init__(self, brand_id=0, model_id=0, generations_id=0):
+    def __init__(self, brand_id=1, model_id=3, generations_id=0):
         self.brand_id, self.model_id, self.generations_id = brand_id, model_id, generations_id
         self.user = User().random
         self.car = []
@@ -279,9 +279,12 @@ class Pars_info_id_file(): # -> car_list
         self.car.append(car_list)
         return  respons_list
 
-    def get_page(self): # -> Return 1 page
+    def get_page(self): 
         params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'brands[0][generation]': self.generations_id, 'condition[0]': 2, 'sort': 2}
-        respons_page = requests.get('https://cars.av.by/filter?', params=params, headers={'user-agent': f'{self.user}'})
+        try:
+            respons_page = requests.get('https://cars.av.by/filter?', params=params, headers={'user-agent': f'{self.user}'})
+        except ConnectionError:
+            return 0
 
         if respons_page.status_code == 200:
             data_soup = bs(respons_page.text, 'lxml')
@@ -291,14 +294,19 @@ class Pars_info_id_file(): # -> car_list
             
         self.count_page = math.ceil(cout_ad / 25)
 
-        if self.count_page > 1:
+        if self.count_page > 1 and self.brand_id != 0 and self.model_id != 0:
             for page in range(2, self.count_page + 1):
                 params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'brands[0][generation]': self.generations_id, 'condition[0]': 2, 'page': page, 'sort': 2}
-                respons_page = requests.get('https://cars.av.by/filter?', params=params, headers={'user-agent': f'{self.user}'})
+                try:
+                    respons_page = requests.get('https://cars.av.by/filter?', params=params, headers={'user-agent': f'{self.user}'})
+                except ConnectionError:
+                    return 0
                 
                 if respons_page.status_code == 200:
                     data_soup = bs(respons_page.text, 'lxml')
                     self.get_car_dict(data_soup)
+                else:
+                    return 0
 
     def __call__(self): # -> self.car, self.count_page
         page = self.get_page()
@@ -337,19 +345,6 @@ class Search_cars(): # -> deviated_car_list
         self.serch_deviated_car_list()
         return self.deviated_car_list, self.arg_price
     
-
-
-# obj_0 = Get_model_or_generations(str(8) +'/models')
-# oo = obj_0()
-
-# generations_object = Get_model_or_generations(str(8) +'/models/' + str(5863)+ '/generations')
-# oo2 = generations_object()
-
-
-#         https://api.av.by/offer-types/cars/catalog/brand-items/ {brandId}/models/ {modelId}/generations
-# print(oo2)
-# 5863
-
 
 # dict_to_car = Pars_info_id_file(brand_id=634, model_id=640, generations_id=1350)
 # params = dict_to_car()

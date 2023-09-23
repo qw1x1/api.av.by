@@ -12,6 +12,9 @@ class Get_new_car_list:
     Вернёт список с диктами {'brand':brand_id, 'model':model_id, 'link':link_car, 'price': price_car, 'location': location, 'arg_price': arg_price, 'procent': procent, 'users': list[user_1, user_2]}
     ничего не принемает, нужно вызывать с интервалом в 10-15 мин
     '''
+    ID_CAR = [5076, 1310, 10094, 1551, 2894, 2345, 2051, 5252, 5032, 1464, 5019, 1279, 0]
+    CAR_NAME = ["Lada", "Богдан", "ГАЗ", "ЕрАЗ", "ЗАЗ", "ИЖ", "ЛуАЗ", "Москвич", "РАФ", "ТагАЗ", "УАЗ", "Эксклюзив", "Shanghai", "Great", "GAC", "Dongfeng", "Aston"]
+
     def __init__(self):
         self.car = []
         self.f_user = Userr().random
@@ -33,6 +36,8 @@ class Get_new_car_list:
         return 0
     
     def get_car_name(self, lst):
+        if lst[0] in self.CAR_NAME:
+            return 0, 0, 0
         lst.reverse()
         if lst[0] == 'Рестайлнг' and len(lst) == 5:
             gen = f'{lst[2]} {lst[1]} Рестайлинг'
@@ -60,8 +65,11 @@ class Get_new_car_list:
             brand = 0
         return brand, mod, gen
 
-    def get_page(self): 
-        respons_page = requests.get('https://cars.av.by/filter?', params={'condition[0]': 2, 'sort': 4}, headers={'user-agent': f'{self.f_user}'})
+    def get_page(self):
+        try:
+            respons_page = requests.get('https://cars.av.by/filter?', params={'condition[0]': 2, 'sort': 4}, headers={'user-agent': f'{self.f_user}'})
+        except ConnectionError:
+            return 0
         if respons_page.status_code == 200:
             self.respons = self.get_car_dict(bs(respons_page.text, 'lxml'))
         self.get_arg_price()
@@ -91,6 +99,8 @@ class Get_new_car_list:
             for item in car_list[i]:
                 count_items += 1
                 total_price += item['price']
+        if count_items == 0:
+            count_items = 1
         return total_price/count_items
 
     def get_procent(self, price, arg_price):
@@ -102,13 +112,16 @@ class Get_new_car_list:
     def get_arg_price(self):
         ''' Находит среднерыночную стоимость авто в списке'''
         for item in self.respons:
-            if item['model'] != None:
+            if item['model'] != None or item['model'] != 0 and item['brand'] not in self.ID_CAR:
+                # в dict_to_car попадают brand_id=0, model_id=0, generations_id=0, изза этого все идет по пизде
+                print(item['brand'], item['model'], item['generation'])
                 dict_to_car = Pars_info_id_file(brand_id=item['brand'], model_id=item['model'], generations_id=item['generation'])
                 params = dict_to_car()
                 arg_price = self.get_average_market_value(params[0], params[1])
                 item['arg_price'] = arg_price
                 item['procent'] = self.get_procent(item['price'], item['arg_price'])
                 item['users'] = self.record_users_if_dict(item['procent'])
+                print()
                 
     def record_users_if_dict(self, procent):
         user_list, users = [], get_user_id_on_procent(percent=procent)
@@ -124,7 +137,6 @@ class Get_new_car_list:
 
     def __call__(self):
         self.get_page()
-
         return self.respons
 
 class Сheck_for_repeats():
@@ -133,14 +145,14 @@ class Сheck_for_repeats():
     Затем с интервалом обновляет данные.
     Обрабатывает все данные и отправляет найденые авто пользователям
     '''
-    CAR_LIST = Get_new_car_list()
 
     def __init__(self):
         self.old_list = []
         self.new_list = []
 
     def get_not_repeats_list(self):
-        self.new_list = self.CAR_LIST()
+        obj = Get_new_car_list()
+        self.new_list = obj()
         for item in self.old_list:
             if item in self.new_list:
                 self.new_list.remove(item)
@@ -148,20 +160,24 @@ class Сheck_for_repeats():
 
     def get_old_list(self):
         self.old_list = self.get_not_repeats_list()
+        return self.old_list
 
     def send_messeg_for_user(self, car_list):
         for item in car_list:
-            for user in item['users']:
-                print(user, item['link'])
+            if type(item['users']) == list:
+                for user in item['users']:
+                    print(user, item['link'], item['procent'])
 
     def __call__(self):
         while True:
+
             result_0 = self.get_old_list()
-            
+            print(time.ctime(time.time()))
             if len(result_0) != 0:
-                print(result_0)
+                print('')
                 self.send_messeg_for_user(result_0)
-            time.sleep(600)
+            time.sleep(300)
+
             # 900 = 15min
             # 840 = 14min
             # 780 = 13min
@@ -171,14 +187,26 @@ class Сheck_for_repeats():
             
     
 # obj_3 = Сheck_for_repeats()
-# res = obj_3()
+# obj_3()
 
-obj_0 = Get_new_car_list()
-res_0 = obj_0()
-for i in res_0:
-    print(i)
-print(len(res_0))
+# obj_0 = Get_new_car_list()
+# res_0 = obj_0()
+# for i in res_0:
+#     print(i)
+# print(len(res_0))
 
+
+while True:
+    obj = Get_new_car_list()
+    print(obj)
+    result = obj()
+    for item in result:
+            if type(item['users']) == list:
+                for user in item['users']:
+                    print(user, item['link'], item['procent'], item['price'])
+    print(time.ctime(time.time()))
+
+    # time.sleep(300)
 
 
 
