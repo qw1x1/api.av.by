@@ -279,7 +279,9 @@ class Pars_info_id_file(): # -> car_list
         self.car.append(car_list)
         return  respons_list
 
-    def get_page(self): 
+    def get_page(self):
+        if self.brand_id == 0 or self.model_id == 0:
+            return 0
         params = {'brands[0][brand]': self.brand_id, 'brands[0][model]': self.model_id, 'brands[0][generation]': self.generations_id, 'condition[0]': 2, 'sort': 2}
         try:
             respons_page = requests.get('https://cars.av.by/filter?', params=params, headers={'user-agent': f'{self.user}'})
@@ -311,7 +313,7 @@ class Pars_info_id_file(): # -> car_list
     def __call__(self): # -> self.car, self.count_page
         page = self.get_page()
         if page == 0:
-            return 0
+            return 0, 0
         else:
             return self.car, self.count_page
     
@@ -346,6 +348,6 @@ class Search_cars(): # -> deviated_car_list
         return self.deviated_car_list, self.arg_price
     
 
-# dict_to_car = Pars_info_id_file(brand_id=634, model_id=640, generations_id=1350)
+# dict_to_car = Pars_info_id_file(brand_id=1, model_id=3, generations_id=0)
 # params = dict_to_car()
 # print(params[0], params[1])

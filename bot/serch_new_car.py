@@ -88,7 +88,7 @@ class Get_new_car_list:
                 if brand_id and model_id:
                     car_list.append({'brand': brand_id, 'model': model_id, 'generation': self.get_generations_id(brand_id, model_id, lst[2]),  'link':link, 'price': price, 'arg_price': 0})
                 else:
-                    car_list.append({'brand': 0, 'model': 0, 'generation': 0, 'link': 0, 'price': 0, 'arg_price': 0})
+                    car_list.append({'brand': 0, 'model': None, 'generation': 0, 'link': 0, 'price': 0, 'arg_price': 0, 'users': 0})
 
         self.car.append(car_list)
         return self.car[0]
@@ -117,11 +117,13 @@ class Get_new_car_list:
                 print(item['brand'], item['model'], item['generation'])
                 dict_to_car = Pars_info_id_file(brand_id=item['brand'], model_id=item['model'], generations_id=item['generation'])
                 params = dict_to_car()
-                arg_price = self.get_average_market_value(params[0], params[1])
-                item['arg_price'] = arg_price
-                item['procent'] = self.get_procent(item['price'], item['arg_price'])
-                item['users'] = self.record_users_if_dict(item['procent'])
-                print()
+                if params[1] == 0 and params[0] == 0:
+                    item['arg_price'], item['procent'], item['users'] = 0, 0, 0
+                else:
+                    arg_price = self.get_average_market_value(params[0], params[1])
+                    item['arg_price'] = arg_price
+                    item['procent'] = self.get_procent(item['price'], item['arg_price'])
+                    item['users'] = self.record_users_if_dict(item['procent'])
                 
     def record_users_if_dict(self, procent):
         user_list, users = [], get_user_id_on_procent(percent=procent)
@@ -129,7 +131,8 @@ class Get_new_car_list:
             for user in users:
                 user_list.append(user)
             return user_list
-
+    
+    # НЕ ЮЗАЕТЬСЯ!!?
     def del_repit(self):
         for item in self.respons:
             if item['users'] == None:
@@ -148,35 +151,36 @@ class Сheck_for_repeats():
 
     def __init__(self):
         self.old_list = []
-        self.new_list = []
+        # self.new_list = []
 
-    def get_not_repeats_list(self):
-        obj = Get_new_car_list()
-        self.new_list = obj()
+    def get_not_repeats_list(self, new_list):
+        
         for item in self.old_list:
-            if item in self.new_list:
-                self.new_list.remove(item)
-        return self.new_list
+            if item in new_list:
+                new_list.remove(item)
+        return new_list
 
     def get_old_list(self):
-        self.old_list = self.get_not_repeats_list()
+        obj = Get_new_car_list()
+        new_list = obj()
+        self.old_list = self.get_not_repeats_list(new_list)
         return self.old_list
 
     def send_messeg_for_user(self, car_list):
         for item in car_list:
             if type(item['users']) == list:
                 for user in item['users']:
-                    print(user, item['link'], item['procent'])
+                    print(user, item['link'], item['procent'], item['price'])
 
     def __call__(self):
         while True:
-
+            print(time.ctime(time.time()))
             result_0 = self.get_old_list()
             print(time.ctime(time.time()))
             if len(result_0) != 0:
                 print('')
                 self.send_messeg_for_user(result_0)
-            time.sleep(300)
+            # time.sleep(300)
 
             # 900 = 15min
             # 840 = 14min
@@ -186,8 +190,8 @@ class Сheck_for_repeats():
             # 600 = 10min
             
     
-# obj_3 = Сheck_for_repeats()
-# obj_3()
+obj_3 = Сheck_for_repeats()
+obj_3()
 
 # obj_0 = Get_new_car_list()
 # res_0 = obj_0()
@@ -196,15 +200,15 @@ class Сheck_for_repeats():
 # print(len(res_0))
 
 
-while True:
-    obj = Get_new_car_list()
-    print(obj)
-    result = obj()
-    for item in result:
-            if type(item['users']) == list:
-                for user in item['users']:
-                    print(user, item['link'], item['procent'], item['price'])
-    print(time.ctime(time.time()))
+# while True:
+#     obj = Get_new_car_list()
+#     print(obj)
+#     result = obj()
+#     for item in result:
+#             if type(item['users']) == list:
+#                 for user in item['users']:
+#                     print(user, item['link'], item['procent'], item['price'])
+#     print(time.ctime(time.time()))
 
     # time.sleep(300)
 

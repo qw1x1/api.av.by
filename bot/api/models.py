@@ -10,7 +10,7 @@ class Basic(Model):
     
 class User(Basic):
     telegram_id = IntegerField(unique=True)
-    percent_difference = IntegerField()
+    percent = IntegerField()
 
     class Meta:
         db_table = 'users'
@@ -34,12 +34,5 @@ class Request(Basic):
     def __str__(self):
         return f'{str(self.user.id)}'
     
-class User2(Basic):
-    telegram_id = IntegerField(unique=True)
-    percent_difference = IntegerField()
 
-    class Meta:
-        db_table = 'users2'
-    
-    def __str__(self):
-        return f'{str(self.telegram_id)}'
+
