@@ -189,7 +189,6 @@ class Сheck_for_repeats():
             # 660 = 11min
             # 600 = 10min
             
-    
 obj_3 = Сheck_for_repeats()
 obj_3()
 

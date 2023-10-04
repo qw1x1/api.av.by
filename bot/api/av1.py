@@ -231,6 +231,10 @@ revers_brand = {
 }
 
 class Get_model_or_generations():
+    '''
+    Get_model_or_generations(str(brend_id) +'/models') Это для того чтоб получить дикт с модетлями
+
+    '''
     def __init__(self, params, user_id=0):
         self.user = User().random 
         self.params = params
