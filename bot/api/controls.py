@@ -10,7 +10,7 @@ def get_user_id_on_procent(percent=0):
         reqest_list = User.select().where(User.percent <= percent)
     return reqest_list
 
-def create_user(telegram_id=1212121212, =percent1):
+def create_user(telegram_id=1212121212, percent=0):
     with db:
         return User.get_or_create(telegram_id=telegram_id, percent=percent)
     

@@ -1,5 +1,5 @@
 from api.av1 import  Pars_info_id_file, Search_cars
-from api.controls import Control_db
+from api.controls import *
 from api.models import *
 
 class Get_data_for_request:
@@ -8,9 +8,7 @@ class Get_data_for_request:
         self.result_list = []
     
     def get_data(self):
-        with db:
-            bd = Control_db(telegram_id=self.telegram_id)
-        return bd.get_sefch_data_list()
+        return get_sefch_data_list(self.telegram_id)
     
     def pars_info(self):
         search_list = self.get_data()
