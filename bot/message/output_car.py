@@ -6,7 +6,7 @@ import callbacks.model as cb_model
 import callbacks.brand as cb_brand
 from api.av1 import Pars_info_id_file, Search_cars
 import math
-from api.controls import Control_db
+from api.controls import create_request
 from api.models import *
 import command.start as Start
 
@@ -41,13 +41,10 @@ async def process_name_sent(message: types.Message, state: FSMContext):
         list_cars, arg_price = serch_car[0], serch_car[1]
         await message.answer(text=f'Среднерыночная стоимость: {math.floor(arg_price)}')
         if len(list_cars) != 0:
-            with db:
-                obj = Control_db(message.from_user.id)
-                us = obj.create_user()
-                obj.create_request(brand_id=int(Start.brand[message.from_user.id]), model_id=int(cb_model.id_model[message.from_user.id]),
+            create_request(brand_id=int(Start.brand[message.from_user.id]), model_id=int(cb_model.id_model[message.from_user.id]),
                                   year_max=int(year_max), year_min=int(year_min), 
                                   price_max=int(price_max), price_min=int(price_min), 
-                                  percent_difference=deviation_procent, user=us[0])
+                                  percent_difference=deviation_procent, user=message.from_user.id)
                 
 
 
