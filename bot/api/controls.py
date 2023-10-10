@@ -1,4 +1,4 @@
-from api.models import User, Request, db
+from models import User, Request, db
 # from models import User, Request, db
 
 ##########################################################################################################################
@@ -9,6 +9,14 @@ def get_user_id_on_procent(percent=0):
     with db:
         reqest_list = User.select().where(User.percent <= percent)
     return reqest_list
+
+def add_procent_user(telegram_id=1212121212, percent=1):
+    '''Если пользователь уже создан, но он не перекуп и у него нет percent,
+    то мы добавляем его 
+    '''
+    with db:
+        user = User.update({User.percent: percent}).where(User.telegram_id == telegram_id)
+        user.execute()
 
 def create_user(telegram_id=1212121212, percent=0):
     with db:

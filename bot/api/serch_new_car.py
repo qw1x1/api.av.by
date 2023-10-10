@@ -1,10 +1,10 @@
 import requests, time
 from fake_useragent import UserAgent as Userr
 from bs4 import BeautifulSoup as bs
-from api.av1 import brand as brand_list
-from api.av1 import Get_model_or_generations, Pars_info_id_file
-from api.controls import get_user_id_on_procent
-from api.models import *
+from av1 import brand as brand_list
+from av1 import Get_model_or_generations, Pars_info_id_file
+from controls import get_user_id_on_procent, add_procent_user
+from models import *
 
 class Get_new_car_list:
     '''
@@ -189,8 +189,8 @@ class Сheck_for_repeats():
             # 660 = 11min
             # 600 = 10min
             
-obj_3 = Сheck_for_repeats()
-obj_3()
+# obj_3 = Сheck_for_repeats()
+# obj_3()
 
 # obj_0 = Get_new_car_list()
 # res_0 = obj_0()
@@ -212,7 +212,7 @@ obj_3()
     # time.sleep(300)
 
 
-
+add_procent_user(11, 44)
 
 
 
