@@ -3,7 +3,7 @@ from fake_useragent import UserAgent as Userr
 from bs4 import BeautifulSoup as bs
 from av1 import brand as brand_list
 from av1 import Get_model_or_generations, Pars_info_id_file
-from controls import get_user_id_on_procent, add_procent_user
+from controls import get_user_id_on_procent
 from models import *
 
 class Get_new_car_list:
@@ -151,7 +151,6 @@ class Сheck_for_repeats():
 
     def __init__(self):
         self.old_list = []
-        # self.new_list = []
 
     def get_not_repeats_list(self, new_list):
         
@@ -212,7 +211,7 @@ class Сheck_for_repeats():
     # time.sleep(300)
 
 
-add_procent_user(11, 44)
+# add_procent_user(11, 44)
 
 
 
