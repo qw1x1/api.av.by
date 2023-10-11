@@ -173,31 +173,18 @@ class Сheck_for_repeats():
 
     def __call__(self):
         while True:
-            print(time.ctime(time.time()))
             result_0 = self.get_old_list()
-            print(time.ctime(time.time()))
             if len(result_0) != 0:
-                print('')
                 self.send_messeg_for_user(result_0)
-            # time.sleep(300)
-
-            # 900 = 15min
-            # 840 = 14min
-            # 780 = 13min
-            # 720 = 12min
-            # 660 = 11min
-            # 600 = 10min
             
-# obj_3 = Сheck_for_repeats()
-# obj_3()
+obj_3 = Сheck_for_repeats()
+obj_3()
 
 # obj_0 = Get_new_car_list()
 # res_0 = obj_0()
 # for i in res_0:
 #     print(i)
 # print(len(res_0))
-
-
 # while True:
 #     obj = Get_new_car_list()
 #     print(obj)
