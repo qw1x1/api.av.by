@@ -74,8 +74,6 @@ class Get_new_car_list:
             self.respons = self.get_car_dict(bs(respons_page.text, 'lxml'))
         self.get_arg_price()
 
-###############################################################################_____LOGIK_____###############################################################################
-
     def get_car_dict(self, data_soup):
         car_list = []
         for result in data_soup.find(class_="listing__items").find_all('div', class_="listing-item__wrap"):
@@ -145,7 +143,7 @@ class Get_new_car_list:
 class Сheck_for_repeats():
     '''
     Убирает авто которые попали в список второй раз.
-    Затем с интервалом обновляет данные.
+    Затем обновляет данные.
     Обрабатывает все данные и отправляет найденые авто пользователям
     '''
 
