@@ -10,13 +10,14 @@ def get_user_id_on_procent(percent=0):
         reqest_list = User.select().where(User.percent <= percent)
     return reqest_list
 
-def add_procent_user(telegram_id=1212121212, percent=1):
+def add_procent_user(telegram_id=0, percent=1):
     '''Если пользователь уже создан, но он не перекуп и у него нет percent,
     то мы добавляем его 
     '''
     with db:
-        user = User.update({User.percent: percent}).where(User.telegram_id == telegram_id)
-        user.execute()
+        user = User.get(telegram_id=telegram_id)
+        user.percent = percent
+        user.save()
 
 def create_user(telegram_id=1212121212, percent=0):
     with db:
@@ -89,5 +90,6 @@ def create_request(brand_id=0, model_id=0, percent_difference=0, year_min=0, yea
     # db.create_tables([User, Request])
     # create_request(telegram_id=11, percent=1)
     # create_request(brand_id=0, model_id=0, percent_difference=0, year_min=0, year_max=0, price_min=0, price_max=0, user=1)
-
+# add_procent_user(telegram_id=12, percent=50)
+# 
 
