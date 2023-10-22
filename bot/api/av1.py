@@ -351,7 +351,3 @@ class Search_cars(): # -> deviated_car_list
         self.serch_deviated_car_list()
         return self.deviated_car_list, self.arg_price
     
-
-# dict_to_car = Pars_info_id_file(brand_id=1, model_id=3, generations_id=0)
-# params = dict_to_car()
-# print(params[0], params[1])

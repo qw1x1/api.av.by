@@ -2,15 +2,16 @@ from models import User, Request, Respons, db
 # from models import User, Request, db
 
 ###########################################################USER###############################################################
-def get_user_id_on_procent(percent=0):
+def get_user_id_on_procent(percent=20):
     '''
+    percent !< 20
     вернет список с пользователями у которых процент ментьше или равен проценту найденого авто
     '''
     with db:
         reqest_list = User.select().where(User.percent <= percent)
     return reqest_list
 
-def add_procent_user(telegram_id=0, percent=1):
+def add_procent_user(telegram_id=0, percent=20):
     '''Если пользователь уже создан, но он не перекуп и у него нет percent,
     то мы добавляем его 
     '''
@@ -19,7 +20,7 @@ def add_procent_user(telegram_id=0, percent=1):
         user.percent = percent
         user.save()
 
-def create_user(telegram_id=1212121212):
+def create_user(telegram_id=0):
     with db:
         return User.get_or_create(telegram_id=telegram_id)
     
@@ -35,12 +36,12 @@ def get_users():
 
 ###########################################################REQEST###############################################################
 
-def get_request(brand_id=0, model_id=0, percent=0):
+def get_request(brand_id=0, model_id=0, generations_id=0, percent=0):
     '''
-    Вернет все записи из request которым соответствует brand_id и model_id и если percent_difference меньше или равен исеомому проценту
+    Вернет все записи из request которым соответствует brand_id и model_id и generations_id и если percent_difference меньше или равен исеомому проценту
     '''
     with db:
-        reqest_list = Request.select().where(Request.brand_id == brand_id, Request.model_id == model_id, Request.percent_difference <= percent)
+        reqest_list = Request.select().where(Request.brand_id == brand_id, Request.model_id == model_id, Request.generations_id == generations_id, Request.percent_difference <= percent)
     return reqest_list
 
 def delet_reqest(telegram_id, request_id):
@@ -57,7 +58,7 @@ def delet_reqest(telegram_id, request_id):
 def get_sefch_data_list(telegram_id):
     requests_list = []
     '''
-    Вкрнет поисковые параметры для конкретного пользователя
+    Вeрнет поисковые параметры для конкретного пользователя
     '''
     with db:
         user = User.get(User.telegram_id == telegram_id)
@@ -66,19 +67,17 @@ def get_sefch_data_list(telegram_id):
                     'id': request.id,
                     'brand_id':request.brand_id,
                     'model_id':request.model_id,
-                    'percent_difference':request.percent_difference,
-                    'year_min':request.year_min,
-                    'year_max':request.year_max,
-                    'price_min':request.price_min,
-                    'price_max':request.price_max
+                    'generations_id':request.generations_id,
+                    'percent_difference':request.percent_difference
                     })
     return requests_list
 
-def create_request(brand_id=0, model_id=0, generations_id=0, percent_difference=0, user=0):
+def create_request(brand_id=0, model_id=0, generations_id=0, percent_difference=0, telegram_id=0):
     '''
     Добавляем новые данные поиска для User
     '''
     with db:
+        user = User.get(User.telegram_id == telegram_id)
         Request.get_or_create(
             brand_id=brand_id,
             model_id=model_id,
@@ -123,22 +122,6 @@ def del_all_respons():
 
 # with db:
 #     db.create_tables([User, Request, Respons])
-#     create_user(telegram_id=11, percent=1)
-# create_request(brand_id=1, model_id=3, generations_id=0, percent_difference=30, user=1)
-# add_procent_user(telegram_id=12, percent=50)
-# 
-
-# lst = ['https://docs.peewee-orm.com/en/latest/peewee/models.html', 'https://docs.peewee-orm.com/en/latest/peewee/models.html', 'https://docs.peewee-orm.com/en/latest/peewee/models.html', 'https://docs.peewee-orm.com/en/latest/peewee/models.html']
-# print(lst)
-# print()
-# str = '_'.join(lst)
-# print(str)
-# print()
-# lst_1 = str.split('_')
-# print(lst_1)
-
-# create_respons(link=['https://docs.peewee-orm.com/en/latest/peewee/models.html'], telegram_id=11)
-
-# print(get_respons_list(telegram_id=11))
-# print(create_user(telegram_id=11))
-# add_procent_user(telegram_id=11, percent=50)
+#     create_user(telegram_id=633279160)
+# create_request(brand_id=1, model_id=3, generations_id=0, percent_difference=30, telegram_id=633279160)
+# add_procent_user(telegram_id=633279160, percent=50)

@@ -1,4 +1,5 @@
 /venv
+/.vscode
 /__pycache__
 /bot/__pycache__
 /bot/api/__pycache__
@@ -7,10 +8,11 @@
 /bot/keyboar/__pycache__
 /bot/message/__pycache__
 
-/ebay/__pycache__
+/ebay/
 /ebay/api/__pycache__
 /ebay/callbacks/__pycache__
 /ebay/command/__pycache__
 /ebay/keyboar/__pycache__
 /ebay/message/__pycache__
 /.vscode
+/db_ebay.sqlite

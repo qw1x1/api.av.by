@@ -105,13 +105,14 @@ class Get_new_car_list:
         procent = 0
         if price < arg_price:
             procent = ((price / arg_price) * 100) - 100
-        return abs(int(procent))
+            dif_procent = abs(int(procent))
+            difference_procent = dif_procent if dif_procent >= 20 else 0
+        return difference_procent
 
     def get_arg_price(self):
         ''' Находит среднерыночную стоимость авто в списке'''
         for item in self.respons:
             if item['model'] != None or item['model'] != 0 and item['brand'] not in self.ID_CAR:
-                # в dict_to_car попадают brand_id=0, model_id=0, generations_id=0, изза этого все идет по пизде
                 print(item['brand'], item['model'], item['generation'])
                 dict_to_car = Pars_info_id_file(brand_id=item['brand'], model_id=item['model'], generations_id=item['generation'])
                 params = dict_to_car()
@@ -130,7 +131,6 @@ class Get_new_car_list:
                 user_list.append(user)
             return user_list
     
-    # НЕ ЮЗАЕТЬСЯ!!?
     def del_repit(self):
         for item in self.respons:
             if item['users'] == None:
@@ -138,6 +138,7 @@ class Get_new_car_list:
 
     def __call__(self):
         self.get_page()
+        self.del_repit()
         return self.respons
 
 class Сheck_for_repeats():
@@ -195,8 +196,6 @@ obj_3()
 
     # time.sleep(300)
 
-
-# add_procent_user(11, 44)
 
 
 
