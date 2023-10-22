@@ -1,7 +1,7 @@
-from models import User, Request, db
+from models import User, Request, Respons, db
 # from models import User, Request, db
 
-##########################################################################################################################
+###########################################################USER###############################################################
 def get_user_id_on_procent(percent=0):
     '''
     вернет список с пользователями у которых процент ментьше или равен проценту найденого авто
@@ -19,9 +19,9 @@ def add_procent_user(telegram_id=0, percent=1):
         user.percent = percent
         user.save()
 
-def create_user(telegram_id=1212121212, percent=0):
+def create_user(telegram_id=1212121212):
     with db:
-        return User.get_or_create(telegram_id=telegram_id, percent=percent)
+        return User.get_or_create(telegram_id=telegram_id)
     
 def get_users():
     '''
@@ -30,6 +30,10 @@ def get_users():
     with db:
         users = User.select()
     return users
+
+###########################################################END_USER###############################################################
+
+###########################################################REQEST###############################################################
 
 def get_request(brand_id=0, model_id=0, percent=0):
     '''
@@ -70,7 +74,7 @@ def get_sefch_data_list(telegram_id):
                     })
     return requests_list
 
-def create_request(brand_id=0, model_id=0, percent_difference=0, year_min=0, year_max=0, price_min=0, price_max=0, user=0):
+def create_request(brand_id=0, model_id=0, generations_id=0, percent_difference=0, user=0):
     '''
     Добавляем новые данные поиска для User
     '''
@@ -79,17 +83,62 @@ def create_request(brand_id=0, model_id=0, percent_difference=0, year_min=0, yea
             brand_id=brand_id,
             model_id=model_id,
             percent_difference=percent_difference,
-            year_min=year_min,
-            year_max=year_max,
-            price_min=price_min,
-            price_max=price_max,
+            generations_id=generations_id,
             user=user)
-##########################################################################################################################
+###########################################################END_REQEST###############################################################
+
+###########################################################RESPONS###############################################################
+def create_respons(link='', telegram_id=0):
+    '''
+    Добавляет отправленные ссылки для конкретного пользователя
+    '''
+    link_str = '_'.join(link)
+    with db:
+        user = User.get(telegram_id=telegram_id)
+        Respons.get_or_create(
+            links=link_str,
+            user=user)
+
+def get_respons_list(telegram_id=0):
+    '''
+    Возвразает список отправленных ссылок пользователю
+    '''
+    respons_list = []
+    respp = []
+    with db:
+        user = User.get(User.telegram_id == telegram_id)
+        for respons in user.respons:
+            respons_list.append(respons.links)
+
+        for item in respons_list:
+            respp.append(item.split('_'))
+    return respp
+  
+def del_all_respons():
+    '''
+    Удаляет все записи у всех пользователей
+    '''
+    pass
+###########################################################END_RESPONS###############################################################
 
 # with db:
-    # db.create_tables([User, Request])
-    # create_request(telegram_id=11, percent=1)
-    # create_request(brand_id=0, model_id=0, percent_difference=0, year_min=0, year_max=0, price_min=0, price_max=0, user=1)
+#     db.create_tables([User, Request, Respons])
+#     create_user(telegram_id=11, percent=1)
+# create_request(brand_id=1, model_id=3, generations_id=0, percent_difference=30, user=1)
 # add_procent_user(telegram_id=12, percent=50)
 # 
 
+# lst = ['https://docs.peewee-orm.com/en/latest/peewee/models.html', 'https://docs.peewee-orm.com/en/latest/peewee/models.html', 'https://docs.peewee-orm.com/en/latest/peewee/models.html', 'https://docs.peewee-orm.com/en/latest/peewee/models.html']
+# print(lst)
+# print()
+# str = '_'.join(lst)
+# print(str)
+# print()
+# lst_1 = str.split('_')
+# print(lst_1)
+
+# create_respons(link=['https://docs.peewee-orm.com/en/latest/peewee/models.html'], telegram_id=11)
+
+# print(get_respons_list(telegram_id=11))
+# print(create_user(telegram_id=11))
+# add_procent_user(telegram_id=11, percent=50)
