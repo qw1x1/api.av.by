@@ -1,7 +1,7 @@
 import asyncio, logging
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
-from callbacks import brand, coice, model, delete
+from callbacks import brand, coice, model, delete,generations
 from command import start, help, mycars
 from fake_useragent import UserAgent as Userr
 from bs4 import BeautifulSoup as bs
@@ -11,7 +11,7 @@ bot = Bot(token='6315832729:AAGC6fYoRIo6QQH595zsXjgN2pZorwvDGi8')
 storage:MemoryStorage = MemoryStorage()
 dp = Dispatcher(storage=storage)
 
-dp.include_routers(brand.router, coice.router, model.router, start.router, delete.router, help.router, mycars.router)
+dp.include_routers(brand.router, coice.router, model.router, start.router, delete.router, help.router, mycars.router,generations.router)
 
 async def main():
     await bot.delete_webhook(drop_pending_updates=True)

@@ -16,6 +16,5 @@ async def callbacks_cars(callback: types.CallbackQuery):
     models_keyboard = InlineKeyboardBuilder()
     models_keyboard._markup.clear()
     models_keyboard = kb_model.api_call(model_car.dikt)
-
     await kb_model.keyboard(callback.message, keybrd=models_keyboard, txt="Выберите марку авто:")
     await callback.answer()
