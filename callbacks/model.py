@@ -10,13 +10,12 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 router = Router()
 
-id_model = {}
+
 
 @router.callback_query(Text(startswith="model_"))
 async def callbacks_generation(callback:types.CallbackQuery):
     action = callback.data.split("_")[1]
-    id_model[callback.from_user.id] = action
-    global brand_car_id, model_car_id 
+    Start.id_model[callback.from_user.id] = action
     await callback.answer()
     generations_object=Get_model_or_generations(str(Start.brand[callback.from_user.id])+'/models/'+str(action)+'/generations/')
     generations_object()

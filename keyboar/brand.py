@@ -18,7 +18,6 @@ def NewKeyboard(cars:InlineKeyboardBuilder(), start:int, stop:int):
     new_cars._markup = cars._markup[start:stop]
     new_cars = new_cars.as_markup()
     new_cars.inline_keyboard.append([types.InlineKeyboardButton(text="<", callback_data="coice_back"),
-types.InlineKeyboardButton(text="Подтвердить", callback_data="coice_coice"),
 types.InlineKeyboardButton(text=">", callback_data="coice_forward")])
     return new_cars
 

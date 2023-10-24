@@ -1,6 +1,5 @@
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from api.av1 import brand
 from aiogram.exceptions import TelegramBadRequest
 from contextlib import suppress
 

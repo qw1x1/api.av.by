@@ -10,7 +10,7 @@ class Basic(Model):
     
 class User(Basic):
     telegram_id = IntegerField(unique=True)
-    percent = IntegerField()
+    percent = IntegerField(null=True)
 
     class Meta:
         db_table = 'users'
@@ -21,11 +21,8 @@ class User(Basic):
 class Request(Basic):
     brand_id = IntegerField()
     model_id = IntegerField()
+    generations_id = IntegerField()
     percent_difference = IntegerField()
-    year_min = IntegerField(default=1940)
-    year_max = IntegerField(default=2023)
-    price_min = IntegerField(default=0)
-    price_max = IntegerField(default=0)
     user = ForeignKeyField(User, related_name='requests')
 
     class Meta:
@@ -34,5 +31,13 @@ class Request(Basic):
     def __str__(self):
         return f'{str(self.user.id)}'
     
+class Respons(Basic):
+    link = CharField(max_length=200, unique=True)
+
+    class Meta:
+        db_table = 'respons'
+
+    def __str__(self):
+        return f'{str(self.link)}'
 
 
