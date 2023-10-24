@@ -3,7 +3,7 @@ from fake_useragent import UserAgent as Userr
 from bs4 import BeautifulSoup as bs
 from av1 import brand as brand_list
 from av1 import Get_model_or_generations, Pars_info_id_file
-from controls import get_user_id_on_procent
+from controls import get_user_id_on_procent, create_respons, get_respons_list
 from models import *
 
 class Get_new_car_list:
@@ -16,7 +16,6 @@ class Get_new_car_list:
     CAR_NAME = ["Lada", "Богдан", "ГАЗ", "ЕрАЗ", "ЗАЗ", "ИЖ", "ЛуАЗ", "Москвич", "РАФ", "ТагАЗ", "УАЗ", "Эксклюзив", "Shanghai", "Great", "GAC", "Dongfeng", "Aston"]
 
     def __init__(self):
-        self.car = []
         self.f_user = Userr().random
         self.respons = None
     
@@ -72,9 +71,11 @@ class Get_new_car_list:
             return 0
         if respons_page.status_code == 200:
             self.respons = self.get_car_dict(bs(respons_page.text, 'lxml'))
+            print(self.respons)
         self.get_arg_price()
 
     def get_car_dict(self, data_soup):
+        links = get_respons_list()
         car_list = []
         for result in data_soup.find(class_="listing__items").find_all('div', class_="listing-item__wrap"):
             name = result.find('div', class_="listing-item__about").text.replace('VIN', '').replace('ТопОбъявление', '').replace('ТОПеПоднялось', '').replace('выше', '').replace('остальных', '').replace('в', '').replace('и', '').replace('собирает', '').replace('больше', '').replace('просмотроСпособы', '').replace('собрает', '').replace('ускореня', '').replace('продаж', '')
@@ -84,12 +85,12 @@ class Get_new_car_list:
             if lst[0] != 0:
                 brand_id , model_id = brand_list[lst[0]], self.get_model_id(lst[0], lst[1])
                 if brand_id and model_id:
-                    car_list.append({'brand': brand_id, 'model': model_id, 'generation': self.get_generations_id(brand_id, model_id, lst[2]),  'link':link, 'price': price, 'arg_price': 0})
+                    if str(link) not in links:
+                        car_list.append({'brand': brand_id, 'model': model_id, 'generation': self.get_generations_id(brand_id, model_id, lst[2]),  'link':link, 'price': price, 'arg_price': 0})
+                        create_respons(link=link)
                 else:
-                    car_list.append({'brand': 0, 'model': None, 'generation': 0, 'link': 0, 'price': 0, 'arg_price': 0, 'users': 0})
-
-        self.car.append(car_list)
-        return self.car[0]
+                    continue
+        return car_list
 
     def get_average_market_value(self, car_list:list=[], count_page:int=0):
         count_items, total_price = 0, 0
@@ -105,9 +106,8 @@ class Get_new_car_list:
         procent = 0
         if price < arg_price:
             procent = ((price / arg_price) * 100) - 100
-            dif_procent = abs(int(procent))
-            difference_procent = dif_procent if dif_procent >= 20 else 0
-        return difference_procent
+        return abs(int(procent))
+            # difference_procent = dif_procent if dif_procent >= 20 else 0
 
     def get_arg_price(self):
         ''' Находит среднерыночную стоимость авто в списке'''
@@ -131,14 +131,8 @@ class Get_new_car_list:
                 user_list.append(user)
             return user_list
     
-    def del_repit(self):
-        for item in self.respons:
-            if item['users'] == None:
-                self.respons.remove(item)
-
     def __call__(self):
         self.get_page()
-        self.del_repit()
         return self.respons
 
 class Сheck_for_repeats():
@@ -176,33 +170,32 @@ class Сheck_for_repeats():
             if len(result_0) != 0:
                 self.send_messeg_for_user(result_0)
             
-obj_3 = Сheck_for_repeats()
-obj_3()
+# obj_3 = Сheck_for_repeats()
+# obj_3()
 
-# obj_0 = Get_new_car_list()
-# res_0 = obj_0()
-# for i in res_0:
-#     print(i)
-# print(len(res_0))
-# while True:
-#     obj = Get_new_car_list()
-#     print(obj)
-#     result = obj()
-#     for item in result:
-#             if type(item['users']) == list:
-#                 for user in item['users']:
-#                     print(user, item['link'], item['procent'], item['price'])
-#     print(time.ctime(time.time()))
+# car_list = [{'users':[11,33,22], 'link':'asdasdasd'},{'users':[11,33,22], 'link':'asdasdasd'}]
+    
+# def send_messeg_for_user(car_list):
+#     for item in car_list:
+#         if type(item['users']) == list:
+#             for user in item['users']:
+#                 links = get_respons_list(user)
+#                 if item['link'] in links:
+#                     continue
+#                 else:
+#                     create_respons(link=item['link'],telegram_id=user)
+#                     print(user, item['link'])
 
-    # time.sleep(300)
+# send_messeg_for_user(car_list)
 
 
 
+obj = Get_new_car_list()
 
-
-
-
-
+while True:
+    car_list = obj()
+    for item in car_list:
+        print(item['link'], item['procent'], item['price'], item['users'])
 
 
 

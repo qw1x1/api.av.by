@@ -87,41 +87,46 @@ def create_request(brand_id=0, model_id=0, generations_id=0, percent_difference=
 ###########################################################END_REQEST###############################################################
 
 ###########################################################RESPONS###############################################################
-def create_respons(link='', telegram_id=0):
+def create_respons(link=''):
     '''
-    Добавляет отправленные ссылки для конкретного пользователя
+    Добавляет найденную ссылку
     '''
-    link_str = '_'.join(link)
     with db:
-        user = User.get(telegram_id=telegram_id)
-        Respons.get_or_create(
-            links=link_str,
-            user=user)
+        Respons.get_or_create(link=link)
 
-def get_respons_list(telegram_id=0):
+def get_respons_list():
+    respons_str = []
     '''
-    Возвразает список отправленных ссылок пользователю
+    Возвразает список найденых ссылок 
     '''
-    respons_list = []
-    respp = []
     with db:
-        user = User.get(User.telegram_id == telegram_id)
-        for respons in user.respons:
-            respons_list.append(respons.links)
+        respons = Respons.select()
 
-        for item in respons_list:
-            respp.append(item.split('_'))
-    return respp
-  
-def del_all_respons():
-    '''
-    Удаляет все записи у всех пользователей
-    '''
-    pass
+        if len(respons) >= 75:
+            respons_del = respons[:25]
+            for item in respons_del:
+                item.delete_instance()
+
+        for item in respons:
+            respons_str.append(str(item))
+
+    return respons_str
+
+
 ###########################################################END_RESPONS###############################################################
 
 # with db:
-#     db.create_tables([User, Request, Respons])
-#     create_user(telegram_id=633279160)
-# create_request(brand_id=1, model_id=3, generations_id=0, percent_difference=30, telegram_id=633279160)
-# add_procent_user(telegram_id=633279160, percent=50)
+    # db.create_tables([User, Request, Respons])
+    # create_user(telegram_id=633279160)
+    # create_request(brand_id=1, model_id=3, generations_id=0, percent_difference=30, telegram_id=633279160)
+    # add_procent_user(telegram_id=633279160, percent=50)
+
+
+# create_respons(link='https://cars.av.by/bmw/4-seriya/23423567890')
+# respons = get_respons_list()
+# print(respons)
+# for i in respons:
+#     print(type(i))
+
+# for link in respons:
+#     if 'https://cars.av.by/bmw/4-seriya/23423567890-=' in

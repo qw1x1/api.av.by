@@ -10,7 +10,7 @@ class Basic(Model):
     
 class User(Basic):
     telegram_id = IntegerField(unique=True)
-    percent = IntegerField()
+    percent = IntegerField(null=True)
 
     class Meta:
         db_table = 'users'
@@ -32,13 +32,12 @@ class Request(Basic):
         return f'{str(self.user.id)}'
     
 class Respons(Basic):
-    links = TextField()
-    user = ForeignKeyField(User, related_name='respons')
+    link = CharField(max_length=200, unique=True)
 
     class Meta:
         db_table = 'respons'
 
     def __str__(self):
-        return f'{str(22)}'
+        return f'{str(self.link)}'
 
 
