@@ -12,8 +12,8 @@ def get_user_id_on_procent(percent=20):
     return reqest_list
 
 def add_procent_user(telegram_id=0, percent=20):
-    '''Если пользователь уже создан, но он не перекуп и у него нет percent,
-    то мы добавляем его 
+    '''
+    Добавляет percent в таблицу User
     '''
     with db:
         user = User.get(telegram_id=telegram_id)
@@ -112,11 +112,10 @@ def get_respons_list():
 
     return respons_str
 
-
 ###########################################################END_RESPONS###############################################################
 
 # with db:
-    # db.create_tables([User, Request, Respons])
+    # db.create_tables([User, Request, Respons]) # Для создания таблиц в бд
     # create_user(telegram_id=633279160)
     # create_request(brand_id=1, model_id=3, generations_id=0, percent_difference=30, telegram_id=633279160)
     # add_procent_user(telegram_id=633279160, percent=50)

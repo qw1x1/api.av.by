@@ -8,9 +8,7 @@ from models import *
 
 class Get_new_car_list:
     '''
-    Делает запрос на av.by, получет 25 новых авто, затем записывает их в список с дсктами.
     Вернёт список с диктами {'brand':brand_id, 'model':model_id, 'link':link_car, 'price': price_car, 'location': location, 'arg_price': arg_price, 'procent': procent, 'users': list[user_1, user_2]}
-    ничего не принемает, нужно вызывать с интервалом в 10-15 мин
     '''
     ID_CAR = [5076, 1310, 10094, 1551, 2894, 2345, 2051, 5252, 5032, 1464, 5019, 1279, 0]
     CAR_NAME = ["Lada", "Богдан", "ГАЗ", "ЕрАЗ", "ЗАЗ", "ИЖ", "ЛуАЗ", "Москвич", "РАФ", "ТагАЗ", "УАЗ", "Эксклюзив", "Shanghai", "Great", "GAC", "Dongfeng", "Aston"]
@@ -71,7 +69,6 @@ class Get_new_car_list:
             return 0
         if respons_page.status_code == 200:
             self.respons = self.get_car_dict(bs(respons_page.text, 'lxml'))
-            print(self.respons)
         self.get_arg_price()
 
     def get_car_dict(self, data_soup):
@@ -113,7 +110,7 @@ class Get_new_car_list:
         ''' Находит среднерыночную стоимость авто в списке'''
         for item in self.respons:
             if item['model'] != None or item['model'] != 0 and item['brand'] not in self.ID_CAR:
-                print(item['brand'], item['model'], item['generation'])
+                # print(item['brand'], item['model'], item['generation'])
                 dict_to_car = Pars_info_id_file(brand_id=item['brand'], model_id=item['model'], generations_id=item['generation'])
                 params = dict_to_car()
                 if params[1] == 0 and params[0] == 0:
