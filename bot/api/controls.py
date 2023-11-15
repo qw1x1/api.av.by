@@ -1,14 +1,21 @@
-from models import User, Request, Respons, db
-# from models import User, Request, db
+# from models import User, Request, Respons, db
+from api.models import User, Request, Respons, db
+
+def reset_BD():
+    '''
+    Создаёт бдешку и таблицы в ней
+    '''
+    with db:
+        db.create_tables([User, Request, Respons]) 
 
 ###########################################################USER###############################################################
-def get_user_id_on_procent(percent=20):
+def get_user_id_on_procent(percent=20): # location=''
     '''
     percent !< 20
     вернет список с пользователями у которых процент ментьше или равен проценту найденого авто
     '''
     with db:
-        reqest_list = User.select().where(User.percent <= percent)
+        reqest_list = User.select().where(User.percent <= percent) #.where(User.location <= location)
     return reqest_list
 
 def add_procent_user(telegram_id=0, percent=20):
@@ -18,6 +25,32 @@ def add_procent_user(telegram_id=0, percent=20):
     with db:
         user = User.get(telegram_id=telegram_id)
         user.percent = percent
+        user.save()
+
+def get_location_user(telegram_id=0):
+    '''
+    Отдает список с location уонкретного USER по telegram_id.
+    '''
+    with db:
+        user = User.get(telegram_id=telegram_id)
+        return user.locationName.split('_')
+
+def change_location_user(telegram_id=0, location=[]):
+    '''
+    Изменяет текущий список location у USER
+    передаем location либо новые либо старые города или все вместе.
+    Можно использовать как для добавления так и для удаления элементов
+    '''
+    old_location = get_location_user(telegram_id=telegram_id)
+    for item in location:
+        if item in old_location:
+            old_location.remove(item)
+        else:
+            old_location.append(item)
+
+    with db:
+        user = User.get(telegram_id=telegram_id)
+        user.locationName = "_".join(list(set(old_location)))
         user.save()
 
 def create_user(telegram_id=0):
@@ -32,6 +65,10 @@ def get_users():
         users = User.select()
     return users
 
+def delet_user(telegram_id=0):
+    with db:
+        user = User.get(telegram_id=telegram_id)
+        user.delete_instance()
 ###########################################################END_USER###############################################################
 
 ###########################################################REQEST###############################################################
@@ -55,7 +92,7 @@ def delet_reqest(telegram_id, request_id):
         request = Request.get(Request.user == user and Request.id == request_id)
     return request.delete_instance()
 
-def get_sefch_data_list(telegram_id):
+def get_sefch_data_list(telegram_id=0):
     requests_list = []
     '''
     Вeрнет поисковые параметры для конкретного пользователя
@@ -87,6 +124,7 @@ def create_request(brand_id=0, model_id=0, generations_id=0, percent_difference=
 ###########################################################END_REQEST###############################################################
 
 ###########################################################RESPONS###############################################################
+
 def create_respons(link=''):
     '''
     Добавляет найденную ссылку
@@ -114,18 +152,7 @@ def get_respons_list():
 
 ###########################################################END_RESPONS###############################################################
 
-# with db:
-    # db.create_tables([User, Request, Respons]) # Для создания таблиц в бд
-    # create_user(telegram_id=633279160)
-    # create_request(brand_id=1, model_id=3, generations_id=0, percent_difference=30, telegram_id=633279160)
-    # add_procent_user(telegram_id=633279160, percent=50)
 
-
-# create_respons(link='https://cars.av.by/bmw/4-seriya/23423567890')
-# respons = get_respons_list()
-# print(respons)
-# for i in respons:
-#     print(type(i))
-
-# for link in respons:
-#     if 'https://cars.av.by/bmw/4-seriya/23423567890-=' in
+# create_user(telegram_id=0)
+# create_request(brand_id=1, model_id=3, generations_id=2, percent_difference=30, telegram_id=0)
+# add_procent_user(telegram_id=0, percent=50)
