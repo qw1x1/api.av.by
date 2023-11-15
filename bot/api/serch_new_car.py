@@ -77,13 +77,13 @@ class Get_new_car_list:
             name = result.find('div', class_="listing-item__about").text.replace('VIN', '').replace('ТопОбъявление', '').replace('ТОПеПоднялось', '').replace('выше', '').replace('остальных', '').replace('в', '').replace('и', '').replace('собирает', '').replace('больше', '').replace('просмотроСпособы', '').replace('собрает', '').replace('ускореня', '').replace('продаж', '')
             link = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
             price = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
-            locationName = result.find('div', class_="listing-item__info").text.replace('только что', '').replace('минуту назад', '').replace('минуты назад', '').replace('минут назад', '').replace('1', '').replace('2', '').replace('3', '').replace('4', '').replace('5', '').replace('6', '').replace('7', '').replace('8', '').replace('9', '').replace('0', '')
+            location = result.find('div', class_="listing-item__info").text.replace('только что', '').replace('минуту назад', '').replace('минуты назад', '').replace('минут назад', '').replace('1', '').replace('2', '').replace('3', '').replace('4', '').replace('5', '').replace('6', '').replace('7', '').replace('8', '').replace('9', '').replace('0', '')
             lst = self.get_car_name(name.split()[:6])
             if lst[0] != 0:
                 brand_id , model_id = brand_list[lst[0]], self.get_model_id(lst[0], lst[1])
                 if brand_id and model_id:
                     if str(link) not in links:
-                        car_list.append({'brand': brand_id, 'model': model_id, 'generation': self.get_generations_id(brand_id, model_id, lst[2]), 'link':link, 'price': price, 'locationName': locationName, 'arg_price': 0})
+                        car_list.append({'brand': brand_id, 'model': model_id, 'generation': self.get_generations_id(brand_id, model_id, lst[2]), 'link':link, 'price': price, 'location': location, 'arg_price': 0})
                         create_respons(link=link)
                 else:
                     continue
@@ -117,9 +117,9 @@ class Get_new_car_list:
                     arg_price = self.get_average_market_value(params[0], params[1])
                     item['arg_price'] = arg_price
                     item['procent'] = self.get_procent(item['price'], item['arg_price'])
-                    item['users'] = self.record_users_if_dict(item['procent'])
+                    item['users'] = self.record_users_if_dict(item['procent'], item['location'])
                 
-    def record_users_if_dict(self, procent):
+    def record_users_if_dict(self, procent, location):
         user_list, users = [], get_user_id_on_procent(percent=procent)
         if len(users) >= 1:
             for user in users:
@@ -134,4 +134,4 @@ obj = Get_new_car_list()
 while True:
     car_list = obj()
     for item in car_list:
-        print(item['link'], item['procent'], item['price'], item['users'], item['locationName'])
+        print(item['link'], item['procent'], item['price'], item['users'], item['location'])

@@ -9,14 +9,22 @@ def reset_BD():
         db.create_tables([User, Request, Respons]) 
 
 ###########################################################USER###############################################################
-def get_user_id_on_procent(percent=20): # location=''
+def get_user_id_on_procent(percent=20, location=''):
+    result_list = []
     '''
     percent !< 20
-    вернет список с пользователями у которых процент ментьше или равен проценту найденого авто
+    вернет список с пользователями у которых процент ментьше 
+    или равен проценту найденого авто и есоли пользователю подходит местоположение авто
     '''
     with db:
-        reqest_list = User.select().where(User.percent <= percent) #.where(User.location <= location)
-    return reqest_list
+        reqest_list = User.select().where(User.percent <= percent)
+    if len(reqest_list) >= 1:
+        for user in reqest_list:
+            locations = get_location_user(telegram_id=user.telegram_id)
+            if location in locations:
+                result_list.append(user)
+
+    return result_list
 
 def add_procent_user(telegram_id=0, percent=20):
     '''
@@ -33,7 +41,9 @@ def get_location_user(telegram_id=0):
     '''
     with db:
         user = User.get(telegram_id=telegram_id)
-        return user.locationName.split('_')
+        if user.location == None:
+            return []
+        return user.location.split('_')
 
 def change_location_user(telegram_id=0, location=[]):
     '''
@@ -50,7 +60,7 @@ def change_location_user(telegram_id=0, location=[]):
 
     with db:
         user = User.get(telegram_id=telegram_id)
-        user.locationName = "_".join(list(set(old_location)))
+        user.location = "_".join(list(set(old_location)))
         user.save()
 
 def create_user(telegram_id=0):
@@ -152,6 +162,8 @@ def get_respons_list():
 
 ###########################################################END_RESPONS###############################################################
 
+
+# reset_BD()
 
 # create_user(telegram_id=0)
 # create_request(brand_id=1, model_id=3, generations_id=2, percent_difference=30, telegram_id=0)

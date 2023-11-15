@@ -11,7 +11,7 @@ class Basic(Model):
 class User(Basic):
     telegram_id = IntegerField(unique=True)
     percent = IntegerField(null=True)
-    locationName = CharField(null=True)
+    location = CharField(null=True)
 
     class Meta:
         db_table = 'users'

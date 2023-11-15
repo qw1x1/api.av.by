@@ -1,6 +1,6 @@
 import requests, json, math
 from fake_useragent import UserAgent as User
-from api.controls import get_location_user, change_location_user
+from api.controls import get_location_user, change_location_user, get_user_id_on_procent
 
 
 [{'id': 1001, 'region_name': 'Брестская обл.', 'goroda':[]},
@@ -325,12 +325,13 @@ def get_city_for_region(region_id):
     for city_dikt in CITY_IN_REGION[region_id]['city']:
         city.append({city_dikt['city_name']:city_dikt['id']})
     return city
+#######################################
 
-# add_location_user(telegram_id=0, location=['Барановичи', 'Брест', 'Белоозёрск', 'Береза'])
 
 
-change_locat = change_location_user(telegram_id=0, location=['Брест'])
-locals = get_location_user(telegram_id=0)
+# change_location_user(telegram_id=0, location=['Барановичи', 'Брест', 'Белоозёрск', 'Береза'])
+# change_locat = change_location_user(telegram_id=0, location=['Брест'])
+# locals = get_location_user(telegram_id=0)
 
 # regio = get_region()
 # reg = get_city_for_region(0)
@@ -338,5 +339,12 @@ locals = get_location_user(telegram_id=0)
 
 # print(regio)
 # print(reg)
-print(locals)
+# print(locals)
 # print(change_locat)
+
+
+
+
+
+# users = get_user_id_on_procent(percent=40, location='Брест')
+# print(users)
