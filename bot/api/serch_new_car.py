@@ -120,7 +120,7 @@ class Get_new_car_list:
                     item['users'] = self.record_users_if_dict(item['procent'], item['location'])
                 
     def record_users_if_dict(self, procent, location):
-        user_list, users = [], get_user_id_on_procent(percent=procent)
+        user_list, users = [], get_user_id_on_procent(percent=procent, location=location)
         if len(users) >= 1:
             for user in users:
                 user_list.append(user)

@@ -1,5 +1,5 @@
-# from models import User, Request, Respons, db
-from api.models import User, Request, Respons, db
+from models import User, Request, Respons, db
+# from api.models import User, Request, Respons, db
 
 def reset_BD():
     '''
