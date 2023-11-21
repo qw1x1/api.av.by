@@ -1,7 +1,7 @@
 import requests
 from fake_useragent import UserAgent as Userr
 from bs4 import BeautifulSoup as bs
-from bot.settings import BRAND as brand_list
+from av1 import brand as brand_list
 from av1 import Get_model_or_generations, Pars_info_id_file
 from controls import get_user_id_on_procent, create_respons, get_respons_list
 
