@@ -501,7 +501,6 @@ class Search_cars(): # -> deviated_car_list
         self.get_average_market_value()
         self.serch_deviated_car_list()
         return self.deviated_car_list, self.arg_price
-    
 
 #######################################
 def get_region():
