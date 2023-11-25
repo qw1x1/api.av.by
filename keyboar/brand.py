@@ -10,8 +10,8 @@ builder = InlineKeyboardBuilder()
 def list_add(cars:InlineKeyboardBuilder()):
     brand_cars = brand.items()
     for key, value in brand_cars:
-        cars.adjust(3)
         cars.add(types.InlineKeyboardButton(text=key, callback_data="car_"+str(value)))
+    cars.adjust(3)
 
 def NewKeyboard(cars:InlineKeyboardBuilder(), start:int, stop:int):
     new_cars = InlineKeyboardBuilder()

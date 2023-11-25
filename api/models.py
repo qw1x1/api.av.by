@@ -11,6 +11,7 @@ class Basic(Model):
 class User(Basic):
     telegram_id = IntegerField(unique=True)
     percent = IntegerField(null=True)
+    location = CharField(null=True)
 
     class Meta:
         db_table = 'users'
@@ -39,5 +40,6 @@ class Respons(Basic):
 
     def __str__(self):
         return f'{str(self.link)}'
+
 
 

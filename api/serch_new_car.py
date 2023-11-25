@@ -1,16 +1,13 @@
-import requests, time
+import requests
 from fake_useragent import UserAgent as Userr
 from bs4 import BeautifulSoup as bs
 from av1 import brand as brand_list
 from av1 import Get_model_or_generations, Pars_info_id_file
 from controls import get_user_id_on_procent, create_respons, get_respons_list
-from models import *
 
 class Get_new_car_list:
     '''
-    Делает запрос на av.by, получет 25 новых авто, затем записывает их в список с дсктами.
     Вернёт список с диктами {'brand':brand_id, 'model':model_id, 'link':link_car, 'price': price_car, 'location': location, 'arg_price': arg_price, 'procent': procent, 'users': list[user_1, user_2]}
-    ничего не принемает, нужно вызывать с интервалом в 10-15 мин
     '''
     ID_CAR = [5076, 1310, 10094, 1551, 2894, 2345, 2051, 5252, 5032, 1464, 5019, 1279, 0]
     CAR_NAME = ["Lada", "Богдан", "ГАЗ", "ЕрАЗ", "ЗАЗ", "ИЖ", "ЛуАЗ", "Москвич", "РАФ", "ТагАЗ", "УАЗ", "Эксклюзив", "Shanghai", "Great", "GAC", "Dongfeng", "Aston"]
@@ -71,7 +68,6 @@ class Get_new_car_list:
             return 0
         if respons_page.status_code == 200:
             self.respons = self.get_car_dict(bs(respons_page.text, 'lxml'))
-            print(self.respons)
         self.get_arg_price()
 
     def get_car_dict(self, data_soup):
@@ -81,12 +77,13 @@ class Get_new_car_list:
             name = result.find('div', class_="listing-item__about").text.replace('VIN', '').replace('ТопОбъявление', '').replace('ТОПеПоднялось', '').replace('выше', '').replace('остальных', '').replace('в', '').replace('и', '').replace('собирает', '').replace('больше', '').replace('просмотроСпособы', '').replace('собрает', '').replace('ускореня', '').replace('продаж', '')
             link = 'https://cars.av.by' + result.find('div', class_="listing-item__about").find('a', class_="listing-item__link").get('href')
             price = int("".join(price for price in result.find(class_="listing-item__prices").find(class_="listing-item__priceusd").text if  price.isdecimal()))
+            location = result.find('div', class_="listing-item__info").text.replace('только что', '').replace('минуту назад', '').replace('минуты назад', '').replace('минут назад', '').replace('1', '').replace('2', '').replace('3', '').replace('4', '').replace('5', '').replace('6', '').replace('7', '').replace('8', '').replace('9', '').replace('0', '')
             lst = self.get_car_name(name.split()[:6])
             if lst[0] != 0:
                 brand_id , model_id = brand_list[lst[0]], self.get_model_id(lst[0], lst[1])
                 if brand_id and model_id:
                     if str(link) not in links:
-                        car_list.append({'brand': brand_id, 'model': model_id, 'generation': self.get_generations_id(brand_id, model_id, lst[2]),  'link':link, 'price': price, 'arg_price': 0})
+                        car_list.append({'brand': brand_id, 'model': model_id, 'generation': self.get_generations_id(brand_id, model_id, lst[2]), 'link':link, 'price': price, 'location': location, 'arg_price': 0})
                         create_respons(link=link)
                 else:
                     continue
@@ -107,13 +104,11 @@ class Get_new_car_list:
         if price < arg_price:
             procent = ((price / arg_price) * 100) - 100
         return abs(int(procent))
-            # difference_procent = dif_procent if dif_procent >= 20 else 0
 
     def get_arg_price(self):
         ''' Находит среднерыночную стоимость авто в списке'''
         for item in self.respons:
             if item['model'] != None or item['model'] != 0 and item['brand'] not in self.ID_CAR:
-                print(item['brand'], item['model'], item['generation'])
                 dict_to_car = Pars_info_id_file(brand_id=item['brand'], model_id=item['model'], generations_id=item['generation'])
                 params = dict_to_car()
                 if params[1] == 0 and params[0] == 0:
@@ -122,10 +117,10 @@ class Get_new_car_list:
                     arg_price = self.get_average_market_value(params[0], params[1])
                     item['arg_price'] = arg_price
                     item['procent'] = self.get_procent(item['price'], item['arg_price'])
-                    item['users'] = self.record_users_if_dict(item['procent'])
+                    item['users'] = self.record_users_if_dict(item['procent'], item['location'])
                 
-    def record_users_if_dict(self, procent):
-        user_list, users = [], get_user_id_on_procent(percent=procent)
+    def record_users_if_dict(self, procent, location):
+        user_list, users = [], get_user_id_on_procent(percent=procent, location=location)
         if len(users) >= 1:
             for user in users:
                 user_list.append(user)
@@ -135,81 +130,8 @@ class Get_new_car_list:
         self.get_page()
         return self.respons
 
-class Сheck_for_repeats():
-    '''
-    Убирает авто которые попали в список второй раз.
-    Затем обновляет данные.
-    Обрабатывает все данные и отправляет найденые авто пользователям
-    '''
-
-    def __init__(self):
-        self.old_list = []
-
-    def get_not_repeats_list(self, new_list):
-        
-        for item in self.old_list:
-            if item in new_list:
-                new_list.remove(item)
-        return new_list
-
-    def get_old_list(self):
-        obj = Get_new_car_list()
-        new_list = obj()
-        self.old_list = self.get_not_repeats_list(new_list)
-        return self.old_list
-
-    def send_messeg_for_user(self, car_list):
-        for item in car_list:
-            if type(item['users']) == list:
-                for user in item['users']:
-                    print(user, item['link'], item['procent'], item['price'])
-
-    def __call__(self):
-        while True:
-            result_0 = self.get_old_list()
-            if len(result_0) != 0:
-                self.send_messeg_for_user(result_0)
-            
-# obj_3 = Сheck_for_repeats()
-# obj_3()
-
-# car_list = [{'users':[11,33,22], 'link':'asdasdasd'},{'users':[11,33,22], 'link':'asdasdasd'}]
-    
-# def send_messeg_for_user(car_list):
-#     for item in car_list:
-#         if type(item['users']) == list:
-#             for user in item['users']:
-#                 links = get_respons_list(user)
-#                 if item['link'] in links:
-#                     continue
-#                 else:
-#                     create_respons(link=item['link'],telegram_id=user)
-#                     print(user, item['link'])
-
-# send_messeg_for_user(car_list)
-
-
-
 obj = Get_new_car_list()
-
 while True:
     car_list = obj()
     for item in car_list:
-        print(item['link'], item['procent'], item['price'], item['users'])
-
-
-
-
-
-
-
-             
-             
-             
-             
-             
-                  
-             
-             
-
-
+        print(item['link'], item['procent'], item['price'], item['users'], item['location'])

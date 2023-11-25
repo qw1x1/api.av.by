@@ -10,6 +10,8 @@ perekup={}
 id_model = {}
 procent ={}
 id_gen={}
+id_region={}
+id_city={}
 
 
 @router.message(Command("start"))
@@ -20,4 +22,6 @@ async def call_backs(message: types.Message):
     id_model[message.from_user.id]=0
     procent[message.from_user.id]=0
     id_gen[message.from_user.id]=0
+    id_region[message.from_user.id]=0
+    id_city[message.from_user.id]=[]
     await message.answer("Вы перекуп?", reply_markup=kb_start.key())

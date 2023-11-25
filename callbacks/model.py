@@ -1,6 +1,6 @@
 from aiogram import Router, types
 from aiogram.filters import Text
-from api.av1 import Get_model_or_generations
+import api.av1
 import keyboar.generations as kb_gen
 from api.controls import create_request
 from api.models import *
@@ -17,7 +17,7 @@ async def callbacks_generation(callback:types.CallbackQuery):
     action = callback.data.split("_")[1]
     Start.id_model[callback.from_user.id] = action
     await callback.answer()
-    generations_object=Get_model_or_generations(str(Start.brand[callback.from_user.id])+'/models/'+str(action)+'/generations/')
+    generations_object=api.av1.Get_model_or_generations(str(Start.brand[callback.from_user.id])+'/models/'+str(action)+'/generations/')
     generations_object()
     gen_keyboard = InlineKeyboardBuilder()
     gen_keyboard._markup.clear()
