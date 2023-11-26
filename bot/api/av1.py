@@ -511,7 +511,7 @@ def get_region():
     region = []
     for region_dikt in CITY_IN_REGION:
         region.append({region_dikt['region_name']:region_dikt['id']})
-    return region,0
+    return region
 
 def get_city_for_region(region_id):
     '''Возвращает список городов в конкретной области по id области'''

@@ -8,9 +8,12 @@ async def keyboard(message:types.Message, keybrd:InlineKeyboardBuilder, txt:str)
         await message.answer(txt, reply_markup=keybrd.as_markup())
 
 def api_call(list):
-    model_list = InlineKeyboardBuilder()
-    model_list._markup.clear()
-    for key, value in list.items():
-        model_list.adjust(3)
-        model_list.add(types.InlineKeyboardButton(text=key, callback_data="model_"+str(value)))
-    return model_list
+    region_name_list = InlineKeyboardBuilder()
+    region_name_list._markup.clear()
+    for i in list:
+        region_name_list.adjust(3)
+        for key, value in i.items():
+            
+            region_name_list.add(types.InlineKeyboardButton(text=key, callback_data="region_"+str(value)))
+    
+    return region_name_list

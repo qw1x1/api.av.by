@@ -14,6 +14,3 @@ def pars_info(search_list):
         obj_search_cars = Search_cars(car_list = obj_pars_info_id_file[0], count_page=obj_pars_info_id_file[1], deviation_procent=item['percent_difference'])
         result_list.append(obj_search_cars())
     return result_list
-
-search_list = get_sefch_data_list(telegram_id=121)
-pars_info(search_list)
