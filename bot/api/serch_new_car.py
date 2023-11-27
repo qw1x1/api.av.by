@@ -2,12 +2,11 @@ import requests
 from fake_useragent import UserAgent as Userr
 from bs4 import BeautifulSoup as bs
 from av1 import brand as brand_list
-from av1 import Get_model_or_generations, Pars_info_id_file
 from controls import get_user_id_on_procent, create_respons, get_respons_list
 
 class Get_new_car_list:
     '''
-    Вернёт список с диктами {'brand':brand_id, 'model':model_id, 'link':link_car, 'price': price_car, 'location': location, 'arg_price': arg_price, 'procent': procent, 'users': list[user_1, user_2]}
+    Вернёт список с диктами {'link':link_car, 'price': price_car, 'location': location, 'arg_price': arg_price, 'procent': procent, 'users': list[user_1, user_2]}
     '''
 
     def __init__(self):
