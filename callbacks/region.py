@@ -16,8 +16,7 @@ router = Router()
 async def callbacks_generation(callback:types.CallbackQuery):
     action = callback.data.split("_")[1]
     Start.id_region[callback.from_user.id] = action
-    city_keyboard = InlineKeyboardBuilder()
-    city_keyboard._markup.clear()
-    city_keyboard = kb_city.api_call(get_city_for_region(int(action)))
-    await kb_city.keyboard(callback.message, keybrd=city_keyboard, txt="Выберите город или несколько городов:")
+    #city_keyboard = kb_city.list_add((int(action)))
+    Start.city_bilder[callback.message.from_user.id]=InlineKeyboardBuilder()
+    await kb_city.keyboard(callback.message, keybrd=Start.city_bilder[callback.message.from_user.id],action=int(action), txt="Выберите город или несколько городов:")
     await callback.answer()
