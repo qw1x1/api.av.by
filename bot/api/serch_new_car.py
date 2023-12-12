@@ -1,8 +1,7 @@
 import requests
 from fake_useragent import UserAgent as Userr
 from bs4 import BeautifulSoup as bs
-from av1 import brand as brand_list
-from controls import get_user_id_on_procent, create_respons, get_respons_list
+from controls import get_user_id_on_procent, create_respons, get_respons_list, set_cars
 
 class Get_new_car_list:
     '''
@@ -73,7 +72,7 @@ class Get_new_car_list:
         user_list, users = [], get_user_id_on_procent(percent=procent, location=location)
         if len(users) >= 1:
             for user in users:
-                user_list.append(user)
+                user_list.append(str(user))
             return user_list
     
     def __call__(self):
@@ -84,4 +83,8 @@ obj = Get_new_car_list()
 while True:
     car_list = obj()
     for item in car_list:
-        print(item['link'], item['procent'], item['price'], item['users'], item['location'])
+        if type(item['users']) == list:
+            print(type(item['users']), item['link'], item['procent'], item['price'], item['users'], item['location'])
+            set_cars(link=item['link'], users=list(item['users']))
+            # print()
+            

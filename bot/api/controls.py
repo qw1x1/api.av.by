@@ -1,12 +1,12 @@
-# from api.models import User, Request, Respons, db
-from models import User, Request, Respons, db
+# from api.models import User, Request, Respons, Cars, db # bot
+from models import User, Request, Respons, Cars, db # 
 
 def reset_BD():
     '''
     Создаёт бдешку и таблицы в ней
     '''
     with db:
-        db.create_tables([User, Request, Respons]) 
+        db.create_tables([User, Request, Respons, Cars]) 
 
 ###########################################################USER###############################################################
 def get_user_id_on_procent(percent=20, location=''):
@@ -162,9 +162,33 @@ def get_respons_list():
 
 ###########################################################END_RESPONS###############################################################
 
+################################################################CARS#################################################################
+def get_cars():
+    '''
+    Отдает список с авто и пользователями
+    '''
+    respons = {}
+    with db:
+        cars = Cars.select()
+        for car in cars:
+            respons[car.link] = car.users.split('_')
+        # Нужно удалить все записи
+        return respons
 
+def set_cars(link='', users=[]):
+    '''
+    
+    '''
+    
+    with db:
+        cars = Cars(link=link, users="_".join(list(set(users))))
+        cars.save()
+
+##############################################################END_CARS################################################################
 # reset_BD()
 
 # create_user(telegram_id=0)
 # create_request(brand_id=1, model_id=3, generations_id=2, percent_difference=30, telegram_id=0)
-# add_procent_user(telegram_id=0, percent=50)
+add_procent_user(telegram_id=0, percent=1)
+# set_cars(link='sjdghfujiwoeeee', users=['444', '555', '666'])
+# print(get_cars())
