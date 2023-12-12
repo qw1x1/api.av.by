@@ -166,13 +166,15 @@ def get_respons_list():
 def get_cars():
     '''
     Отдает список с авто и пользователями
+    После этого удаляет все записи
     '''
     respons = {}
     with db:
         cars = Cars.select()
         for car in cars:
             respons[car.link] = car.users.split('_')
-        # Нужно удалить все записи
+            Cars[car.id].delete_instance()
+
         return respons
 
 def set_cars(link='', users=[]):
@@ -189,6 +191,6 @@ def set_cars(link='', users=[]):
 
 # create_user(telegram_id=0)
 # create_request(brand_id=1, model_id=3, generations_id=2, percent_difference=30, telegram_id=0)
-add_procent_user(telegram_id=0, percent=1)
+# add_procent_user(telegram_id=0, percent=1)
 # set_cars(link='sjdghfujiwoeeee', users=['444', '555', '666'])
 # print(get_cars())
