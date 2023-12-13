@@ -1,5 +1,5 @@
-# from api.models import User, Request, Respons, Cars, db # bot
-from models import User, Request, Respons, Cars, db # 
+from api.models import User, Request, Respons, Cars, db # bot
+# from models import User, Request, Respons, Cars, db # 
 
 def reset_BD():
     '''
