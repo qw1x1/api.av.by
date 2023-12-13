@@ -40,6 +40,16 @@ class Respons(Basic):
 
     def __str__(self):
         return f'{str(self.link)}'
+    
+class Cars(Basic):
+    link = CharField(max_length=200, unique=True)
+    users = CharField()
+
+    class Meta:
+        db_table = 'cars'
+
+    def __str__(self):
+        return f'{str(self.link)}'
 
 
 

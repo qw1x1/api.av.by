@@ -28,7 +28,7 @@ def NewKeyboard(bilder:InlineKeyboardBuilder(),text):
     new_city._markup=markup_city.inline_keyboard
     return new_city
 
-async def new_keyboard(message:types.Message,text:str):
-    Start.city_bilder[message.from_user.id]=NewKeyboard(Start.city_bilder[message.from_user.id],text)
-    await message.edit_text("Выберите город или несколько городов:", reply_markup=Start.city_bilder[message.from_user.id].as_markup())
+async def new_keyboard(message:types.Message,id,text:str):
+    Start.city_bilder[id]=NewKeyboard(Start.city_bilder[id],text)
+    await message.edit_text("Выберите город или несколько городов:", reply_markup=Start.city_bilder[id].as_markup())
 

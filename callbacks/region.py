@@ -17,6 +17,6 @@ async def callbacks_generation(callback:types.CallbackQuery):
     action = callback.data.split("_")[1]
     Start.id_region[callback.from_user.id] = action
     #city_keyboard = kb_city.list_add((int(action)))
-    Start.city_bilder[callback.message.from_user.id]=InlineKeyboardBuilder()
-    await kb_city.keyboard(callback.message, keybrd=Start.city_bilder[callback.message.from_user.id],action=int(action), txt="Выберите город или несколько городов:")
+    Start.city_bilder[callback.from_user.id]=InlineKeyboardBuilder()
+    await kb_city.keyboard(callback.message, keybrd=Start.city_bilder[callback.from_user.id],action=int(action), txt="Выберите город или несколько городов:")
     await callback.answer()
