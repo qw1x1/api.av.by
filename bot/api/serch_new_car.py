@@ -1,7 +1,7 @@
 import requests
 from fake_useragent import UserAgent as Userr
 from bs4 import BeautifulSoup as bs
-from controls import get_user_id_on_procent, create_respons, get_respons_list, set_cars
+from controls import get_user_id_on_procent, create_respons, get_respons_list, set_cars, get_cars
 
 class Get_new_car_list:
     '''
@@ -84,7 +84,7 @@ while True:
     car_list = obj()
     for item in car_list:
         if type(item['users']) == list:
-            print(type(item['users']), item['link'], item['procent'], item['price'], item['users'], item['location'])
             set_cars(link=item['link'], users=list(item['users']))
-            # print()
+    # print(get_cars())
+    
             

@@ -174,7 +174,6 @@ def get_cars():
         for car in cars:
             respons[car.link] = car.users.split('_')
             Cars[car.id].delete_instance()
-
         return respons
 
 def set_cars(link='', users=[]):
