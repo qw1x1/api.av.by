@@ -92,7 +92,8 @@ async def main():
         for item in car_list:
             if type(item['users']) == list:
                 for user in item['users']:
-                    await send_msg(user, item['link'])
+                    message = 'Процент отклонения от рынка: ' + str(item['procent']) + '%' + '\n' + str(item['link'])
+                    await send_msg(user, message)
 
 if __name__ ==  '__main__':
     asyncio.run(main())   
