@@ -6,10 +6,13 @@ from aiogram.filters.command import Command
 import api.controls as Controls
 from api.models import *
 import command.start as Start
+from aiogram.fsm.state import State, StatesGroup
 router = Router()
+
+class Inputdata(StatesGroup):
+    procent = State()
 
 @router.message(Command("procent"))
 async def callbacks_cars(message: types.Message, state:FSMContext):
     await message.answer('Введите процент отклонения от среднерыночной цены')
     await state.set_state(Inputdata.procent)
-    Controls.add_procent_user(int(message.from_user.id),percent=int(Start.procent[message.from_user.id]['procent']))
