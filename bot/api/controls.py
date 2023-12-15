@@ -9,7 +9,7 @@ def reset_BD():
         db.create_tables([User, Request, Respons, Cars]) 
 
 ###########################################################USER###############################################################
-def get_user_id_on_procent(percent=20, location=''):
+def get_user_id_on_procent(percent, location):
     result_list = []
     '''
     percent !< 20
