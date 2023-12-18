@@ -17,7 +17,7 @@ def get_user_id_on_procent(percent, location):
     или равен проценту найденого авто и есоли пользователю подходит местоположение авто
     '''
     with db:
-        reqest_list = User.select().where(User.percent <= percent)
+        reqest_list = User.select().where(User.percent <= percent).where(User.is_active == True).where(User.subscription_status == True)
     if len(reqest_list) >= 1:
         for user in reqest_list:
             locations = get_location_user(telegram_id=user.telegram_id)
@@ -162,7 +162,7 @@ def get_respons_list():
 
 ###########################################################END_RESPONS###############################################################
 
-# reset_BD()
+reset_BD()
 
 # create_user(telegram_id=0)
 # create_request(brand_id=1, model_id=3, generations_id=2, percent_difference=30, telegram_id=0)
