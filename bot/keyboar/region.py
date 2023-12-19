@@ -13,7 +13,5 @@ def api_call(list):
     for i in list:
         region_name_list.adjust(3)
         for key, value in i.items():
-            
             region_name_list.add(types.InlineKeyboardButton(text=key, callback_data="region_"+str(value)))
-    
     return region_name_list

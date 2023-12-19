@@ -9,17 +9,15 @@ from contextlib import suppress
 
 router = Router()
 
-
-
 @router.callback_query(Text(startswith="citydel_"))
 async def callbacks_generation(callback:types.CallbackQuery):
     with suppress(TelegramBadRequest):
         action = callback.data.split("_")[1]
-        masscity=Start.delet_city[callback.from_user.id]
+        masscity = Start.delet_city[callback.from_user.id]
         masscity.append(action)
-        Start.delet_city[callback.from_user.id]=masscity
-        change_location_user(callback.from_user.id,Start.delet_city[callback.from_user.id])
-        Start.delet_city[callback.from_user.id]=[]
-        await kb_city.new_keyboard(callback.message,callback.from_user.id,action)
+        Start.delet_city[callback.from_user.id] = masscity
+        change_location_user(callback.from_user.id, Start.delet_city[callback.from_user.id])
+        Start.delet_city[callback.from_user.id] = []
+        await kb_city.new_keyboard(callback.message, callback.from_user.id, action)
         await callback.answer()
 

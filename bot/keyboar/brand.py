@@ -6,7 +6,6 @@ from contextlib import suppress
 
 builder = InlineKeyboardBuilder()
 
-
 def list_add(cars:InlineKeyboardBuilder()):
     brand_cars = brand.items()
     for key, value in brand_cars:
