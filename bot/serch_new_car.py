@@ -21,8 +21,9 @@ class Get_new_car_list:
     def get_page(self):
         try:
             respons_page = requests.get('https://cars.av.by/filter?', params={'condition[0]': 2, 'sort': 4}, headers={'user-agent': f'{self.f_user}'})
-        except ConnectionError:
-            return 0
+        except Exception:
+            self.get_page()
+
         if respons_page.status_code == 200:
             self.respons = self.get_car_dict(bs(respons_page.text, 'lxml'))
         self.get_arg_price()
@@ -92,7 +93,7 @@ async def main():
         for item in car_list:
             if type(item['users']) == list:
                 for user in item['users']:
-                    message = 'Средняя стоимость авто: ' + str(item['arg_price']) + '%' + '\n' + str(item['link'])
+                    message = 'Средняя стоимость авто: ' + str(item['arg_price']) + '$' + '\n' + 'Процент отклонения от рынка: ' + str(item['procent']) + '%' + '\n' + str(item['link'])
                     await send_msg(user, message)
 
 if __name__ ==  '__main__':
