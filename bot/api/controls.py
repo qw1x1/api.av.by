@@ -17,7 +17,10 @@ def get_user_id_on_procent(percent, location):
     или равен проценту найденого авто и есоли пользователю подходит местоположение авто
     '''
     with db:
-        reqest_list = User.select().where(User.percent <= percent).where(User.is_active == True).where(User.subscription_status == True)
+        reqest_list = User.select().where(
+            (User.percent <= percent) | 
+            (User.is_active == True) | 
+            (User.subscription_status == True))
     if len(reqest_list) >= 1:
         for user in reqest_list:
             locations = get_location_user(telegram_id=user.telegram_id)

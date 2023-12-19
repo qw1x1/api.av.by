@@ -16,7 +16,7 @@ dp.include_routers(brand.router, coice.router, model.router, start.router, delet
 async def main():
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
-async def send_msg(id: int, message: str):
+async def send_msg(id: int, message: str):                                       
     await bot.send_message(id, message)
 
 
