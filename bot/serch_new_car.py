@@ -1,4 +1,4 @@
-import requests, asyncio
+import requests, asyncio, time
 from fake_useragent import UserAgent as Userr
 from bs4 import BeautifulSoup as bs
 from api.controls import get_user_id_on_procent, create_respons, get_respons_list
@@ -22,10 +22,14 @@ class Get_new_car_list:
         try:
             respons_page = requests.get('https://cars.av.by/filter?', params={'condition[0]': 2, 'sort': 4}, headers={'user-agent': f'{self.f_user}'})
         except Exception:
+            time.sleep(60)
             self.get_page()
 
         if respons_page.status_code == 200:
             self.respons = self.get_car_dict(bs(respons_page.text, 'lxml'))
+        else:
+            time.sleep(60)
+            self.get_page()
         self.get_arg_price()
 
     def get_car_dict(self, data_soup):
@@ -48,7 +52,9 @@ class Get_new_car_list:
         if respons_page.status_code == 200:
             data_soup = bs(respons_page.text, 'lxml')
             return self.mid_price(data_soup)
-        return 404
+        else:
+            time.sleep(60)
+            self.pars_page(link)
 
     def mid_price(self, data_soup):       
         total = ''
