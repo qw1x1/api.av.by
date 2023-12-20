@@ -1,8 +1,6 @@
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from aiogram.exceptions import TelegramBadRequest
 from api.av1 import get_city_for_region
-from contextlib import suppress
 import command.start as Start
 
 async def keyboard(message:types.Message, keybrd:InlineKeyboardBuilder(), action:int, txt:str):
@@ -20,10 +18,10 @@ def NewKeyboard(bilder:InlineKeyboardBuilder(), text):
     button=types.InlineKeyboardButton(text=text, callback_data="city_"+text)
     for i in range(0, len(markup_city.inline_keyboard), 1):
          for j in range(0, len(markup_city.inline_keyboard[i]), 1):
-              if markup_city.inline_keyboard[i][j] == button:
+            if markup_city.inline_keyboard[i][j] == button:
                 del markup_city.inline_keyboard[i][j]
                 break
-    new_city._markup=markup_city.inline_keyboard
+    new_city._markup = markup_city.inline_keyboard
     return new_city
 
 async def new_keyboard(message:types.Message, id, text:str):

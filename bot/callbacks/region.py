@@ -1,6 +1,8 @@
 from aiogram import Router, types
 from aiogram.filters import Text
+from api.av1 import get_city_for_region
 import keyboar.city as kb_city
+from api.controls import create_request
 from api.models import *
 import command.start as Start
 from aiogram.utils.keyboard import InlineKeyboardBuilder

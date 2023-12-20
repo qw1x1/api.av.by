@@ -2,7 +2,6 @@ from aiogram import Router, types
 from aiogram.filters import Text
 import api.av1
 import keyboar.generations as kb_gen
-from api.controls import create_request
 from api.models import *
 import command.start as Start
 from aiogram.utils.keyboard import InlineKeyboardBuilder

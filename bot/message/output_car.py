@@ -26,9 +26,7 @@ async def process_name_sent(message:types.Message, state:FSMContext):
             keyboard_reg = kb_region.api_call(get_region())
             await kb_region.keyboard(message, keyboard_reg, "Выберите область:")
         elif(Start.perekup[message.from_user.id] == "no"):
-            pars_info = Pars_info_id_file(brand_id = int(Start.brand[message.from_user.id]), 
-                                        model_id  = int(Start.id_model[message.from_user.id]), generations_id = Start.id_gen[message.from_user.id])
-
+            pars_info = Pars_info_id_file(brand_id=int(Start.brand[message.from_user.id]), model_id=int(Start.id_model[message.from_user.id]), generations_id=Start.id_gen[message.from_user.id])
             cars_count_page = pars_info()
             if cars_count_page == 0:
                 await message.answer(text='В настоящий момент нет ни одного объявления по Вашему запросу') 
@@ -38,8 +36,8 @@ async def process_name_sent(message:types.Message, state:FSMContext):
                 list_cars, arg_price = serch_car[0], serch_car[1]
                 await message.answer(text=f'Среднерыночная стоимость: {math.floor(arg_price)}')
                 if len(list_cars) != 0:
-                    Controls.create_request(brand_id = int(Start.brand[message.from_user.id]), model_id = int(Start.id_model[message.from_user.id]), 
-                                    percent_difference = int(Start.procent[message.from_user.id]['procent']), telegram_id = message.from_user.id)
+                    Controls.create_request(brand_id=int(Start.brand[message.from_user.id]), model_id=int(Start.id_model[message.from_user.id]), 
+                                    percent_difference=int(Start.procent[message.from_user.id]['procent']), telegram_id=message.from_user.id)
                     for item in list_cars:
                         await message.answer(text=item['link'])
                 else:

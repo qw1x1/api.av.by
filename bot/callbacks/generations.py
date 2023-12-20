@@ -1,7 +1,6 @@
 from aiogram import Router, types
 from aiogram.filters import Text
 import command.start as Start
-from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 import callbacks.perekup as perekup
 

@@ -1,5 +1,4 @@
 from aiogram import Router, types
-from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import StateFilter
 import callbacks.model as cb_model

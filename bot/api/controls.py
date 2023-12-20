@@ -17,10 +17,7 @@ def get_user_id_on_procent(percent, location):
     или равен проценту найденого авто и есоли пользователю подходит местоположение авто
     '''
     with db:
-        reqest_list = User.select().where(
-            (User.percent <= percent) | 
-            (User.is_active == True) | 
-            (User.subscription_status == True))
+        reqest_list = User.select().where(User.percent <= percent).where(User.is_active == True).where(User.subscription_status == True)
     if len(reqest_list) >= 1:
         for user in reqest_list:
             locations = get_location_user(telegram_id=user.telegram_id)
@@ -82,6 +79,29 @@ def delet_user(telegram_id=0):
     with db:
         user = User.get(telegram_id=telegram_id)
         user.delete_instance()
+
+def set_is_active(telegram_id=0, active=0):
+    with db:
+        user = User.get(telegram_id=telegram_id)
+        user.is_active = active
+        user.save()
+
+def add_is_active(telegram_id=0):
+    with db:
+        user = User.get(telegram_id=telegram_id)
+        return user.is_active
+
+def set_subscription_status(telegram_id=0, subscription_status=0):
+    with db:
+        user = User.get(telegram_id=telegram_id)
+        user.subscription_status = subscription_status
+        user.save()
+
+def add_subscription_status(telegram_id=0):
+    with db:
+        user = User.get(telegram_id=telegram_id)
+        return user.subscription_status       
+
 ###########################################################END_USER###############################################################
 
 ###########################################################REQEST###############################################################

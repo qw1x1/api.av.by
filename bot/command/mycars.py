@@ -1,4 +1,4 @@
-from aiogram import Router, F, types
+from aiogram import Router, types
 from aiogram.filters.command import Command
 from api.models import *
 from api.controls import get_sefch_data_list

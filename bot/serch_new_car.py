@@ -65,7 +65,7 @@ class Get_new_car_list:
                     total += item
         if total != '':
             return int(total)
-        return 300
+        return 1
 
     def get_procent(self, price, arg_price):
         procent = 0
@@ -89,7 +89,7 @@ class Get_new_car_list:
     
     def __call__(self):
         self.get_page()
-        print(self.respons)
+        print(self.respons) ############################################DEBUG############################################
         return self.respons
 
 async def main():
