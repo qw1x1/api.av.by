@@ -86,7 +86,7 @@ def set_is_active(telegram_id=0, active=0):
         user.is_active = active
         user.save()
 
-def add_is_active(telegram_id=0):
+def get_is_active(telegram_id=0):
     with db:
         user = User.get(telegram_id=telegram_id)
         return user.is_active
@@ -97,7 +97,7 @@ def set_subscription_status(telegram_id=0, subscription_status=0):
         user.subscription_status = subscription_status
         user.save()
 
-def add_subscription_status(telegram_id=0):
+def get_subscription_status(telegram_id=0):
     with db:
         user = User.get(telegram_id=telegram_id)
         return user.subscription_status       

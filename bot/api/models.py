@@ -12,14 +12,15 @@ class User(Basic):
     telegram_id = IntegerField(unique=True)
     percent = IntegerField(null=True)
     location = CharField(null=True)
-    is_active = BooleanField(null=True) # Если True, то выполняется поиск для этого пользователя, иначе поиск остановлен
-    subscription_status = BooleanField(null=True) # Если True, то у пользователя оплачена подписка и поиск для него работает, иначе поиск остановлен
+    is_active = BooleanField(null=True, default = 0) # Если True, то выполняется поиск для этого пользователя, иначе поиск остановлен
+    subscription_status = BooleanField(null=True, default = 0) # Если True, то у пользователя оплачена подписка и поиск для него работает, иначе поиск остановлен
 
     class Meta:
         db_table = 'users'
     
     def __str__(self):
         return f'{str(self.telegram_id)}'
+
 
 class Request(Basic):
     brand_id = IntegerField()

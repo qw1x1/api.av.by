@@ -1,6 +1,7 @@
 from aiogram import Router, types
 from aiogram.filters.command import Command
-import keyboar.start as kb_start
+#import keyboar.start as kb_start
+from api.controls import create_user
 import keyboar.qwe as qwe
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
@@ -10,7 +11,10 @@ router = Router()
 class Inputdata(StatesGroup):
     perekup_state = State()
     procent_state = State()
+    menu = State()
+
 perekup_key=['1','2']
+menu_key=["Остановить поиск", "Продолжить поиск"]
 user_data = {}
 brand = {}
 perekup = {}
@@ -37,6 +41,7 @@ async def call_backs(message: types.Message, state: FSMContext):
     delet_city[message.from_user.id] = []
     del_city_bilder[message.from_user.id] = 0
     await qwe.cmd_start(message)
+    create_user(message.from_user.id)
     #await message.answer("Выберите подходящий для Вас поиск авто:", reply_markup=kb_start.key())
     await state.set_state(Inputdata.perekup_state)
 

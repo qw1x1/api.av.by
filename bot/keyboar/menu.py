@@ -11,4 +11,4 @@ async def menu(message: types.Message):
         keyboard=kb,
         resize_keyboard=True,
     )
-    await message.answer("Добро пожаловать в наш бот по поиску автомобилей",reply_markup=keyboard)
+    await message.answer("Меню:",reply_markup=keyboard)
