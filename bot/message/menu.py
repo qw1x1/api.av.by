@@ -17,3 +17,19 @@ async def menu_qwe(message: types.Message, state: FSMContext):
         set_is_active(message.from_user.id,1)
         await state.set_state(start.Inputdata.menu)
         #await state.clear()
+        
+@router.message(F.text.lower() == "изменение процента отклонения")
+async def procent(message: types.Message):
+    await message.answer('Введите /procent')
+
+@router.message(F.text.lower() == "выбор региона поиска")
+async def procent(message: types.Message):
+    await message.answer('Введите /region')
+
+@router.message(F.text.lower() == "удаление выбранных городов")
+async def procent(message: types.Message):
+    await message.answer('Введите /deletecity')
+
+@router.message(F.text.lower() == "меню поиска")
+async def procent(message: types.Message):
+    await message.answer('Введите /poisk')

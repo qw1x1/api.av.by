@@ -4,6 +4,7 @@ from callbacks.perekup import Inputdata
 from aiogram.filters.command import Command
 from api.models import *
 from aiogram.fsm.state import State, StatesGroup
+
 router = Router()
 
 class Inputdata(StatesGroup):
