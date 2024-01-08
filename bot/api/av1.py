@@ -1,6 +1,9 @@
-import requests, json, math
+import requests, json, math, time, datetime
 from fake_useragent import UserAgent as User
 from bs4 import BeautifulSoup as bs
+from controls import set_time_sub, get_time_sub
+
+MONTH_IN_SECONDS = 2592000
 
 CITY_IN_REGION = [
 {'id': 0, 'region_name': 'Брестская обл.', 'city':[
@@ -502,7 +505,7 @@ class Search_cars(): # -> deviated_car_list
         self.serch_deviated_car_list()
         return self.deviated_car_list, self.arg_price
 
-#######################################
+##################REGION#####################
 def get_region():
     '''
     Возвращает список областей
@@ -519,4 +522,30 @@ def get_city_for_region(region_id):
     for city_dikt in CITY_IN_REGION[region_id]['city']:
         city.append({city_dikt['city_name']:city_dikt['id']})
     return city
-#######################################
+################END_REGION###################
+
+####################SUB######################
+def set_time(telegram_id):
+    """
+    Записывает время подписки пользователю и отправляет True в ответ
+    """
+    time_sub = int(time.time()) + MONTH_IN_SECONDS
+    set_time_sub(telegram_id=telegram_id, time=time_sub)
+    return True
+
+def get_remaining_subscription_time(telegram_id=0):
+    """
+    Вернет остаток времени подписки в формате дни.часы.минуты.секунды
+    """
+    time_sub_user = get_time_sub(telegram_id=telegram_id)
+    time_now = int(time.time())
+    middle_time = int(time_sub_user) - time_now
+
+    if middle_time <= 0:
+        return False
+        # При этом отвкте вывксит пользователю f'Время Вашей подписки имтекло' и предложение покупки подписки
+    else:
+        time_sud = str(datetime.timedelta(seconds=middle_time))
+        time_sud = time_sud.replace('days', 'дней').replace('day', 'день')
+        return time_sud
+##################END_SUB####################

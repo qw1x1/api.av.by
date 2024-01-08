@@ -13,7 +13,7 @@ import command.start as Start
 
 router = Router()
 
-@router.message(StateFilter(procent.Inputdata.procent))
+@router.message(StateFilter(Start.Inputdata.procent_state))
 async def process_name_sent(message:types.Message, state:FSMContext):
     try:
         if int(message.text) < 0 or int(message.text) > 100:

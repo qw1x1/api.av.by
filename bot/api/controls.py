@@ -1,5 +1,6 @@
 from api.models import User, Request, Respons, db # bot
 # from models import User, Request, Respons, db # 
+import time
 
 def reset_BD():
     '''
@@ -17,7 +18,7 @@ def get_user_id_on_procent(percent, location):
     или равен проценту найденого авто и есоли пользователю подходит местоположение авто
     '''
     with db:
-        reqest_list = User.select().where(User.percent <= percent).where(User.is_active == True).where(User.subscription_status == True)
+        reqest_list = User.select().where(User.percent <= percent).where(User.is_active == True).where(User.time_sub > int(time.time()))
     if len(reqest_list) >= 1:
         for user in reqest_list:
             locations = get_location_user(telegram_id=user.telegram_id)
@@ -86,22 +87,36 @@ def set_is_active(telegram_id=0, active=0):
         user.is_active = active
         user.save()
 
-def add_is_active(telegram_id=0):
+def get_is_active(telegram_id=0):
     with db:
         user = User.get(telegram_id=telegram_id)
         return user.is_active
-
-def set_subscription_status(telegram_id=0, subscription_status=0):
+    
+###########################################################SUB###############################################################
+    
+def set_time_sub(telegram_id=0, time=0):
+    '''Запишем время действия подписки в секуднах '''
     with db:
         user = User.get(telegram_id=telegram_id)
-        user.subscription_status = subscription_status
+        user.time_sub = time
         user.save()
 
-def add_subscription_status(telegram_id=0):
+def get_time_sub(telegram_id=0):
+    '''Вернёт время подписки в секуднах '''
     with db:
         user = User.get(telegram_id=telegram_id)
-        return user.subscription_status       
+        return user.time_sub       
 
+def get_status_sub(telegram_id=0):
+    '''Вернёт True либо False, в зависимости от того есть ли подписка ''' 
+    with db:
+        user = User.get(telegram_id=telegram_id)
+        time_sub = user.time_sub 
+        if time_sub > int(time.time()):
+            return True
+        else:
+            return False
+###########################################################END_SUB###############################################################
 ###########################################################END_USER###############################################################
 
 ###########################################################REQEST###############################################################
