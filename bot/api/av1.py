@@ -552,4 +552,4 @@ def get_sub_time(telegram_id=0):
 ##################END_SUB####################
     
 # set_time(telegram_id=633279160)
-# print(get_remaining_subscription_time(telegram_id=633279160))
+# print(get_sub_time(telegram_id=633279160))
