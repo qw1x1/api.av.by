@@ -14,6 +14,7 @@ class User(Basic):
     location = CharField(null=True)
     is_active = BooleanField(null=True, default = 0) # Если True, то выполняется поиск для этого пользователя, иначе поиск остановлен
     time_sub = IntegerField(null=True, default = 0) # Если True, то у пользователя оплачена подписка и поиск для него работает, иначе поиск остановлен
+    is_admin = BooleanField(null=True, default = 0) # Для админа.
 
     class Meta:
         db_table = 'users'

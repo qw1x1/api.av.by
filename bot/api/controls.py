@@ -65,6 +65,9 @@ def change_location_user(telegram_id=0, location=[]):
         user.save()
 
 def create_user(telegram_id=0):
+    '''
+    Создает нового пользователя
+    '''
     with db:
         return User.get_or_create(telegram_id=telegram_id)
     
@@ -77,21 +80,37 @@ def get_users():
     return users
 
 def delet_user(telegram_id=0):
+    '''
+    Удаляет пользователя
+    '''
     with db:
         user = User.get(telegram_id=telegram_id)
         user.delete_instance()
 
 def set_is_active(telegram_id=0, active=0):
+    '''
+    Изменяет активность поиска перекупа у пользователя
+    '''
     with db:
         user = User.get(telegram_id=telegram_id)
         user.is_active = active
         user.save()
 
 def get_is_active(telegram_id=0):
+    '''
+    Вернёт True если у пользователя активен поиск перекупа
+    '''
     with db:
         user = User.get(telegram_id=telegram_id)
         return user.is_active
     
+def get_is_admin(telegram_id=0):
+    '''
+    Вернёт True если пользователь админ
+    '''
+    with db:
+        user = User.get(telegram_id=telegram_id)
+        return user.is_admin
 ###########################################################SUB###############################################################
     
 def set_time_sub(telegram_id=0, time=0):
