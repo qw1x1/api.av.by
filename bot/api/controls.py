@@ -1,5 +1,5 @@
-from api.models import User, Request, Respons, db # bot
-# from models import User, Request, Respons, db # 
+from api.models import User, Respons, db # BOT
+# from models import User, Respons, db # debug
 import time
 
 def reset_BD():
@@ -7,7 +7,7 @@ def reset_BD():
     Создаёт бдешку и таблицы в ней
     '''
     with db:
-        db.create_tables([User, Request, Respons]) 
+        db.create_tables([User, Respons]) 
 
 ###########################################################USER###############################################################
 def get_user_id_on_procent(percent, location):
@@ -107,69 +107,8 @@ def get_time_sub(telegram_id=0):
         user = User.get(telegram_id=telegram_id)
         return user.time_sub       
 
-def get_status_sub(telegram_id=0):
-    '''Вернёт True либо False, в зависимости от того есть ли подписка ''' 
-    with db:
-        user = User.get(telegram_id=telegram_id)
-        time_sub = user.time_sub 
-        if time_sub > int(time.time()):
-            return True
-        else:
-            return False
 ###########################################################END_SUB###############################################################
 ###########################################################END_USER###############################################################
-
-###########################################################REQEST###############################################################
-
-def get_request(brand_id=0, model_id=0, generations_id=0, percent=0):
-    '''
-    Вернет все записи из request которым соответствует brand_id и model_id и generations_id и если percent_difference меньше или равен исеомому проценту
-    '''
-    with db:
-        reqest_list = Request.select().where(Request.brand_id == brand_id, Request.model_id == model_id, Request.generations_id == generations_id, Request.percent_difference <= percent)
-    return reqest_list
-
-def delet_reqest(telegram_id, request_id):
-    '''
-    Метод удалит крнкретную запсись с параметрами для поиска
-    но пред этим нужно передать в класс _request_id с помощю сетерра 
-    obj.request_id = <int:и id записи>
-    '''
-    with db:
-        user = User.get(User.telegram_id == telegram_id)
-        request = Request.get(Request.user == user and Request.id == request_id)
-    return request.delete_instance()
-
-def get_sefch_data_list(telegram_id=0):
-    requests_list = []
-    '''
-    Вeрнет поисковые параметры для конкретного пользователя
-    '''
-    with db:
-        user = User.get(User.telegram_id == telegram_id)
-        for request in user.requests:
-            requests_list.append({
-                    'id': request.id,
-                    'brand_id':request.brand_id,
-                    'model_id':request.model_id,
-                    'generations_id':request.generations_id,
-                    'percent_difference':request.percent_difference
-                    })
-    return requests_list
-
-def create_request(brand_id=0, model_id=0, generations_id=0, percent_difference=0, telegram_id=0):
-    '''
-    Добавляем новые данные поиска для User
-    '''
-    with db:
-        user = User.get(User.telegram_id == telegram_id)
-        Request.get_or_create(
-            brand_id=brand_id,
-            model_id=model_id,
-            percent_difference=percent_difference,
-            generations_id=generations_id,
-            user=user)
-###########################################################END_REQEST###############################################################
 
 ###########################################################RESPONS###############################################################
 
@@ -200,9 +139,7 @@ def get_respons_list():
 
 ###########################################################END_RESPONS###############################################################
 
-reset_BD()
+# reset_BD()
 
-# create_user(telegram_id=0)
-# create_request(brand_id=1, model_id=3, generations_id=2, percent_difference=30, telegram_id=0)
-# add_procent_user(telegram_id=0, percent=1)
-# set_cars(link='sjdghfujiwoeeee', users=['444', '555', '666'])
+# create_user(telegram_id=633279160)
+# add_procent_user(telegram_id=633279160, percent=25)

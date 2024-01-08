@@ -2,7 +2,7 @@ from aiogram import Router, types,F
 from aiogram.fsm.context import FSMContext
 import command.start as start
 from keyboar.sell_key import key
-from api.controls import get_subscription_status
+from api.controls import get_status_sub
 
 router = Router()
 
@@ -12,7 +12,7 @@ async def perekup_qwe(message: types.Message, state: FSMContext):
     yes_or_no = await state.get_data()
    # if(start.perekup[message.from_user.id]['perekup']=='yes'):
     if(yes_or_no['perekup']=='1'):
-        if(get_subscription_status(message.from_user.id)==0):
+        if(get_status_sub(message.from_user.id)==0):
             await message.answer('Купите подписку:',reply_markup=key())
         else:
             start.perekup[message.from_user.id]='yes'

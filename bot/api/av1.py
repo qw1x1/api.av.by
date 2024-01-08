@@ -1,7 +1,8 @@
 import requests, json, math, time, datetime
 from fake_useragent import UserAgent as User
 from bs4 import BeautifulSoup as bs
-from controls import set_time_sub, get_time_sub
+from api.controls import set_time_sub, get_time_sub # BOT
+# from controls import set_time_sub, get_time_sub # debug
 
 MONTH_IN_SECONDS = 2592000
 
@@ -423,7 +424,7 @@ class Pars_info_id_file(): # -> car_list
         car_list, respons_list = [], []
         try:
             if param == 1:
-                count_ad = int("".join(count for count in data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text if  count.isdecimal()))
+                count_ad = int("".join(count for count in data_soup.find(class_="listing__container").find(class_='listing__header').find(class_='listing__title').text if count.isdecimal()))
                 respons_list = [count_ad]
         except AttributeError:
             respons_list = [0]
@@ -525,7 +526,7 @@ def get_city_for_region(region_id):
 ################END_REGION###################
 
 ####################SUB######################
-def set_time(telegram_id):
+def set_time(telegram_id=0):
     """
     Записывает время подписки пользователю и отправляет True в ответ
     """
@@ -535,7 +536,7 @@ def set_time(telegram_id):
 
 def get_remaining_subscription_time(telegram_id=0):
     """
-    Вернет остаток времени подписки в формате дни.часы.минуты.секунды
+    Вернет остаток времени подписки в формате дни.часы.минуты.секунды, если подписки нет то вернет False
     """
     time_sub_user = get_time_sub(telegram_id=telegram_id)
     time_now = int(time.time())
@@ -549,3 +550,6 @@ def get_remaining_subscription_time(telegram_id=0):
         time_sud = time_sud.replace('days', 'дней').replace('day', 'день')
         return time_sud
 ##################END_SUB####################
+    
+# set_time(telegram_id=633279160)
+# print(get_remaining_subscription_time(telegram_id=633279160))
