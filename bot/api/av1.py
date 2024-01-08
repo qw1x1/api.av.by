@@ -534,7 +534,7 @@ def set_time(telegram_id=0):
     set_time_sub(telegram_id=telegram_id, time=time_sub)
     return True
 
-def get_remaining_subscription_time(telegram_id=0):
+def get_sub_time(telegram_id=0):
     """
     Вернет остаток времени подписки в формате дни.часы.минуты.секунды, если подписки нет то вернет False
     """
